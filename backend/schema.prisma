@@ -23,3 +23,18 @@ model Session {
   createdAt DateTime @default(now())
   expiresAt DateTime
 }
+
+model Game {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  scores Score[]
+}
+
+model Score {
+  id     Int  @id @default(autoincrement())
+  gameId Int
+  userId Int
+  data   Json // arbitrary data in json format
+  game   Game @relation(fields: [gameId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+}
