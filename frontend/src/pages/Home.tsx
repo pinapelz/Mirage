@@ -66,6 +66,12 @@ const Home = () => {
               <span className="text-white font-semibold text-lg">Mirage</span>
             </div>
             <div className="flex items-center space-x-4">
+              <Link
+                to="/import"
+                className="text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                Import Data
+              </Link>
               <span className="text-slate-300 text-sm">Welcome back, {user.username}</span>
               <button
                 onClick={handleLogout}
