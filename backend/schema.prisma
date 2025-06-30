@@ -26,16 +26,17 @@ model Session {
 }
 
 model Game {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
+  internalName   String  @id
+  formattedName  String
+  description    String
   scores Score[]
 }
 
 model Score {
   id     Int  @id @default(autoincrement())
-  gameId Int
+  gameInternalName String
   userId Int
-  data   Json // arbitrary data in json format
-  game   Game @relation(fields: [gameId], references: [id])
+  data   Json
+  game   Game @relation(fields: [gameInternalName], references: [internalName])
   user   User @relation(fields: [userId], references: [id])
 }

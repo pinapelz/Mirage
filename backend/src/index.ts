@@ -8,6 +8,7 @@ import { startSessionCleanup } from './utils/session';
 // Routes
 import * as authRoutes from './routes/authRoutes';
 import * as userRoutes from './routes/userRoutes';
+import * as gameRoutes from './routes/gameRoutes';
 
 const app = express();
 const port = 5000;
@@ -48,6 +49,8 @@ app.post('/api/logout', requireAuth, authRoutes.handleLogout);
 
 app.get('/api/me', userRoutes.handleMeRoute);
 app.get('/api/session', userRoutes.handleGetCurrentSession);
+
+app.get('/api/supportedGames', gameRoutes.handleGetSupportedGames);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
