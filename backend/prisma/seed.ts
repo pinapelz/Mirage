@@ -3,9 +3,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.games.createMany({
+  await prisma.game.createMany({
     data: [
-      { gameName: 'Dancerush' },
+      { name: 'Dancerush' },
     ],
   });
   console.log('Initial seed data inserted');
