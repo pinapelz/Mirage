@@ -27,7 +27,7 @@ model Session {
 
 model Game {
   internalName   String  @id
-  formattedName  String
+  formattedName  String  @unique
   description    String
   scores Score[]
 }

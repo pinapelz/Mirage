@@ -6,9 +6,10 @@ import { requireAuth } from './middleware/requireAuth';
 import { startSessionCleanup } from './utils/session';
 
 // Routes
-import * as authRoutes from './routes/authRoutes';
-import * as userRoutes from './routes/userRoutes';
-import * as gameRoutes from './routes/gameRoutes';
+import * as authRoutes from './routes/auth';
+import * as userRoutes from './routes/user';
+import * as gameRoutes from './routes/game';
+import * as scoreRoutes from './routes/score';
 
 const app = express();
 const port = 5000;
@@ -51,6 +52,8 @@ app.get('/api/me', userRoutes.handleMeRoute);
 app.get('/api/session', userRoutes.handleGetCurrentSession);
 
 app.get('/api/supportedGames', gameRoutes.handleGetSupportedGames);
+
+app.post('/api/uploadScore', requireAuth, scoreRoutes.handleScoreUpload);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
