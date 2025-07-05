@@ -1,5 +1,6 @@
 import express from 'express';
 import { prisma } from '../config/db';
+import { timeStamp } from 'node:console';
 
 export const handleScoreUpload = async (req: express.Request, res: express.Response) => {
   try {
@@ -32,6 +33,7 @@ export const handleScoreUpload = async (req: express.Request, res: express.Respo
       data: scoresArray.map(scoreData => ({
         gameInternalName: internalGameName,
         userId: userId,
+        timestamp: scoreData.timestamp,
         data: scoreData
       }))
     });

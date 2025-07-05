@@ -36,6 +36,7 @@ model Score {
   id     Int  @id @default(autoincrement())
   gameInternalName String
   userId Int
+  timestamp Int //in UNIX milliseconds
   data   Json
   game   Game @relation(fields: [gameInternalName], references: [internalName])
   user   User @relation(fields: [userId], references: [id])

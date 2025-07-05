@@ -3,6 +3,8 @@ import { useState, useRef } from 'react';
 interface JsonUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
+  // has to be any as this is a dynamic trackerm with dynamic score formats
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUpload: (data: any) => void;
   game: string;
 }

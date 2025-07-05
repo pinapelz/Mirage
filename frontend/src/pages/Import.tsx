@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 import JsonUploadModal from '../components/modals/JsonUploadModal';
+import EamusementModal from '../components/modals/EamusementModal';
+import type { SupportedGame } from '../types/game';
+import { uploadScore } from '../utils/scoreUpload';
 
-interface SupportedGame {
-  internalName: string;
-  formattedName: string;
-  description: string;
-}
+
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState('');
   const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
+  const [isEamusementModalOpen, setIsEamusementModalOpen] = useState(false);
   const [supportedGames, setSupportedGames] = useState<SupportedGame[]>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [uploadStatus, setUploadStatus] = useState<{
@@ -54,31 +54,20 @@ const Import = () => {
     }
   };
 
+  // has to be any as this is a dynamic trackerm with dynamic score formats
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleJsonUpload = async (data: any) => {
     try {
       console.log('Uploading data for game:', selectedGame, data);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/uploadScore`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+
+      const result = await uploadScore({
+        meta: {
+          game: data.meta.game,
+          service: data.meta.service,
+          playtype: data.meta.playtype
         },
-        credentials: 'include',
-        body: JSON.stringify({
-          meta: {
-            game: data.meta.game,
-            service: data.meta.service,
-            playtype: data.meta.playtype
-          },
-          scores: data.scores
-        })
+        scores: data.scores
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to upload scores');
-      }
-
-      const result = await response.json();
 
       setUploadStatus({
         type: 'success',
@@ -94,6 +83,65 @@ const Import = () => {
         type: 'error',
         message: error instanceof Error ? error.message : 'Failed to import data. Please try again.'
       });
+    }
+  };
+
+  const JsonUploadCard = () => (
+    <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
+      <div className="w-12 h-12 bg-violet-600/20 rounded-lg flex items-center justify-center mb-4">
+        <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+      </div>
+      <h4 className="text-white font-semibold mb-2">Batch-Manual Upload</h4>
+      <p className="text-slate-400 text-sm mb-4">
+        Upload your game data from a Mirage compatible JSON file
+      </p>
+      <button
+        onClick={() => setIsJsonModalOpen(true)}
+        className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+      >
+        Upload JSON
+      </button>
+    </div>
+  );
+
+  const EamusementScrapeUploadCard = () => (
+    <>
+      {/* e-amusement Card */}
+      <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
+        <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
+          <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </div>
+        <h4 className="text-white font-semibold mb-2">e-amusement Play History</h4>
+        <p className="text-slate-400 text-sm mb-4">
+          Import via scraping your playdata from KONAMI e-amusement
+        </p>
+        <button
+          onClick={() => setIsEamusementModalOpen(true)}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+        >
+          Connect e-amusement
+        </button>
+      </div>
+    </>
+  );
+
+  const renderImportOptions = () => {
+    switch (selectedGame) {
+      case 'dancerush':
+        return (
+          <>
+            {/* JSON Upload Card */}
+            <JsonUploadCard />
+            <EamusementScrapeUploadCard/>
+          </>
+        );
+
+      default:
+        return <JsonUploadCard />;
     }
   };
 
@@ -228,24 +276,7 @@ const Import = () => {
               <h3 className="text-lg font-semibold text-white">Import Options</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* JSON Upload Card */}
-                <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-                  <div className="w-12 h-12 bg-violet-600/20 rounded-lg flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                  </div>
-                  <h4 className="text-white font-semibold mb-2">Batch-Manual Upload</h4>
-                  <p className="text-slate-400 text-sm mb-4">
-                    Upload your game data from a Mirage compatible JSON file
-                  </p>
-                  <button
-                    onClick={() => setIsJsonModalOpen(true)}
-                    className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
-                  >
-                    Upload JSON
-                  </button>
-                </div>
+                {renderImportOptions()}
               </div>
             </div>
           )}
@@ -258,6 +289,13 @@ const Import = () => {
         onClose={() => setIsJsonModalOpen(false)}
         onUpload={handleJsonUpload}
         game={supportedGames.find(g => g.internalName === selectedGame)?.formattedName || ''}
+      />
+
+      {/* Eamusement Modal */}
+      <EamusementModal
+        isOpen={isEamusementModalOpen}
+        onClose={() => setIsEamusementModalOpen(false)}
+        game={supportedGames.find(g => g.internalName === selectedGame) || undefined}
       />
     </div>
   );

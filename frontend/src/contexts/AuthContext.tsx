@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { authApi } from '../utils/api';
-import type { User as ApiUser, SessionResponse } from '../utils/api';
+import { authApi } from '../utils/authApi';
+import type { User as ApiUser, SessionResponse } from '../utils/authApi';
 
 interface User {
   id: string;

@@ -3,6 +3,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 // Auth API functions
 export const authApi = {
   async login(credentials: { username: string; password: string }) {
+    credentials.username = credentials.username.trim();
     try {
       const response = await fetch(`${API_BASE_URL}/authenticate`, {
         method: 'POST',
@@ -31,6 +32,7 @@ export const authApi = {
     email: string;
     password: string;
   }) {
+    userData.username = userData.username.trim();
     try {
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
