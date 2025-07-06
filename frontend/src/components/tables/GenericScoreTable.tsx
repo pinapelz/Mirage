@@ -1,6 +1,7 @@
 import React from "react";
 
 interface Score {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
   timestamp: string | number;
 }
@@ -70,7 +71,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "grade",
   ];
   const expandableKeys = ["judgements", "optional"];
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
 
@@ -102,10 +103,11 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
   };
 
   const renderValue = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any,
     key: string,
     compact: boolean = false,
-  ): JSX.Element => {
+  ): React.ReactElement => {
     if (value === null || value === undefined)
       return <span className="text-slate-500">N/A</span>;
 
@@ -260,6 +262,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { primary, mainStats, expandable, others, timestamp } =
             getScoreEntries(score);
 

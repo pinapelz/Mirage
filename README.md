@@ -1,6 +1,11 @@
 # Mirage
 
 **Mirage** is a lightweight, open-source rhythm game score tracker that doesn’t rely on predefined seeds or chart metadata. It preseves your scores across games — even niche ones.
+- React Typescript
+- Express
+- TailwindCSS
+- PostgreSQL
+- Prisma ORM
 
 ## ✨ Features
 - **Import & Track Scores** – Keep a safe backup of your game scores.

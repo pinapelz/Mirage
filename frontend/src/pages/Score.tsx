@@ -11,6 +11,7 @@ type SortDirection = "asc" | "desc";
 const Score = () => {
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [scores, setScores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,7 +32,7 @@ const Score = () => {
       alert("Network error during logout. Please try again.");
     }
   };
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const flattenScoreData = (score: any) => {
     const flat = { ...score, ...score.data };
     delete flat.data;
