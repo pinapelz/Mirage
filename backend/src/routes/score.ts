@@ -1,6 +1,6 @@
 import express from 'express';
 import { prisma } from '../config/db';
-import { timeStamp } from 'node:console';
+import { PAGE_SIZE } from '../config/constants';
 
 export const handleScoreUpload = async (req: express.Request, res: express.Response) => {
   try {
@@ -28,21 +28,46 @@ export const handleScoreUpload = async (req: express.Request, res: express.Respo
     const internalGameName = game.internalName;
     const scoresArray = Array.isArray(scores) ? scores : [scores];
 
-    // Create score records
-    const createdScores = await prisma.score.createMany({
-      data: scoresArray.map(scoreData => ({
-        gameInternalName: internalGameName,
-        userId: userId,
-        timestamp: scoreData.timestamp,
-        data: scoreData
-      }))
-    });
+    const scoresToCreate = [];
+    let skippedCount = 0;
+
+    for (const scoreData of scoresArray) {
+      // Check if exact same score data already exists
+      const existingScore = await prisma.score.findFirst({
+        where: {
+          gameInternalName: internalGameName,
+          userId: userId,
+          data: {
+            equals: scoreData
+          }
+        }
+      });
+
+      if (existingScore) {
+        skippedCount++;
+      } else {
+        scoresToCreate.push({
+          gameInternalName: internalGameName,
+          userId: userId,
+          timestamp: scoreData.timestamp,
+          data: scoreData
+        });
+      }
+    }
+
+    const createdScores = scoresToCreate.length > 0
+      ? await prisma.score.createMany({
+          data: scoresToCreate
+        })
+      : { count: 0 };
 
     res.status(200).json({
-      message: 'Score upload received successfully',
+      message: 'Score upload processed successfully',
       game: meta.game,
       service: meta.service,
-      scoreCount: createdScores.count
+      scoreCount: createdScores.count,
+      skippedCount: skippedCount,
+      totalProcessed: scoresArray.length
     });
 
   } catch (error) {
@@ -50,3 +75,49 @@ export const handleScoreUpload = async (req: express.Request, res: express.Respo
     res.status(500).json({ error: 'Internal server error. Unable to process score upload' });
   }
 }
+
+export const handleGetScores = async (req: express.Request, res: express.Response) => {
+  try {
+    const { userId, internalGameName, pageNum } = req.query;
+    if (!userId || !internalGameName || !pageNum) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+    const pageNumber = parseInt(pageNum as string);
+    const gameInternalName = internalGameName as string;
+    const userIdNumber = parseInt(userId as string);
+
+    const num_pages = Math.ceil(await prisma.score.count({
+      where: {
+        gameInternalName: gameInternalName,
+        userId: userIdNumber
+      }
+    }) / PAGE_SIZE);
+
+    const scores = await prisma.score.findMany({
+      where: {
+        gameInternalName: gameInternalName,
+        userId: userIdNumber
+      },
+      orderBy: {
+        timestamp: 'desc'
+      },
+      skip: (pageNumber - 1) * PAGE_SIZE,
+      take: PAGE_SIZE
+    });
+
+    const safeScores = scores.map(score => ({
+      ...score,
+      timestamp: typeof score.timestamp === 'bigint'
+        ? Number(score.timestamp)
+        : score.timestamp
+    }));
+
+    res.status(200).json({
+      scores: safeScores,
+      num_pages
+    });
+  } catch (error) {
+    console.error('Failed to fetch scores:', error);
+    res.status(500).json({ error: 'Internal server error. Unable to process score upload' });
+  }
+};
