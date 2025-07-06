@@ -78,32 +78,50 @@ export const handleScoreUpload = async (req: express.Request, res: express.Respo
 
 export const handleGetScores = async (req: express.Request, res: express.Response) => {
   try {
-    const { userId, internalGameName, pageNum } = req.query;
+    const { userId, internalGameName, pageNum, sortKey, direction } = req.query;
     if (!userId || !internalGameName || !pageNum) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
+
     const pageNumber = parseInt(pageNum as string);
     const gameInternalName = internalGameName as string;
     const userIdNumber = parseInt(userId as string);
+    const sortKeyString = (sortKey as string) || 'timestamp';
+    const directionString = ((direction as string)?.toLowerCase() === 'asc') ? 'asc' : 'desc';
 
     const num_pages = Math.ceil(await prisma.score.count({
       where: {
-        gameInternalName: gameInternalName,
+        gameInternalName,
         userId: userIdNumber
       }
     }) / PAGE_SIZE);
 
-    const scores = await prisma.score.findMany({
-      where: {
-        gameInternalName: gameInternalName,
-        userId: userIdNumber
-      },
-      orderBy: {
-        timestamp: 'desc'
-      },
-      skip: (pageNumber - 1) * PAGE_SIZE,
-      take: PAGE_SIZE
-    });
+    let scores;
+
+    if (sortKeyString === 'timestamp') {
+      scores = await prisma.score.findMany({
+        where: {
+          gameInternalName,
+          userId: userIdNumber
+        },
+        orderBy: {
+          timestamp: directionString
+        },
+        skip: (pageNumber - 1) * PAGE_SIZE,
+        take: PAGE_SIZE
+      });
+    } else if (sortKeyString === 'score') {
+      // raw SQL for JSON field ordering
+      scores = await prisma.$queryRawUnsafe<any[]>(`
+        SELECT * FROM "Score"
+        WHERE "gameInternalName" = $1 AND "userId" = $2
+        ORDER BY (data->>'score')::numeric ${directionString.toUpperCase()}
+        OFFSET $3
+        LIMIT $4
+      `, gameInternalName, userIdNumber, (pageNumber - 1) * PAGE_SIZE, PAGE_SIZE);
+    } else {
+      return res.status(400).json({ error: 'Invalid sort key' });
+    }
 
     const safeScores = scores.map(score => ({
       ...score,
@@ -118,6 +136,6 @@ export const handleGetScores = async (req: express.Request, res: express.Respons
     });
   } catch (error) {
     console.error('Failed to fetch scores:', error);
-    res.status(500).json({ error: 'Internal server error. Unable to process score upload' });
+    res.status(500).json({ error: 'Internal server error. Unable to fetch scores' });
   }
 };
