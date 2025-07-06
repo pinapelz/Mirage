@@ -20,6 +20,7 @@ const Score = () => {
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
   const [sortField, setSortField] = useState<SortField>("");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [requestOrder, setRequestOrder] = useState<string>("timestamp");
 
   const gameName =
     new URLSearchParams(window.location.search).get("game") || "dancerush";
@@ -33,6 +34,37 @@ const Score = () => {
       alert("Network error during logout. Please try again.");
     }
   };
+
+  const renderRequestFilterMenu = () => {
+    if (gameName === "dancerush") {
+      const filterOptions = [
+        { value: "timestamp", label: "Recent" },
+        { value: "score", label: "Score" },
+        { value: "lamp", label: "Rank" },
+        { value: "lamo_diff", label: "Difficulty" },
+      ];
+
+      return (
+        <div className="flex items-center space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setRequestOrder(option.value)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                requestOrder === option.value
+                  ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const flattenScoreData = (score: any) => {
     const flat = { ...score, ...score.data };
@@ -51,7 +83,7 @@ const Score = () => {
         url.searchParams.append("userId", user.id);
         url.searchParams.append("internalGameName", gameName);
         url.searchParams.append("pageNum", pageNum.toString());
-        url.searchParams.append("sortKey", 'timestamp');
+        url.searchParams.append("sortKey", requestOrder);
         url.searchParams.append("direction", "asc");
 
         const response = await fetch(url.toString());
@@ -68,7 +100,7 @@ const Score = () => {
         setLoading(false);
       }
     },
-    [user],
+    [user, gameName, requestOrder],
   );
 
   useEffect(() => {
@@ -101,7 +133,7 @@ const Score = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      <NavBar user={user} handleLogout={handleLogout} currentPage="score"/>
+      <NavBar user={user} handleLogout={handleLogout} currentPage="score" />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
@@ -131,9 +163,16 @@ const Score = () => {
               </button>
             </div>
           </div>
-          <p className="text-slate-400 text-lg">
-            Displaying {scores.length} scores • Page {currentPage} of {numPages}
-          </p>
+
+          {/* Filter Menu */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <span className="text-slate-300 text-sm font-medium">
+                Sort by:
+              </span>
+              {renderRequestFilterMenu()}
+            </div>
+          </div>
         </div>
 
         {(() => {
@@ -180,6 +219,9 @@ const Score = () => {
             </div>
           </div>
         )}
+        <p className="text-slate-400 mt-4 text-lg">
+          Displaying {scores.length} scores • Page {currentPage} of {numPages}
+        </p>
       </main>
     </div>
   );
