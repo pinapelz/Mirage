@@ -3,8 +3,9 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { NavBar } from "../components/NavBar";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
-import ScoreDisplay from "../components/tables/GenericScoreTable";
-
+import ScoreDisplay from "../components/displays/GenericScoreDisplay";
+import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
+// TODO: selector for PB/Recent
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -17,8 +18,8 @@ const Score = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
-  const [sortField, setSortField] = useState<SortField>("timestamp");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [sortField, setSortField] = useState<SortField>("");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   const gameName =
     new URLSearchParams(window.location.search).get("game") || "dancerush";
@@ -50,6 +51,8 @@ const Score = () => {
         url.searchParams.append("userId", user.id);
         url.searchParams.append("internalGameName", gameName);
         url.searchParams.append("pageNum", pageNum.toString());
+        url.searchParams.append("sortKey", 'timestamp');
+        url.searchParams.append("direction", "asc");
 
         const response = await fetch(url.toString());
         if (!response.ok) throw new Error("Failed to fetch scores");
@@ -134,7 +137,17 @@ const Score = () => {
         </div>
 
         {(() => {
-          switch (viewMode) {
+          switch (gameName) {
+            case "dancerush":
+              return (
+                <DancerushScoreDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                />
+              );
             default:
               return (
                 <ScoreDisplay
