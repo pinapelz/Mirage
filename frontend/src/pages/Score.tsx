@@ -9,6 +9,8 @@ import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay"
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
+import { getFilterOptions } from "../types/constants";
+
 const Score = () => {
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
@@ -36,33 +38,24 @@ const Score = () => {
   };
 
   const renderRequestFilterMenu = () => {
-    if (gameName === "dancerush") {
-      const filterOptions = [
-        { value: "timestamp", label: "Recent" },
-        { value: "score", label: "Score" },
-        { value: "lamp", label: "Rank" },
-        { value: "lamo_diff", label: "Difficulty" },
-      ];
-
-      return (
-        <div className="flex items-center space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
-          {filterOptions.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => setRequestOrder(option.value)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                requestOrder === option.value
-                  ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
-                  : "text-slate-300 hover:text-white hover:bg-slate-800/50"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      );
-    }
-    return null;
+    const filterOptions = getFilterOptions(gameName);
+    return (
+      <div className="flex items-center space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
+        {filterOptions.map((option) => (
+          <button
+            key={option.value}
+            onClick={() => setRequestOrder(option.value)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              requestOrder === option.value
+                ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
+                : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+            }`}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    );
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -167,9 +160,6 @@ const Score = () => {
           {/* Filter Menu */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">
-              <span className="text-slate-300 text-sm font-medium">
-                Sort by:
-              </span>
               {renderRequestFilterMenu()}
             </div>
           </div>
