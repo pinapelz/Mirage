@@ -1,4 +1,5 @@
 import React from "react";
+import { globalSkipKeys } from "../../types/constants";
 
 interface Score {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,13 +54,6 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     time: "Time",
   };
 
-  const skipKeys = [
-    "id",
-    "internalname",
-    "internalName",
-    "gameInternalName",
-    "userId",
-  ];
   const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
@@ -165,7 +159,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
   const getScoreEntries = (score: Score) => {
     const entries = Object.entries(score).filter(
-      ([key]) => !skipKeys.includes(key),
+      ([key]) => !globalSkipKeys.includes(key),
     );
 
     const primary = entries.filter(([key]) => primaryKeys.includes(key));
@@ -224,7 +218,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
   // Get all possible keys for table headers
   const allKeys = Array.from(
     new Set(scores.flatMap((score) => Object.keys(score))),
-  ).filter((key) => !skipKeys.includes(key));
+  ).filter((key) => !globalSkipKeys.includes(key));
 
   // Prioritize important keys for table display
   const tableKeys = [

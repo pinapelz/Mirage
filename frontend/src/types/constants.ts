@@ -4,6 +4,15 @@ export const EamuseImportInfo: Record<string, { scorePage: string }> = {
   },
 };
 
+export const globalSkipKeys = [
+  "id",
+  "internalname",
+  "internalName",
+  "gameInternalName",
+  "userId",
+  "chartId"
+];
+
 export function getFilterOptions(game: string): { value: string; label: string }[] {
   switch (game) {
     case "dancerush":

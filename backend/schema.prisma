@@ -30,14 +30,26 @@ model Game {
   formattedName  String  @unique
   description    String
   scores Score[]
+  charts Charts[]
 }
 
 model Score {
-  id     Int  @id @default(autoincrement())
+  id               Int     @id @default(autoincrement())
   gameInternalName String
-  userId Int
-  timestamp BigInt //in UNIX milliseconds
-  data   Json
-  game   Game @relation(fields: [gameInternalName], references: [internalName])
-  user   User @relation(fields: [userId], references: [id])
+  chartId          String
+  userId           Int
+  timestamp        BigInt // in UNIX milliseconds
+  data             Json
+  game   Game   @relation(fields: [gameInternalName], references: [internalName])
+  user   User   @relation(fields: [userId], references: [id])
+  chart  Charts @relation(fields: [chartId], references: [chartId])
+}
+
+model Charts {
+  chartId          String  @id // platform-wide unique hash
+  gameInternalName String
+  title        String
+  artist           String
+  game   Game   @relation(fields: [gameInternalName], references: [internalName])
+  scores Score[]
 }

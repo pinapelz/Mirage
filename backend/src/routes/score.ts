@@ -1,6 +1,7 @@
 import express from "express";
 import { prisma } from "../config/db";
 import { PAGE_SIZE } from "../config/constants";
+import crypto from "crypto";
 
 export const handleScoreUpload = async (
   req: express.Request,
@@ -42,6 +43,10 @@ export const handleScoreUpload = async (
     let skippedCount = 0;
 
     for (const scoreData of scoresArray) {
+      const chartIdHash = crypto
+        .createHash("sha1")
+        .update(`${internalGameName}${scoreData.title}${scoreData.artist}`)
+        .digest("hex");
       // Check if exact same score data already exists
       const existingScore = await prisma.score.findFirst({
         where: {
@@ -56,9 +61,26 @@ export const handleScoreUpload = async (
       if (existingScore) {
         skippedCount++;
       } else {
+        const chartExists = await prisma.charts.findFirst({
+          where: {
+            gameInternalName: internalGameName,
+            chartId: chartIdHash,
+          },
+        });
+        if(!chartExists){
+          await prisma.charts.create({
+            data: {
+              gameInternalName: internalGameName,
+              chartId: chartIdHash,
+              title: scoreData.title,
+              artist: scoreData.artist,
+            },
+          });
+        }
         scoresToCreate.push({
           gameInternalName: internalGameName,
           userId: userId,
+          chartId: chartIdHash,
           timestamp: scoreData.timestamp,
           data: scoreData,
         });

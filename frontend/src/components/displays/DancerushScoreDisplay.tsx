@@ -1,4 +1,5 @@
 import React from "react";
+import { globalSkipKeys } from "../../types/constants";
 import dancerushEasyImg from "../../assets/games/dancerush/easy.webp";
 import dancerushNormalImg from "../../assets/games/dancerush/normal.webp";
 
@@ -41,13 +42,6 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     miss: "Miss",
   };
 
-  const skipKeys = [
-    "id",
-    "internalname",
-    "internalName",
-    "gameInternalName",
-    "userId",
-  ];
   const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
@@ -169,7 +163,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
   const getScoreEntries = (score: Score) => {
     const entries = Object.entries(score).filter(
-      ([key]) => !skipKeys.includes(key),
+      ([key]) => !globalSkipKeys.includes(key),
     );
 
     const primary = entries.filter(([key]) => primaryKeys.includes(key));
@@ -228,7 +222,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   // Get all possible keys for table headers
   const allKeys = Array.from(
     new Set(scores.flatMap((score) => Object.keys(score))),
-  ).filter((key) => !skipKeys.includes(key));
+  ).filter((key) => !globalSkipKeys.includes(key));
 
   // Prioritize important keys for table display
   const tableKeys = [
