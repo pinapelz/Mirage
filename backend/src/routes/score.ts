@@ -110,6 +110,36 @@ export const handleScoreUpload = async (
   }
 };
 
+export const handleScoreDeletion = async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  try {
+    const { userId, internalGameName, scoreId } = req.query;
+    if (!userId || !internalGameName || !scoreId) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+
+    const userIdNumber = parseInt(userId as string);
+    const scoreIdNumber = parseInt(scoreId as string);
+
+    await prisma.score.deleteMany({
+      where: {
+        userId: userIdNumber,
+        gameInternalName: internalGameName as string,
+        id: scoreIdNumber,
+      },
+    });
+
+    res.status(200).json({ message: "Scores deleted successfully" });
+  } catch (error) {
+    console.error("Score deletion endpoint error:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Unable to delete scores" });
+  }
+};
+
 export const handleGetScores = async (
   req: express.Request,
   res: express.Response,

@@ -34,9 +34,9 @@ model Game {
 }
 
 model Score {
-  id               Int     @id @default(autoincrement())
+  id               Int     @id @default(autoincrement()) // This is the numerical score number (global)
   gameInternalName String
-  chartId          String
+  chartId          String // Refers to the unqiue chart identifier
   userId           Int
   timestamp        BigInt // in UNIX milliseconds
   data             Json

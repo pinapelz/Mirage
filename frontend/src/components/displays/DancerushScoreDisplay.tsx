@@ -15,6 +15,7 @@ interface ScoreDisplayProps {
   sortField: string;
   sortDirection: "asc" | "desc";
   onSort: (field: string) => void;
+  onDelete?: (scoreId: number) => void;
 }
 
 const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
@@ -23,6 +24,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   sortField,
   sortDirection,
   onSort,
+  onDelete,
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
@@ -242,6 +244,9 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "timestamp",
   ].filter((key) => allKeys.includes(key));
 
+  // Add actions column if delete function is provided
+  const showActions = onDelete && viewMode === "table";
+
   if (scores.length === 0) {
     return (
       <div className="text-center py-16">
@@ -374,13 +379,18 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
                   )}
                 </th>
               ))}
+              {showActions && (
+                <th className="px-4 py-3 text-left text-slate-300 font-medium w-16">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/50">
             {sortedScores.map((score, index) => (
               <tr
                 key={score.id || index}
-                className="hover:bg-slate-800/30 transition-colors"
+                className="hover:bg-slate-800/30 transition-colors group"
               >
                 {tableKeys.map((key) => (
                   <td key={key} className="px-4 py-3">
@@ -411,6 +421,19 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
                     )}
                   </td>
                 ))}
+                {showActions && (
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => onDelete(score.id)}
+                      className="text-red-400 hover:text-red-300 opacity-100 transition-opacity duration-200 p-1 rounded bg-red-500/10"
+                      title="Delete score"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

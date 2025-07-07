@@ -5,7 +5,6 @@ import { NavBar } from "../components/NavBar";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
-// TODO: selector for PB/Recent
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -79,7 +78,7 @@ const Score = () => {
         url.searchParams.append("sortKey", requestOrder);
         url.searchParams.append("direction", "asc");
 
-        const response = await fetch(url.toString());
+        const response = await fetch(url.toString(), {credentials: 'include'});
         if (!response.ok) throw new Error("Failed to fetch scores");
         const data = await response.json();
         const flattened = data.scores.map(flattenScoreData);
@@ -95,6 +94,33 @@ const Score = () => {
     },
     [user, gameName, requestOrder],
   );
+
+  const handleDeleteScore = async (scoreId: number) => {
+    if (!user) return;
+
+    if (!confirm("Are you sure you want to delete this score? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const url = new URL(import.meta.env.VITE_API_URL + "/scores");
+      url.searchParams.append("userId", user.id);
+      url.searchParams.append("internalGameName", gameName);
+      url.searchParams.append("scoreId", scoreId.toString());
+
+      const response = await fetch(url.toString(), {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete score");
+
+      await fetchScores(currentPage);
+    } catch (error) {
+      console.error("Failed to delete score:", error);
+      alert("Failed to delete score. Please try again.");
+    }
+  };
 
   useEffect(() => {
     if (user) fetchScores(1);
@@ -175,6 +201,7 @@ const Score = () => {
                   sortField={sortField}
                   sortDirection={sortDirection}
                   onSort={handleSort}
+                  onDelete={handleDeleteScore}
                 />
               );
             default:
@@ -185,6 +212,7 @@ const Score = () => {
                   sortField={sortField}
                   sortDirection={sortDirection}
                   onSort={handleSort}
+                  onDelete={handleDeleteScore}
                 />
               );
           }
