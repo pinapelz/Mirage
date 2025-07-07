@@ -7,6 +7,7 @@ interface Score {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
   timestamp: string | number;
+  username?: string;
 }
 
 interface ScoreDisplayProps {
@@ -16,6 +17,8 @@ interface ScoreDisplayProps {
   sortDirection: "asc" | "desc";
   onSort: (field: string) => void;
   onDelete?: (scoreId: number) => void;
+  showUsername?: boolean;
+  hideTitleArtist?: boolean;
 }
 
 const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
@@ -25,6 +28,8 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   sortDirection,
   onSort,
   onDelete,
+  showUsername = false,
+  hideTitleArtist = false,
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
@@ -42,6 +47,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     good: "Good",
     bad: "Bad",
     miss: "Miss",
+    username: "Username",
   };
 
   const primaryKeys = ["title", "artist", "song"];
@@ -228,9 +234,8 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
   // Prioritize important keys for table display
   const tableKeys = [
-    "title",
-    "song",
-    "artist",
+    ...(hideTitleArtist ? [] : ["title", "song", "artist"]),
+    ...(showUsername ? ["username"] : []),
     "score",
     "difficulty",
     "lamp",
@@ -277,12 +282,21 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
               {/* Primary Info */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
-                    {score.title || score.song || "Unknown Title"}
-                  </h3>
-                  {score.artist && (
-                    <p className="text-slate-400 text-sm break-words leading-tight">
-                      {score.artist}
+                  {!hideTitleArtist && (
+                    <>
+                      <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
+                        {score.title || score.song || "Unknown Title"}
+                      </h3>
+                      {score.artist && (
+                        <p className="text-slate-400 text-sm break-words leading-tight">
+                          {score.artist}
+                        </p>
+                      )}
+                    </>
+                  )}
+                  {showUsername && score.username && (
+                    <p className="text-slate-500 text-xs break-words leading-tight">
+                      by {score.username}
                     </p>
                   )}
                 </div>
@@ -412,9 +426,13 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
                             : score[key],
                         ).toLocaleDateString()}
                       </span>
+                    ) : key === "username" ? (
+                      <span className="text-violet-400 text-sm font-medium">
+                        {score[key] || "Unknown"}
+                      </span>
                     ) : (
                       <span
-                        className={`${key === "title" || key === "song" ? "text-white font-medium" : key === "score" ? "text-white font-medium" : "text-slate-300"}`}
+                        className={`${(key === "title" || key === "song") && !hideTitleArtist ? "text-white font-medium" : key === "score" ? "text-white font-medium" : "text-slate-300"}`}
                       >
                         {renderValue(score[key], key)}
                       </span>

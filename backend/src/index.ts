@@ -56,6 +56,7 @@ app.get('/api/supportedGames', gameRoutes.handleGetSupportedGames);
 app.post('/api/uploadScore', requireAuth, scoreRoutes.handleScoreUpload);
 app.get('/api/scores', requireAuth, scoreRoutes.handleGetScores);
 app.delete('/api/scores', requireAuth, scoreRoutes.handleScoreDeletion);
+app.get('/api/scores/:chartId', requireAuth, scoreRoutes.handleGetScoresByChartId);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

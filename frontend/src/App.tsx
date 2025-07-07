@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Import from "./pages/Import";
 import Home from "./pages/Home";
 import Score from "./pages/Score";
+import Chart from "./pages/Chart";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/import" element={<Import />} />
         <Route path="/home" element={<Home />} />
         <Route path="/score" element={<Score />} />
+        <Route path="/chart" element={<Chart />} />
       </Routes>
     </AuthProvider>
   );

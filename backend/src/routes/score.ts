@@ -67,7 +67,7 @@ export const handleScoreUpload = async (
             chartId: chartIdHash,
           },
         });
-        if(!chartExists){
+        if (!chartExists) {
           await prisma.charts.create({
             data: {
               gameInternalName: internalGameName,
@@ -145,57 +145,114 @@ export const handleGetScores = async (
   res: express.Response,
 ) => {
   try {
-    const { userId, internalGameName, pageNum, sortKey, direction } = req.query;
+    const { userId, internalGameName, pageNum, sortKey, direction, pbOnly } =
+      req.query;
     if (!userId || !internalGameName || !pageNum) {
       return res.status(400).json({ error: "Missing required parameters" });
     }
-
     const pageNumber = parseInt(pageNum as string);
     const gameInternalName = internalGameName as string;
     const userIdNumber = parseInt(userId as string);
     const sortKeyString = (sortKey as string) || "timestamp";
     const directionString =
       (direction as string)?.toLowerCase() === "asc" ? "asc" : "desc";
+    const pbOnlyFlag = pbOnly === "true";
 
-    const num_pages = Math.ceil(
-      (await prisma.score.count({
-        where: {
-          gameInternalName,
-          userId: userIdNumber,
-        },
-      })) / PAGE_SIZE,
-    );
+    if (
+      directionString &&
+      directionString !== "asc" &&
+      directionString !== "desc"
+    ) {
+      return res.status(400).json({ error: "Invalid direction parameter" });
+    }
 
     let scores;
+    let totalScores;
 
-    if (sortKeyString === "timestamp") {
-      scores = await prisma.score.findMany({
+    if (pbOnlyFlag) {
+      // For pbOnly, we need to get the best score for each chart
+      if (sortKeyString === "timestamp") {
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT DISTINCT ON ("chartId") *
+          FROM "Score"
+          WHERE "gameInternalName" = $1 AND "userId" = $2
+          ORDER BY "chartId", "timestamp" ${directionString.toUpperCase()}
+          OFFSET $3
+          LIMIT $4
+          `,
+          gameInternalName,
+          userIdNumber,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      } else {
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT DISTINCT ON ("chartId") *
+          FROM "Score"
+          WHERE "gameInternalName" = $1 AND "userId" = $2
+          ORDER BY "chartId", (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+          OFFSET $3
+          LIMIT $4
+          `,
+          gameInternalName,
+          userIdNumber,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      }
+
+      // Count distinct charts for pagination
+      const chartCountResult = await prisma.$queryRawUnsafe<any[]>(
+        `
+        SELECT COUNT(DISTINCT "chartId") as count
+        FROM "Score"
+        WHERE "gameInternalName" = $1 AND "userId" = $2
+        `,
+        gameInternalName,
+        userIdNumber,
+      );
+      totalScores = Number(chartCountResult[0]?.count || 0);
+    } else {
+      totalScores = await prisma.score.count({
         where: {
           gameInternalName,
           userId: userIdNumber,
         },
-        orderBy: {
-          timestamp: directionString,
-        },
-        skip: (pageNumber - 1) * PAGE_SIZE,
-        take: PAGE_SIZE,
       });
-    } else {
-      // everything else attempt to rawsql it
-      scores = await prisma.$queryRawUnsafe<any[]>(
-        `
-        SELECT * FROM "Score"
-        WHERE "gameInternalName" = $1 AND "userId" = $2
-        ORDER BY (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-        OFFSET $3
-        LIMIT $4
-      `,
-        gameInternalName,
-        userIdNumber,
-        (pageNumber - 1) * PAGE_SIZE,
-        PAGE_SIZE,
-      );
+
+      if (sortKeyString === "timestamp") {
+        scores = await prisma.score.findMany({
+          where: {
+            gameInternalName,
+            userId: userIdNumber,
+          },
+          orderBy: {
+            timestamp: directionString,
+          },
+          skip: (pageNumber - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+        });
+      } else {
+        // everything else attempt to rawsql it
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT * FROM "Score"
+          WHERE "gameInternalName" = $1 AND "userId" = $2
+          ORDER BY (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+          OFFSET $3
+          LIMIT $4
+        `,
+          gameInternalName,
+          userIdNumber,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      }
     }
+
+    const num_pages = Math.ceil(totalScores / PAGE_SIZE);
     if (!scores) {
       return res.status(404).json({
         error:
@@ -206,6 +263,147 @@ export const handleGetScores = async (
 
     const safeScores = scores.map((score) => ({
       ...score,
+      timestamp:
+        typeof score.timestamp === "bigint"
+          ? Number(score.timestamp)
+          : score.timestamp,
+    }));
+
+    res.status(200).json({
+      scores: safeScores,
+      num_pages,
+    });
+  } catch (error) {
+    console.error("Failed to fetch scores:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Unable to fetch scores" });
+  }
+};
+
+
+export const handleGetScoresByChartId = async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  try {
+    const { chartId } = req.params;
+    const { sortKey, direction, pageNum, pbOnly } = req.query;
+    const chartIdString = chartId as string;
+    const pageNumber = parseInt(pageNum as string);
+    const sortKeyString = (sortKey as string) || "timestamp";
+    const directionString =
+      (direction as string)?.toLowerCase() === "asc" ? "asc" : "desc";
+    const pbOnlyFlag = pbOnly === "true";
+    if (
+      directionString &&
+      directionString !== "asc" &&
+      directionString !== "desc"
+    ) {
+      return res.status(400).json({ error: "Invalid direction parameter" });
+    }
+
+    let scores;
+    let totalScores;
+
+    if (pbOnlyFlag) {
+      if (sortKeyString === "timestamp") {
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT DISTINCT ON (s."userId") s.*, u.username
+          FROM "Score" s
+          JOIN "User" u ON s."userId" = u.id
+          WHERE s."chartId" = $1
+          ORDER BY s."userId", s."timestamp" ${directionString.toUpperCase()}
+          OFFSET $2
+          LIMIT $3
+          `,
+          chartIdString,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      } else {
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT DISTINCT ON (s."userId") s.*, u.username
+          FROM "Score" s
+          JOIN "User" u ON s."userId" = u.id
+          WHERE s."chartId" = $1
+          ORDER BY s."userId", (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+          OFFSET $2
+          LIMIT $3
+          `,
+          chartIdString,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      }
+
+      // Count distinct users for pagination
+      const userCountResult = await prisma.$queryRawUnsafe<any[]>(
+        `
+        SELECT COUNT(DISTINCT "userId") as count
+        FROM "Score"
+        WHERE "chartId" = $1
+        `,
+        chartIdString,
+      );
+      totalScores = Number(userCountResult[0]?.count || 0);
+    } else {
+      totalScores = await prisma.score.count({
+        where: {
+          chartId: chartIdString,
+        },
+      });
+
+      if (sortKeyString === "timestamp") {
+        scores = await prisma.score.findMany({
+          where: {
+            chartId: chartIdString,
+          },
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+          orderBy: {
+            timestamp: directionString,
+          },
+          skip: (pageNumber - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+        });
+      } else {
+        // everything else attempt to rawsql it
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT s.*, u.username FROM "Score" s
+          JOIN "User" u ON s."userId" = u.id
+          WHERE s."chartId" = $1
+          ORDER BY (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+          OFFSET $2
+          LIMIT $3
+        `,
+          chartIdString,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      }
+    }
+
+    const num_pages = Math.ceil(totalScores / PAGE_SIZE);
+    if (!scores) {
+      return res.status(404).json({
+        error:
+          "No scores found. Either no scores exist or the sortKey provided is invalid for the game, sortKey: " +
+          sortKeyString,
+      });
+    }
+
+    const safeScores = scores.map((score) => ({
+      ...score,
+      username: score.user?.username || score.username,
       timestamp:
         typeof score.timestamp === "bigint"
           ? Number(score.timestamp)
