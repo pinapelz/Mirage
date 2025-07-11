@@ -1,7 +1,9 @@
 import React from "react";
+import {Link} from "react-router";
 import { globalSkipKeys } from "../../types/constants";
 import dancerushEasyImg from "../../assets/games/dancerush/easy.webp";
 import dancerushNormalImg from "../../assets/games/dancerush/normal.webp";
+import SHA1 from "crypto-js/sha1";
 
 interface Score {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -273,7 +275,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { primary, mainStats, expandable, others, timestamp } =
             getScoreEntries(score);
-
+          const chartIdHash = SHA1(`dancerush${score.title}${score.artist}`).toString();
           return (
             <div
               key={score.id || index}
@@ -283,7 +285,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   {!hideTitleArtist && (
-                    <>
+                    <Link to={`/chart?chartId=${chartIdHash}`}>
                       <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
                         {score.title || score.song || "Unknown Title"}
                       </h3>
@@ -292,7 +294,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
                           {score.artist}
                         </p>
                       )}
-                    </>
+                    </Link>
                   )}
                   {showUsername && score.username && (
                     <p className="text-slate-500 text-xs break-words leading-tight">

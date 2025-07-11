@@ -1,4 +1,6 @@
 import React from "react";
+import SHA1 from "crypto-js/sha1";
+import { Link } from "react-router";
 import { globalSkipKeys } from "../../types/constants";
 
 interface Score {
@@ -73,6 +75,8 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "grade",
   ];
   const expandableKeys = ["judgements", "optional"];
+  // get ?game=
+  const internalGameName =new URLSearchParams(window.location.search).get("game") || "dancerush";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
@@ -266,6 +270,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
+          const chartIdHash = SHA1(`${internalGameName}${score.title}${score.artist}`).toString();
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { primary, mainStats, expandable, others, timestamp } =
             getScoreEntries(score);
@@ -279,7 +284,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   {!hideTitleArtist && (
-                    <>
+                    <Link to={`/chart?chartId=${chartIdHash}`}>
                       <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
                         {score.title || score.song || "Unknown Title"}
                       </h3>
@@ -288,7 +293,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                           {score.artist}
                         </p>
                       )}
-                    </>
+                    </Link>
                   )}
                   {showUsername && score.username && (
                     <p className="text-slate-500 text-xs break-words leading-tight">
