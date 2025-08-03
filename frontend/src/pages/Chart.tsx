@@ -5,6 +5,7 @@ import { NavBar } from "../components/NavBar";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
+import SongInfoDisplay from "../components/modals/SongInfoDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -22,6 +23,7 @@ const Chart = () => {
   const [sortField, setSortField] = useState<SortField>("");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [requestOrder, setRequestOrder] = useState<string>("timestamp");
+
   const chartIdHash = new URLSearchParams(window.location.search).get("chartId") || "";
   if (!chartIdHash) {
     navigate("/home");
@@ -130,16 +132,12 @@ const Chart = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
       <NavBar user={user} handleLogout={handleLogout} currentPage="score" />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <SongInfoDisplay
+          scores={scores}
+        />
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
-                {scores.length === 0 ? "Unknown Chart" : scores[0].title}
-              </h1>
-              <h2 className="text-xl text-slate-300 mt-2">
-                {scores.length === 0 ? "Unknown Artist" : scores[0].artist}
-              </h2>
-            </div>
+            <div className="flex-1"/>
             <div className="flex items-center space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
               <button
                 onClick={() => setViewMode("cards")}
@@ -224,6 +222,7 @@ const Chart = () => {
           Displaying {scores.length} scores • Page {currentPage} of {numPages}
         </p>
       </main>
+
     </div>
   );
 };
