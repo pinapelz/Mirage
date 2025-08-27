@@ -3,6 +3,8 @@ import {Link} from "react-router";
 import { globalSkipKeys } from "../../types/constants";
 import dancerushEasyImg from "../../assets/games/dancerush/easy.webp";
 import dancerushNormalImg from "../../assets/games/dancerush/normal.webp";
+import p1_img from "../../assets/games/dancerush/1_p.webp";
+import p2_img from "../../assets/games/dancerush/2_p.webp";
 import SHA1 from "crypto-js/sha1";
 
 interface Score {
@@ -50,6 +52,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     bad: "Bad",
     miss: "Miss",
     username: "Username",
+    num_players: "Players"
   };
 
   const primaryKeys = ["title", "artist", "song"];
@@ -142,13 +145,13 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     }
 
     if(key === "diff_lamp"){
-      return <span className="">
+      return <span>
         <img src={value == "EASY" ? dancerushEasyImg : dancerushNormalImg} alt={value} />
       </span>;
     }
 
     if(key === "lamp"){
-       return <span className=" px-2 py-1 rounded-full">{
+       return <span className="px-2 py-1 rounded-full">{
          (() => {
            switch(value){
              case 1:
@@ -167,6 +170,13 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
          })()
        }</span>;
     }
+
+    if(key === "num_players"){
+      return <span>
+        <img src={value == 1 ? p1_img : p2_img} alt={value + " player"} />
+      </span>
+    }
+
 
     return <span>{formatValue(value, key)}</span>;
   };
@@ -248,6 +258,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "judgements",
     "maxCombo",
     "combo",
+    "num_players",
     "timestamp",
   ].filter((key) => allKeys.includes(key));
 
@@ -307,7 +318,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
               {/* Main Stats */}
               {mainStats.length > 0 && (
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                  {mainStats.slice(0, 4).map(([key, value]) => (
+                  {mainStats.slice(0, 5).map(([key, value]) => (
                     <div key={key} className="bg-slate-800/50 rounded-lg p-3">
                       <p className="text-slate-400 text-xs uppercase tracking-wide mb-1">
                         {getDisplayName(key)}

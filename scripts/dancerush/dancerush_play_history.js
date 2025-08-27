@@ -89,17 +89,19 @@
             let mirage = {
                 meta: {
                     game: "DANCERUSH STARDOM",
-                    playtype: "Single",
+                    playtype: "Singl2e",
                     service: "e-amusement PLAY HISTORY",
                 },
             };
             const remappedList = play_hist.map((entry) => {
                 const p_judgements = getCorrectPlayerJudgements(data.data.easite_get_playerdata.userid.code, entry)
                 const diff = getDifficulty(entry.music_type, song_db[entry.music_id].difficulty)
+                const numPlayers = (entry.p1 && entry.p2) ? 2 : 1;
                 return {
                     title: song_db[entry.music_id].info.title_name,
                     artist: song_db[entry.music_id].info.artist_name,
                     diff_lamp: diff.lamp,
+                    num_players: numPlayers,
                     score: entry.score,
                     lamp: entry.rank,
                     difficulty: diff.difficulty,

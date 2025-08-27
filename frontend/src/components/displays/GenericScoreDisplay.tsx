@@ -62,6 +62,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     date: "Date",
     time: "Time",
     username: "Username",
+    num_players: "Players"
   };
 
   const primaryKeys = ["title", "artist", "song"];
