@@ -10,6 +10,7 @@ import * as authRoutes from './routes/auth';
 import * as userRoutes from './routes/user';
 import * as gameRoutes from './routes/game';
 import * as scoreRoutes from './routes/score';
+import * as adminRoutes from './routes/admin';
 
 const app = express();
 const port = 5000;
@@ -57,6 +58,8 @@ app.post('/api/uploadScore', requireAuth, scoreRoutes.handleScoreUpload);
 app.get('/api/scores', requireAuth, scoreRoutes.handleGetScores);
 app.delete('/api/scores', requireAuth, scoreRoutes.handleScoreDeletion);
 app.get('/api/scores/:chartId', requireAuth, scoreRoutes.handleGetScoresByChartId);
+
+app.post('/api/admin/createGame', requireAuth, adminRoutes.handleCreateGame);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
