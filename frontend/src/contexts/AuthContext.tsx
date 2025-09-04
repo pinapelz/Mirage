@@ -4,9 +4,10 @@ import { authApi } from '../utils/authApi';
 import type { User as ApiUser, SessionResponse } from '../utils/authApi';
 
 interface User {
-  id: string;
+  id: number;
   username: string;
   email: string;
+  isAdmin: boolean;
 }
 
 interface AuthContextType {
@@ -40,9 +41,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isAuthenticated = user !== null;
 
   const transformApiUser = (apiUser: ApiUser): User => ({
-    id: apiUser.id.toString(),
+    id: apiUser.id,
     username: apiUser.username,
     email: apiUser.email,
+    isAdmin: apiUser.isAdmin,
   });
 
   const checkAuth = async () => {

@@ -7,13 +7,9 @@ export const handleCreateGame = async (req: express.Request, res: express.Respon
       return res.status(401).json({ error: 'Authentication required' });
     }
 
-    if (req.session.userId !== 1){
-      return res.status(403).json({ error: 'Unauthorized. You are not the admin of this instance' });
-    }
-
     const user = await prisma.user.findUnique({
       where: { id: req.session.userId },
-      select: { id: true, username: true, email: true }
+      select: { id: true, username: true, isAdmin: true }
     });
 
     if (!user) {
@@ -21,6 +17,10 @@ export const handleCreateGame = async (req: express.Request, res: express.Respon
         if (err) console.error('Session destroy error:', err);
       });
       return res.status(401).json({ error: 'Invalid session' });
+    }
+
+    if (user.id !== 1 && !user.isAdmin) {
+      return res.status(403).json({ error: 'Unauthorized. You are not an admin of this instance' });
     }
     const { gameInternalName, gameFormattedName, gameDescription } = req.body;
 
