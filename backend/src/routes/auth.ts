@@ -34,6 +34,7 @@ export const handleRegistration = async (req: express.Request, res: express.Resp
         password: hashedPassword,
         salt,
         email,
+        isAdmin: false
       }
     });
 

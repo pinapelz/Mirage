@@ -4,8 +4,15 @@ import { prisma } from '../config/db';
 
 export const handleMeRoute = async (req: express.Request, res: express.Response) => {
   try {
-    const user = (req as any).user;
-    res.json(user);
+    if (!req.session.userId) {
+      return res.status(403).json({ error: 'Not Authenticated' });
+    }
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: req.session.userId },
+      select: { id: true, username: true, isAdmin: true }
+    });
+    const isAdmin = user.id === 1 || user.isAdmin;
+    res.json({user, isAdmin});
   } catch (error) {
     console.error('Me endpoint error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -20,7 +27,7 @@ export const handleGetCurrentSession =  async (req: express.Request, res: expres
 
     const user = await prisma.user.findUnique({
       where: { id: req.session.userId },
-      select: { id: true, username: true, email: true }
+      select: { id: true, username: true, isAdmin: true }
     });
 
     if (!user) {
