@@ -39,12 +39,12 @@ const Score = () => {
   const renderRequestFilterMenu = () => {
     const filterOptions = getFilterOptions(gameName);
     return (
-      <div className="flex items-center space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
+      <div className="flex flex-wrap items-center gap-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
         {filterOptions.map((option) => (
           <button
             key={option.value}
             onClick={() => setRequestOrder(option.value)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
               requestOrder === option.value
                 ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
                 : "text-slate-300 hover:text-white hover:bg-slate-800/50"
@@ -153,16 +153,16 @@ const Score = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
       <NavBar user={user} handleLogout={handleLogout} currentPage="score" />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <div className="mb-6 sm:mb-12">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
               Your Scores
             </h1>
-            <div className="flex items-center space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
+            <div className="flex items-center space-x-1 sm:space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
               <button
                 onClick={() => setViewMode("cards")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
                   viewMode === "cards"
                     ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
                     : "text-slate-300 hover:text-white hover:bg-slate-800/50"
@@ -172,7 +172,7 @@ const Score = () => {
               </button>
               <button
                 onClick={() => setViewMode("table")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
                   viewMode === "table"
                     ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
                     : "text-slate-300 hover:text-white hover:bg-slate-800/50"
@@ -184,8 +184,8 @@ const Score = () => {
           </div>
 
           {/* Filter Menu */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="w-full sm:w-auto">
               {renderRequestFilterMenu()}
             </div>
           </div>
@@ -219,13 +219,13 @@ const Score = () => {
         })()}
 
         {numPages > 1 && (
-          <div className="flex justify-center mt-12">
-            <div className="flex space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-2 border border-slate-800/50">
+          <div className="flex justify-center mt-8 sm:mt-12">
+            <div className="flex flex-wrap gap-1 sm:gap-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-2 border border-slate-800/50 max-w-full overflow-x-auto">
               {[...Array(numPages)].map((_, i) => (
                 <button
                   key={i}
                   onClick={() => fetchScores(i + 1)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
                     currentPage === i + 1
                       ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
                       : "text-slate-300 hover:text-white hover:bg-slate-800/50"
@@ -237,9 +237,14 @@ const Score = () => {
             </div>
           </div>
         )}
-        <p className="text-slate-400 mt-4 text-lg">
+        <p className="text-slate-400 mt-4 text-sm sm:text-base md:text-lg text-center">
           Displaying {scores.length} scores • Page {currentPage} of {numPages}
         </p>
+        {viewMode === "table" && (
+          <p className="text-slate-500 mt-2 text-xs text-center md:hidden">
+            ← Swipe horizontally to see more →
+          </p>
+        )}
       </main>
     </div>
   );

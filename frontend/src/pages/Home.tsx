@@ -75,22 +75,22 @@ const Home = () => {
       <NavBar user={user} handleLogout={handleLogout} currentPage="home"/>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-slate-400">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-sm sm:text-base text-slate-400">
             Track your rhythm game progress and performance
           </p>
         </div>
 
         {/* Supported Games */}
-        <div className="mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-8 sm:mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {supportedGames.map((game) => (
               <div
                 key={game.internalName}
-                className="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden hover:border-violet-500 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 group cursor-pointer"
+                className="bg-slate-900 rounded-lg sm:rounded-xl border border-slate-700 overflow-hidden hover:border-violet-500 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 group cursor-pointer"
                 onClick={() => navigate(`/score?game=${game.internalName}`)}
               >
                 <div className="aspect-video bg-slate-800 relative overflow-hidden">
@@ -120,11 +120,11 @@ const Home = () => {
                     </div>
                   )}
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-violet-400 transition-colors">
+                <div className="p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 group-hover:text-violet-400 transition-colors">
                     {game.formattedName}
                   </h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">
+                  <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
                     {game.description}
                   </p>
                 </div>

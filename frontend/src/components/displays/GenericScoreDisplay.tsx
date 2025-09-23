@@ -269,7 +269,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
   if (viewMode === "cards") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {sortedScores.map((score, index) => {
           const chartIdHash = SHA1(`${internalGameName}${score.title}${score.artist}`).toString();
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -279,18 +279,18 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
           return (
             <div
               key={score.id || index}
-              className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl p-6 hover:border-violet-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10"
+              className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:border-violet-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10"
             >
               {/* Primary Info */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   {!hideTitleArtist && (
                     <Link to={`/chart?chartId=${chartIdHash}`}>
-                      <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
+                      <h3 className="text-base sm:text-lg font-semibold text-white mb-1 break-words leading-tight">
                         {score.title || score.song || "Unknown Title"}
                       </h3>
                       {score.artist && (
-                        <p className="text-slate-400 text-sm break-words leading-tight">
+                        <p className="text-slate-400 text-xs sm:text-sm break-words leading-tight">
                           {score.artist}
                         </p>
                       )}
@@ -306,13 +306,13 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
               {/* Main Stats */}
               {mainStats.length > 0 && (
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4">
                   {mainStats.slice(0, 4).map(([key, value]) => (
-                    <div key={key} className="bg-slate-800/50 rounded-lg p-3">
-                      <p className="text-slate-400 text-xs uppercase tracking-wide mb-1">
+                    <div key={key} className="bg-slate-800/50 rounded-lg p-2 sm:p-3">
+                      <p className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wide mb-1">
                         {getDisplayName(key)}
                       </p>
-                      <p className="text-white font-semibold text-lg">
+                      <p className="text-white font-semibold text-sm sm:text-lg">
                         {renderValue(value, key)}
                       </p>
                     </div>
@@ -335,7 +335,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                 <div className="mb-4">
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {others.map(([key, value]) => (
-                      <div key={key} className="flex justify-between">
+                      <div key={key} className="flex justify-between text-xs sm:text-sm">
                         <span className="text-slate-400">
                           {getDisplayName(key)}:
                         </span>
@@ -350,7 +350,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
               {/* Timestamp */}
               <div className="pt-4 border-t border-slate-800/50">
-                <p className="text-slate-500 text-xs">
+                <p className="text-slate-500 text-[10px] sm:text-xs">
                   {new Date(
                     typeof timestamp === "number" ? timestamp : timestamp,
                   ).toLocaleDateString()}{" "}
@@ -372,21 +372,22 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
   return (
     <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[1000px]">
+      <div className="overflow-x-auto relative">
+        <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-900/80 to-transparent pointer-events-none z-10"></div>
+        <table className="w-full text-sm min-w-[800px] md:min-w-[1000px]">
           <thead className="bg-slate-800/50 border-b border-slate-700/50">
             <tr>
               {tableKeys.map((key) => (
                 <th
                   key={key}
-                  className="px-4 py-3 text-left text-slate-300 font-medium"
+                  className="px-2 sm:px-4 py-2 sm:py-3 text-left text-slate-300 font-medium text-xs sm:text-sm"
                 >
                   {key === "judgements" ? (
                     <span>{getDisplayName(key)}</span>
                   ) : (
                     <button
                       onClick={() => onSort(key)}
-                      className="flex items-center space-x-2 hover:text-white transition-colors"
+                      className="flex items-center space-x-1 sm:space-x-2 hover:text-white transition-colors"
                     >
                       <span>{getDisplayName(key)}</span>
                       <SortIcon field={key} />
@@ -395,7 +396,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                 </th>
               ))}
               {showActions && (
-                <th className="px-4 py-3 text-left text-slate-300 font-medium w-16">
+                <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-slate-300 font-medium w-16 text-xs sm:text-sm">
                   Actions
                 </th>
               )}
@@ -408,10 +409,10 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                 className="hover:bg-slate-800/30 transition-colors group"
               >
                 {tableKeys.map((key) => (
-                  <td key={key} className="px-4 py-3">
+                  <td key={key} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
                     {key === "lamp" || key === "diff_lamp" ? (
                       <div className="flex items-center space-x-2">
-                        <span className="inline-block bg-slate-800/50 text-slate-200 px-2 py-1 rounded text-xs border border-slate-600">
+                        <span className="inline-block bg-slate-800/50 text-slate-200 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs border border-slate-600 whitespace-nowrap">
                           {score[key] || "No Clear"}
                         </span>
                       </div>
@@ -420,7 +421,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                         {renderValue(score[key], key, true)}
                       </div>
                     ) : key === "timestamp" ? (
-                      <span className="text-slate-400 text-xs">
+                      <span className="text-slate-400 text-[10px] sm:text-xs whitespace-nowrap">
                         {new Date(
                           typeof score[key] === "number"
                             ? score[key]
@@ -428,7 +429,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                         ).toLocaleDateString()}
                       </span>
                     ) : key === "username" ? (
-                      <span className="text-violet-400 text-sm font-medium">
+                      <span className="text-violet-400 text-xs sm:text-sm font-medium">
                         {score[key] || "Unknown"}
                       </span>
                     ) : (
@@ -441,13 +442,13 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                   </td>
                 ))}
                 {showActions && (
-                  <td className="px-4 py-3">
+                  <td className="px-2 sm:px-4 py-2 sm:py-3">
                     <button
                       onClick={() => onDelete(score.id)}
                       className="text-red-400 hover:text-red-300 opacity-100 transition-opacity duration-200 p-1 rounded bg-red-500/10"
                       title="Delete score"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>

@@ -92,8 +92,8 @@ const Import = () => {
   };
 
   const JsonUploadCard = () => (
-    <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-      <div className="w-12 h-12 bg-violet-600/20 rounded-lg flex items-center justify-center mb-4">
+    <div className="bg-slate-800 rounded-lg border border-slate-700 p-4 sm:p-6 hover:border-violet-500 transition-colors">
+      <div className="w-10 sm:w-12 h-10 sm:h-12 bg-violet-600/20 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
         <svg
           className="w-6 h-6 text-violet-400"
           fill="none"
@@ -114,7 +114,7 @@ const Import = () => {
       </p>
       <button
         onClick={() => setIsJsonModalOpen(true)}
-        className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+        className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
       >
         Upload JSON
       </button>
@@ -148,7 +148,7 @@ const Import = () => {
         </p>
         <button
           onClick={() => setIsEamusementModalOpen(true)}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
         >
           Connect e-amusement
         </button>
@@ -193,11 +193,11 @@ const Import = () => {
       <NavBar user={user} handleLogout={handleLogout} currentPage="import"/>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Import Data</h1>
-          <p className="text-slate-400">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Import Data</h1>
+          <p className="text-sm sm:text-base text-slate-400">
             Import your game scores and progress from various sources
           </p>
         </div>
@@ -224,10 +224,10 @@ const Import = () => {
         )}
 
         {/* Game Selection Card */}
-        <div className="bg-slate-900 rounded-lg border border-slate-700 p-8">
-          <div className="mb-8">
-            <h2 className="text-xl font-bold text-white mb-4">Select Game</h2>
-            <p className="text-slate-400 text-sm mb-6">
+        <div className="bg-slate-900 rounded-lg border border-slate-700 p-4 sm:p-6 lg:p-8">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">Select Game</h2>
+            <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">
               Choose the game you want to import data for
             </p>
 

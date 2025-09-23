@@ -77,7 +77,7 @@ const JsonUploadModal = ({ isOpen, onClose, onUpload, game }: JsonUploadModalPro
       />
 
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
         <div className="relative bg-slate-900 rounded-lg border border-slate-700 w-full max-w-md p-6 shadow-xl">
           {/* Header */}
           <div className="mb-6">
