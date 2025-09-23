@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Score from "./pages/Score";
 import Chart from "./pages/Chart";
 import Admin from "./pages/Admin";
+import AllScores from "./pages/AllScores";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/score" element={<Score />} />
         <Route path="/chart" element={<Chart />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/allScores" element={<AllScores />} />
       </Routes>
     </AuthProvider>
   );

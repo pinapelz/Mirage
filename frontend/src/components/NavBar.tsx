@@ -5,58 +5,40 @@ export const NavBar = ({ currentPage, user, handleLogout }: {
   user: { username: string };
   handleLogout: () => void;
 }) => {
-  const getMenuOptions = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return (
-          <>
-            <Link
-              to="/import"
-              className="text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-slate-800/50"
-            >
-              Import Data
-            </Link>
-          </>
-        );
-      case 'import':
-        return (
-          <>
-            <Link
-              to="/home"
-              className="text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-slate-800/50"
-            >
-              Home
-            </Link>
-          </>
-        );
-      case 'score':
-        return (
-          <>
-            <Link
-              to="/home"
-              className="text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-slate-800/50"
-            >
-              Home
-            </Link>
-            <Link
-              to="/import"
-              className="text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-slate-800/50"
-            >
-              Import Data
-            </Link>
-          </>
-        );
-      default:
-        return (
-          <Link
-            to="/import"
-            className="text-slate-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-slate-800/50"
-          >
-            Import Data
-          </Link>
-        );
-    }
-  };
+  const menuOptions = (
+    <>
+      <Link
+        to="/home"
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          currentPage === 'dashboard' || currentPage === 'home'
+            ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+            : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+        }`}
+      >
+        Home
+      </Link>
+      <Link
+        to="/import"
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          currentPage === 'import'
+            ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+            : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+        }`}
+      >
+        Import Data
+      </Link>
+      <Link
+        to="/allscores"
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          currentPage === 'allscores'
+            ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+            : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+        }`}
+      >
+        Community Scores
+      </Link>
+    </>
+  );
 
   return (
     <nav className="border-b border-slate-800/50 bg-slate-950/95 backdrop-blur-sm sticky top-0 z-50">
@@ -69,7 +51,7 @@ export const NavBar = ({ currentPage, user, handleLogout }: {
             <span className="text-white font-semibold text-lg">Mirage</span>
           </div>
           <div className="flex items-center space-x-4">
-            {getMenuOptions()}
+            {menuOptions}
             <span className="text-slate-300 text-sm">
               Welcome back,{" "}
               <span className="text-violet-400 font-medium">

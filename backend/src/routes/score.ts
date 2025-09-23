@@ -421,3 +421,148 @@ export const handleGetScoresByChartId = async (
       .json({ error: "Internal server error. Unable to fetch scores" });
   }
 };
+
+export const handleGetAllGameScores = async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  try {
+    const { internalGameName, pageNum, sortKey, direction, pbOnly } = req.query;
+    if (!internalGameName || !pageNum) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+
+    const pageNumber = parseInt(pageNum as string);
+    const gameInternalName = internalGameName as string;
+    const sortKeyString = (sortKey as string) || "timestamp";
+    const directionString =
+      (direction as string)?.toLowerCase() === "asc" ? "asc" : "desc";
+    const pbOnlyFlag = pbOnly === "true";
+
+    if (
+      directionString &&
+      directionString !== "asc" &&
+      directionString !== "desc"
+    ) {
+      return res.status(400).json({ error: "Invalid direction parameter" });
+    }
+
+    let scores;
+    let totalScores;
+
+    if (pbOnlyFlag) {
+      // For pbOnly, we need to get the best score for each chart for each user
+      if (sortKeyString === "timestamp") {
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT DISTINCT ON (s."chartId", s."userId") s.*, u.username
+          FROM "Score" s
+          JOIN "User" u ON s."userId" = u.id
+          WHERE s."gameInternalName" = $1
+          ORDER BY s."chartId", s."userId", s."timestamp" ${directionString.toUpperCase()}
+          OFFSET $2
+          LIMIT $3
+          `,
+          gameInternalName,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      } else {
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT DISTINCT ON (s."chartId", s."userId") s.*, u.username
+          FROM "Score" s
+          JOIN "User" u ON s."userId" = u.id
+          WHERE s."gameInternalName" = $1
+          ORDER BY s."chartId", s."userId", (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+          OFFSET $2
+          LIMIT $3
+          `,
+          gameInternalName,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      }
+
+      // Count distinct chart-user combinations for pagination
+      const combinationCountResult = await prisma.$queryRawUnsafe<any[]>(
+        `
+        SELECT COUNT(DISTINCT (s."chartId", s."userId")) as count
+        FROM "Score" s
+        WHERE s."gameInternalName" = $1
+        `,
+        gameInternalName,
+      );
+      totalScores = Number(combinationCountResult[0]?.count || 0);
+    } else {
+      totalScores = await prisma.score.count({
+        where: {
+          gameInternalName,
+        },
+      });
+
+      if (sortKeyString === "timestamp") {
+        scores = await prisma.score.findMany({
+          where: {
+            gameInternalName,
+          },
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+          orderBy: {
+            timestamp: directionString,
+          },
+          skip: (pageNumber - 1) * PAGE_SIZE,
+          take: PAGE_SIZE,
+        });
+      } else {
+        // everything else attempt to rawsql it
+        scores = await prisma.$queryRawUnsafe<any[]>(
+          `
+          SELECT s.*, u.username FROM "Score" s
+          JOIN "User" u ON s."userId" = u.id
+          WHERE s."gameInternalName" = $1
+          ORDER BY (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+          OFFSET $2
+          LIMIT $3
+        `,
+          gameInternalName,
+          (pageNumber - 1) * PAGE_SIZE,
+          PAGE_SIZE,
+        );
+      }
+    }
+
+    const num_pages = Math.ceil(totalScores / PAGE_SIZE);
+    if (!scores) {
+      return res.status(404).json({
+        error:
+          "No scores found. Either no scores exist or the sortKey provided is invalid for the game, sortKey: " +
+          sortKeyString,
+      });
+    }
+
+    const safeScores = scores.map((score) => ({
+      ...score,
+      username: score.user?.username || score.username,
+      timestamp:
+        typeof score.timestamp === "bigint"
+          ? Number(score.timestamp)
+          : score.timestamp,
+    }));
+
+    res.status(200).json({
+      scores: safeScores,
+      num_pages,
+    });
+  } catch (error) {
+    console.error("Failed to fetch all game scores:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Unable to fetch scores" });
+  }
+};
