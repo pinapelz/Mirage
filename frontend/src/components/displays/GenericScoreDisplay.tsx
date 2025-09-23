@@ -373,7 +373,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
   return (
     <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-xl overflow-hidden">
       <div className="overflow-x-auto relative">
-        <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-900/80 to-transparent pointer-events-none z-10"></div>
+        <div className="md:hidden absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-slate-900/80 to-transparent pointer-events-none z-10"></div>
         <table className="w-full text-sm min-w-[800px] md:min-w-[1000px]">
           <thead className="bg-slate-800/50 border-b border-slate-700/50">
             <tr>

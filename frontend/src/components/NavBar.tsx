@@ -52,7 +52,7 @@ export const NavBar = ({ currentPage, user, handleLogout }: {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-violet-600 to-violet-700 rounded-lg flex items-center justify-center shadow-lg">
+            <div className="w-8 h-8 bg-linear-to-r from-violet-600 to-violet-700 rounded-lg flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-sm">M</span>
             </div>
             <span className="text-white font-semibold text-lg">Mirage</span>

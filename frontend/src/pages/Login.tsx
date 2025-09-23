@@ -101,7 +101,7 @@ const Login = () => {
           {errors.general && (
             <div className="mb-6 bg-red-900/50 border border-red-700 rounded-md p-4">
               <div className="flex">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <svg
                     className="h-5 w-5 text-red-400"
                     viewBox="0 0 20 20"
