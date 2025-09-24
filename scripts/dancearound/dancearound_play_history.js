@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         DANCERUSH Mirage Scraper
+// @name         DANCEAROUND Mirage Scraper
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @description  DANCERUSH e-amusement site to Mirage import JSON
-// @match        https://p.eagate.573.jp/game/dan/1st/playdata/entrance.html*
+// @description  DANCEAROUND e-amusement site to Mirage import JSON
+// @match        https://p.eagate.573.jp/game/around/1st/playdata/index.html*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
@@ -28,43 +28,54 @@
         let difficulty, lamp;
 
         switch (fumen) {
-            case "1a":
-                difficulty = mdb.fumen_1a.difnum;
-                lamp = "NORMAL";
+            case "ADVANCED":
+                difficulty = mdb.fumens.ADVANCED.level;
+                lamp = "ADVANCED";
                 break;
-            case "1b":
-                difficulty = mdb.fumen_1b.difnum;
-                lamp = "EASY";
+            case "BASIC":
+                difficulty = mdb.fumens.BASIC.level;
+                lamp = "BASIC";
                 break;
-            case "2a":
-                difficulty = mdb.fumen_2a.difnum;
-                lamp = "NORMAL";
-                break;
-            case "2b":
-            default:
-                difficulty = mdb.fumen_2b.difnum;
-                lamp = "EASY";
+            case "MASTER":
+                difficulty = mdb.fumens.MASTER.level;
+                lamp = "MASTER";
                 break;
         }
 
         return { difficulty, lamp };
     }
-
-    function getCorrectPlayerJudgements(player_code, score_data){
-        if(!score_data.p2){
-            return score_data.p1;
-        }
-        if(player_code === score_data.p1.member_code){
-            return score_data.p1;
-        }
-        else{
-            return score_data.p2;
+    function getLampText(status) {
+        switch (status) {
+            case 0:
+                return "C";
+            case 1:
+                return "B";
+            case 2:
+                return "A";
+            case 3:
+                return "AA";
+            case 4:
+                return "AAA";
+            case 5:
+                return "AAA+";
         }
     }
 
+    function getClearStatusText(status){
+      switch(status){
+        case 1:
+          return "FAILURE";
+        case 2:
+          return "PASSED";
+        case 3:
+          return "FULL COMBO";
+        case 4:
+          return "EXC";
+      }
+    }
 
     async function fetchAndDownload() {
-        const url = "https://p.eagate.573.jp/game/dan/1st/json/pdata_getdata.html";
+        const url = "https://p.eagate.573.jp/game/around/1st/json/pdata_getdata.html";
         const payload = new URLSearchParams({
             service_kind: "play_hist",
             pdata_kind: "play_hist",
@@ -88,29 +99,29 @@
             const song_db = data.data.easite_get_playerdata.mdb;
             let mirage = {
                 meta: {
-                    game: "DANCERUSH STARDOM",
+                    game: "dancearound",
                     playtype: "Single",
                     service: "e-amusement PLAY HISTORY",
                 },
             };
             const remappedList = play_hist.map((entry) => {
-                const p_judgements = getCorrectPlayerJudgements(data.data.easite_get_playerdata.userid.code, entry)
                 const diff = getDifficulty(entry.music_type, song_db[entry.music_id].difficulty)
                 const numPlayers = (entry.p1 && entry.p2) ? 2 : 1;
                 return {
-                    title: song_db[entry.music_id].info.title_name,
-                    artist: song_db[entry.music_id].info.artist_name,
+                    title: song_db[entry.music_id].title_name,
+                    artist: song_db[entry.music_id].artist_name,
                     diff_lamp: diff.lamp,
                     num_players: numPlayers,
                     score: entry.score,
-                    lamp: entry.rank,
+                    lamp: getLampText(entry.rank),
+                    clear_status: getClearStatusText(entry.clear_status),
                     difficulty: diff.difficulty,
-                    timestamp: entry.lastplay_date,
+                    timestamp: entry.play_date,
                     judgements: {
-                        "perfect": p_judgements.perfect,
-                        "great": p_judgements.great,
-                        "good": p_judgements.good,
-                        "bad": p_judgements.bad
+                        "perfect": entry.perfect,
+                        "great": entry.great,
+                        "good": entry.good,
+                        "bad": entry.bad
                     },
                     optional: {
                         maxCombo: entry.combo,
@@ -126,7 +137,7 @@
 
             const a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = "dancerush_scores_mirage_import.json";
+            a.download = "dancearound_scores_mirage_import.json";
             a.click();
         } catch (err) {
             console.error("Fetch/download error:", err);

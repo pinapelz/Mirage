@@ -3,6 +3,37 @@ import { prisma } from "../config/db";
 import { PAGE_SIZE } from "../config/constants";
 import crypto from "crypto";
 
+// Helper function to create a CASE statement for Japanese-style grade sorting
+const createGradeCaseStatement = (sortKeyString: string, directionString: string): string => {
+  const gradeOrder = [
+    'F', 'F+',
+    'E-', 'E', 'E+',
+    'D-', 'D', 'D+',
+    'C-', 'C', 'C+',
+    'B-', 'B', 'B+',
+    'A-', 'A', 'A+',
+    'AA-', 'AA', 'AA+',
+    'AAA-', 'AAA', 'AAA+',
+    'S-', 'S', 'S+',
+    'SS-', 'SS', 'SS+',
+    'SSS-', 'SSS', 'SSS+'
+  ];
+
+  let caseStatement = `CASE `;
+  gradeOrder.forEach((grade, index) => {
+    caseStatement += `WHEN UPPER(TRIM(s.data->>'${sortKeyString}')) = '${grade}' THEN ${index} `;
+  });
+  caseStatement += `ELSE 999 END`;
+
+  if (directionString === 'desc') {
+    caseStatement += ' DESC';
+  } else {
+    caseStatement += ' ASC';
+  }
+
+  return caseStatement;
+};
+
 export const handleScoreUpload = async (
   req: express.Request,
   res: express.Response,
@@ -187,20 +218,49 @@ export const handleGetScores = async (
           PAGE_SIZE,
         );
       } else {
-        scores = await prisma.$queryRawUnsafe<any[]>(
-          `
-          SELECT DISTINCT ON ("chartId") *
-          FROM "Score"
-          WHERE "gameInternalName" = $1 AND "userId" = $2
-          ORDER BY "chartId", (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-          OFFSET $3
-          LIMIT $4
-          `,
+        // Check if we need grade-based sorting by sampling one score
+        const sampleScore = await prisma.$queryRawUnsafe<any[]>(
+          `SELECT data->>'${sortKeyString}' as value FROM "Score" WHERE "gameInternalName" = $1 AND "userId" = $2 AND data->>'${sortKeyString}' IS NOT NULL LIMIT 1`,
           gameInternalName,
-          userIdNumber,
-          (pageNumber - 1) * PAGE_SIZE,
-          PAGE_SIZE,
+          userIdNumber
         );
+
+        // If it is not a numerical value
+        const isGradeSort = sampleScore.length > 0 &&
+          sampleScore[0].value &&
+          /^[A-Z]+[+-]?$/i.test(sampleScore[0].value.trim());
+
+        if (isGradeSort) {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT DISTINCT ON ("chartId") *
+            FROM "Score"
+            WHERE "gameInternalName" = $1 AND "userId" = $2
+            ORDER BY "chartId", ${createGradeCaseStatement(sortKeyString, directionString)}
+            OFFSET $3
+            LIMIT $4
+            `,
+            gameInternalName,
+            userIdNumber,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        } else {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT DISTINCT ON ("chartId") *
+            FROM "Score"
+            WHERE "gameInternalName" = $1 AND "userId" = $2
+            ORDER BY "chartId", (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+            OFFSET $3
+            LIMIT $4
+            `,
+            gameInternalName,
+            userIdNumber,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        }
       }
 
       // Count distinct charts for pagination
@@ -235,20 +295,47 @@ export const handleGetScores = async (
           take: PAGE_SIZE,
         });
       } else {
-        // everything else attempt to rawsql it
-        scores = await prisma.$queryRawUnsafe<any[]>(
-          `
-          SELECT * FROM "Score"
-          WHERE "gameInternalName" = $1 AND "userId" = $2
-          ORDER BY (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-          OFFSET $3
-          LIMIT $4
-        `,
+        // Check if we need grade-based sorting by sampling one score
+        const sampleScore = await prisma.$queryRawUnsafe<any[]>(
+          `SELECT data->>'${sortKeyString}' as value FROM "Score" WHERE "gameInternalName" = $1 AND "userId" = $2 AND data->>'${sortKeyString}' IS NOT NULL LIMIT 1`,
           gameInternalName,
-          userIdNumber,
-          (pageNumber - 1) * PAGE_SIZE,
-          PAGE_SIZE,
+          userIdNumber
         );
+
+        const isGradeSort = sampleScore.length > 0 &&
+          sampleScore[0].value &&
+          /^[A-Z]+[+-]?$/i.test(sampleScore[0].value.trim());
+
+        if (isGradeSort) {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT * FROM "Score"
+            WHERE "gameInternalName" = $1 AND "userId" = $2
+            ORDER BY ${createGradeCaseStatement(sortKeyString, directionString)}
+            OFFSET $3
+            LIMIT $4
+          `,
+            gameInternalName,
+            userIdNumber,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        } else {
+          // everything else attempt to rawsql it
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT * FROM "Score"
+            WHERE "gameInternalName" = $1 AND "userId" = $2
+            ORDER BY (data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+            OFFSET $3
+            LIMIT $4
+          `,
+            gameInternalName,
+            userIdNumber,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        }
       }
     }
 
@@ -323,20 +410,47 @@ export const handleGetScoresByChartId = async (
           PAGE_SIZE,
         );
       } else {
-        scores = await prisma.$queryRawUnsafe<any[]>(
-          `
-          SELECT DISTINCT ON (s."userId") s.*, u.username
-          FROM "Score" s
-          JOIN "User" u ON s."userId" = u.id
-          WHERE s."chartId" = $1
-          ORDER BY s."userId", (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-          OFFSET $2
-          LIMIT $3
-          `,
-          chartIdString,
-          (pageNumber - 1) * PAGE_SIZE,
-          PAGE_SIZE,
+        // Check if we need grade-based sorting by sampling one score
+        const sampleScore = await prisma.$queryRawUnsafe<any[]>(
+          `SELECT s.data->>'${sortKeyString}' as value FROM "Score" s WHERE s."chartId" = $1 AND s.data->>'${sortKeyString}' IS NOT NULL LIMIT 1`,
+          chartIdString
         );
+
+        const isGradeSort = sampleScore.length > 0 &&
+          sampleScore[0].value &&
+          /^[A-Z]+[+-]?$/i.test(sampleScore[0].value.trim());
+
+        if (isGradeSort) {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT DISTINCT ON (s."userId") s.*, u.username
+            FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."chartId" = $1
+            ORDER BY s."userId", ${createGradeCaseStatement(sortKeyString, directionString)}
+            OFFSET $2
+            LIMIT $3
+            `,
+            chartIdString,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        } else {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT DISTINCT ON (s."userId") s.*, u.username
+            FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."chartId" = $1
+            ORDER BY s."userId", (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+            OFFSET $2
+            LIMIT $3
+            `,
+            chartIdString,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        }
       }
 
       // Count distinct users for pagination
@@ -375,20 +489,46 @@ export const handleGetScoresByChartId = async (
           take: PAGE_SIZE,
         });
       } else {
-        // everything else attempt to rawsql it
-        scores = await prisma.$queryRawUnsafe<any[]>(
-          `
-          SELECT s.*, u.username FROM "Score" s
-          JOIN "User" u ON s."userId" = u.id
-          WHERE s."chartId" = $1
-          ORDER BY (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-          OFFSET $2
-          LIMIT $3
-        `,
-          chartIdString,
-          (pageNumber - 1) * PAGE_SIZE,
-          PAGE_SIZE,
+        // Check if we need grade-based sorting by sampling one score
+        const sampleScore = await prisma.$queryRawUnsafe<any[]>(
+          `SELECT s.data->>'${sortKeyString}' as value FROM "Score" s WHERE s."chartId" = $1 AND s.data->>'${sortKeyString}' IS NOT NULL LIMIT 1`,
+          chartIdString
         );
+
+        const isGradeSort = sampleScore.length > 0 &&
+          sampleScore[0].value &&
+          /^[A-Z]+[+-]?$/i.test(sampleScore[0].value.trim());
+
+        if (isGradeSort) {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT s.*, u.username FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."chartId" = $1
+            ORDER BY ${createGradeCaseStatement(sortKeyString, directionString)}
+            OFFSET $2
+            LIMIT $3
+          `,
+            chartIdString,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        } else {
+          // everything else attempt to rawsql it
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT s.*, u.username FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."chartId" = $1
+            ORDER BY (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+            OFFSET $2
+            LIMIT $3
+          `,
+            chartIdString,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        }
       }
     }
 
@@ -468,20 +608,47 @@ export const handleGetAllGameScores = async (
           PAGE_SIZE,
         );
       } else {
-        scores = await prisma.$queryRawUnsafe<any[]>(
-          `
-          SELECT DISTINCT ON (s."chartId", s."userId") s.*, u.username
-          FROM "Score" s
-          JOIN "User" u ON s."userId" = u.id
-          WHERE s."gameInternalName" = $1
-          ORDER BY s."chartId", s."userId", (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-          OFFSET $2
-          LIMIT $3
-          `,
-          gameInternalName,
-          (pageNumber - 1) * PAGE_SIZE,
-          PAGE_SIZE,
+        // Check if we need grade-based sorting by sampling one score
+        const sampleScore = await prisma.$queryRawUnsafe<any[]>(
+          `SELECT s.data->>'${sortKeyString}' as value FROM "Score" s WHERE s."gameInternalName" = $1 AND s.data->>'${sortKeyString}' IS NOT NULL LIMIT 1`,
+          gameInternalName
         );
+
+        const isGradeSort = sampleScore.length > 0 &&
+          sampleScore[0].value &&
+          /^[A-Z]+[+-]?$/i.test(sampleScore[0].value.trim());
+
+        if (isGradeSort) {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT DISTINCT ON (s."chartId", s."userId") s.*, u.username
+            FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."gameInternalName" = $1
+            ORDER BY s."chartId", s."userId", ${createGradeCaseStatement(sortKeyString, directionString)}
+            OFFSET $2
+            LIMIT $3
+            `,
+            gameInternalName,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        } else {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT DISTINCT ON (s."chartId", s."userId") s.*, u.username
+            FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."gameInternalName" = $1
+            ORDER BY s."chartId", s."userId", (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+            OFFSET $2
+            LIMIT $3
+            `,
+            gameInternalName,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        }
       }
 
       // Count distinct chart-user combinations for pagination
@@ -520,20 +687,46 @@ export const handleGetAllGameScores = async (
           take: PAGE_SIZE,
         });
       } else {
-        // everything else attempt to rawsql it
-        scores = await prisma.$queryRawUnsafe<any[]>(
-          `
-          SELECT s.*, u.username FROM "Score" s
-          JOIN "User" u ON s."userId" = u.id
-          WHERE s."gameInternalName" = $1
-          ORDER BY (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
-          OFFSET $2
-          LIMIT $3
-        `,
-          gameInternalName,
-          (pageNumber - 1) * PAGE_SIZE,
-          PAGE_SIZE,
+        // Check if we need grade-based sorting by sampling one score
+        const sampleScore = await prisma.$queryRawUnsafe<any[]>(
+          `SELECT s.data->>'${sortKeyString}' as value FROM "Score" s WHERE s."gameInternalName" = $1 AND s.data->>'${sortKeyString}' IS NOT NULL LIMIT 1`,
+          gameInternalName
         );
+
+        const isGradeSort = sampleScore.length > 0 &&
+          sampleScore[0].value &&
+          /^[A-Z]+[+-]?$/i.test(sampleScore[0].value.trim());
+
+        if (isGradeSort) {
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT s.*, u.username FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."gameInternalName" = $1
+            ORDER BY ${createGradeCaseStatement(sortKeyString, directionString)}
+            OFFSET $2
+            LIMIT $3
+          `,
+            gameInternalName,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        } else {
+          // everything else attempt to rawsql it
+          scores = await prisma.$queryRawUnsafe<any[]>(
+            `
+            SELECT s.*, u.username FROM "Score" s
+            JOIN "User" u ON s."userId" = u.id
+            WHERE s."gameInternalName" = $1
+            ORDER BY (s.data->>'${sortKeyString}')::numeric ${directionString.toUpperCase()}
+            OFFSET $2
+            LIMIT $3
+          `,
+            gameInternalName,
+            (pageNumber - 1) * PAGE_SIZE,
+            PAGE_SIZE,
+          );
+        }
       }
     }
 
