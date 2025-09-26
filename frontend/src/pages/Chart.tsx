@@ -10,6 +10,7 @@ type SortField = string;
 type SortDirection = "asc" | "desc";
 
 import { getFilterOptions } from "../types/constants";
+import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 
 const Chart = () => {
   const { user, isLoading, logout } = useAuth();
@@ -82,6 +83,7 @@ const Chart = () => {
         url.searchParams.append("sortKey", requestOrder);
         url.searchParams.append("direction", "asc");
         url.searchParams.append("pbOnly", "true");
+        url.searchParams.append("game", gameName);
 
         const response = await fetch(url.toString(), {credentials: 'include'});
         if (!response.ok) throw new Error("Failed to fetch scores");
@@ -97,7 +99,7 @@ const Chart = () => {
         setLoading(false);
       }
     },
-    [user, requestOrder, chartIdHash],
+    [user, requestOrder, chartIdHash, gameName],
   );
 
   useEffect(() => {
@@ -184,6 +186,18 @@ const Chart = () => {
                   hideTitleArtist={true}
                 />
               );
+              case "dancearound":
+                return (
+                  <DancearoundScoreDisplay
+                    scores={scores}
+                    viewMode={viewMode}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
+                    showUsername={true}
+                    hideTitleArtist={true}
+                  />
+                );
             default:
               return (
                 <ScoreDisplay

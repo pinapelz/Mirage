@@ -5,6 +5,7 @@ import { NavBar } from "../components/NavBar";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
+import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -196,6 +197,17 @@ const Score = () => {
             case "dancerush":
               return (
                 <DancerushScoreDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  onDelete={handleDeleteScore}
+                />
+              );
+            case "dancearound":
+              return (
+                <DancearoundScoreDisplay
                   scores={scores}
                   viewMode={viewMode}
                   sortField={sortField}
