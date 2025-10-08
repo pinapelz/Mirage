@@ -76,6 +76,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "grade",
   ];
   const expandableKeys = ["judgements", "optional"];
+  const skipKeys = ["user", "username"]
   // get ?game=
   const internalGameName =new URLSearchParams(window.location.search).get("game") || "dancerush";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -273,8 +274,10 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
         {sortedScores.map((score, index) => {
           const chartIdHash = SHA1(`${internalGameName}${score.title}${score.artist}`).toString();
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { primary, mainStats, expandable, others, timestamp } =
+          const { primary, mainStats, expandable, others: rawOthers, timestamp } =
             getScoreEntries(score);
+          const others = rawOthers.filter(([key]) => !skipKeys.includes(key));
+
 
           return (
             <div
