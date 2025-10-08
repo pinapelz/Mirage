@@ -6,6 +6,8 @@ import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import { useState, useEffect } from "react";
 
 import dancerushImage from "../assets/games/dancerush.webp";
+import dancearoundImage from "../assets/games/dancearound.webp";
+import divaImage from "../assets/games/diva.webp";
 
 const Home = () => {
   const { user, isLoading, logout } = useAuth();
@@ -27,6 +29,12 @@ const Home = () => {
     switch (internalName) {
       case "dancerush": {
         return dancerushImage;
+      }
+      case "dancearound": {
+        return dancearoundImage;
+      }
+      case "diva": {
+        return divaImage;
       }
       default: {
         return null;

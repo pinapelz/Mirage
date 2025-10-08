@@ -15,6 +15,7 @@ import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisp
 const Chart = () => {
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
+  const [pbOnly, setPbOnly] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [scores, setScores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,7 +83,7 @@ const Chart = () => {
         url.searchParams.append("pageNum", pageNum.toString());
         url.searchParams.append("sortKey", requestOrder);
         url.searchParams.append("direction", "asc");
-        url.searchParams.append("pbOnly", "true");
+        url.searchParams.append("pbOnly", pbOnly.toString());
         url.searchParams.append("game", gameName);
 
         const response = await fetch(url.toString(), {credentials: 'include'});
@@ -99,7 +100,7 @@ const Chart = () => {
         setLoading(false);
       }
     },
-    [user, requestOrder, chartIdHash, gameName],
+    [user, requestOrder, chartIdHash, gameName, pbOnly],
   );
 
   useEffect(() => {
@@ -113,6 +114,10 @@ const Chart = () => {
       setSortField(field);
       setSortDirection("desc");
     }
+  };
+
+  const handleTogglePB = () => {
+    setPbOnly(!pbOnly);
   };
 
   if (!user) {
@@ -160,6 +165,16 @@ const Chart = () => {
                 }`}
               >
                 Table
+              </button>
+              <button
+                onClick={() => handleTogglePB()}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  pbOnly
+                    ? "bg-violet-600 text-white shadow-lg shadow-violet-500/25"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+                }`}
+              >
+                {pbOnly ? "Showing only PBs" : "Showing all scores"}
               </button>
             </div>
           </div>
