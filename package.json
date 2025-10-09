@@ -2,7 +2,9 @@
   "name": "yet-another-score-tracker",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "install:all": "pnpm i && cd backend && pnpm i && cd ../frontend && pnpm i && cd ..",
+    "db-init": "cd backend && pnpm i && pnpm prisma db push && pnpm prisma db seed && cd .."
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
