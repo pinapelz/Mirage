@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { NavBar } from "../components/NavBar";
+import type { SupportedGame}  from "../types/game";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
@@ -14,6 +15,7 @@ import { getFilterOptions } from "../types/constants";
 const Score = () => {
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
+  const [formattedGameName, setFormattedGameName] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [scores, setScores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +38,21 @@ const Score = () => {
       alert("Network error during logout. Please try again.");
     }
   };
+
+  useEffect(() => {
+    try{
+      fetch(import.meta.env.VITE_API_URL + `/supportedGames`)
+        .then(response => response.json())
+        .then(data => {
+          const game = data.find((game: SupportedGame) => game.internalName === gameName);
+          setFormattedGameName(game ? game.formattedName : gameName);
+        })
+        .catch(error => console.error(error));
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Network error. Please try again.");
+    }
+  }, [gameName]);
 
   const renderRequestFilterMenu = () => {
     const filterOptions = getFilterOptions(gameName);
@@ -158,7 +175,7 @@ const Score = () => {
         <div className="mb-6 sm:mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-linear-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
-              Your Scores
+              Your Scores for {formattedGameName}
             </h1>
             <div className="flex items-center space-x-1 sm:space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
               <button
