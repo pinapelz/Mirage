@@ -2,7 +2,7 @@
 
 **Mirage** is a rhythm game score tracker that doesn’t rely on predefined seeds or chart metadata. It preseves your scores across games — even niche ones.
 
-![docs/readme-assets/mirage-1.png](docs/readme-assets/mirage-1.png)
+![https://github.com/user-attachments/assets/e1a03b39-3c6f-4d31-8a4e-7ae9abaa93a2](https://github.com/user-attachments/assets/e1a03b39-3c6f-4d31-8a4e-7ae9abaa93a2)
 ![https://github.com/user-attachments/assets/63341f3b-991c-4147-8014-30f27020dc05](https://github.com/user-attachments/assets/63341f3b-991c-4147-8014-30f27020dc05)
 
 # ✨ Features
