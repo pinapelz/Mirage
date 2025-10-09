@@ -55,14 +55,13 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
     clear_status: "Status"
   };
 
-  const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
     "difficulty",
     "lamp",
     "diff_lamp",
   ];
-  const expandableKeys = ["judgements", "optional"];
+  const expandableKeys = ["judgements", "optional", "clear_status"];
   const localSkipKeys = ["num_players"]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
@@ -182,22 +181,12 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
       ([key]) => !globalSkipKeys.includes(key) && !localSkipKeys.includes(key),
     );
 
-    const primary = entries.filter(([key]) => primaryKeys.includes(key));
     const mainStats = entries.filter(([key]) => mainStatKeys.includes(key));
     const expandable = entries.filter(([key]) => expandableKeys.includes(key));
-    const others = entries.filter(
-      ([key]) =>
-        !primaryKeys.includes(key) &&
-        !mainStatKeys.includes(key) &&
-        !expandableKeys.includes(key) &&
-        key !== "timestamp",
-    );
 
     return {
-      primary,
       mainStats,
       expandable,
-      others,
       timestamp: score.timestamp,
     };
   };
@@ -280,7 +269,7 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { primary, mainStats, expandable, others, timestamp } =
+          const { mainStats, expandable, timestamp } =
             getScoreEntries(score);
           const chartIdHash = SHA1(`dancearound${score.title}${score.artist}`).toString();
           return (
@@ -336,24 +325,6 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
                   {renderValue(value, key)}
                 </div>
               ))}
-
-              {/* Other fields */}
-              {others.length > 0 && (
-                <div className="mb-4">
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    {others.map(([key, value]) => (
-                      <div key={key} className="flex justify-between">
-                        <span className="text-slate-400">
-                          {getDisplayName(key)}:
-                        </span>
-                        <span className="text-white font-medium">
-                          {renderValue(value, key)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Timestamp */}
               <div className="pt-4 border-t border-slate-800/50">
