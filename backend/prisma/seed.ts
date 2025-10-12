@@ -26,6 +26,16 @@ async function main() {
         formattedName: "MUSIC DIVER",
         description: "Taito's quadrant based drumming game",
       },
+      {
+        internalName: "nostalgia",
+        formattedName: "NOSTALGIA",
+        description: "A piano based touch music game from KONAMI",
+      },
+      {
+        internalName: "reflecbeat",
+        formattedName: "REFLEC BEAT",
+        description: "A touchscreen rhythm game from KONAMI",
+      }
     ],
   });
   console.log("Initial seed data inserted");

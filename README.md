@@ -16,7 +16,7 @@
 # Development
 Install dependencies:
 ```bash
-pnpm install:all1
+pnpm install:all
 ```
 
 Create a `.env` file in `backend` based on `backend/.env.template`. Fill in the fields as required.
