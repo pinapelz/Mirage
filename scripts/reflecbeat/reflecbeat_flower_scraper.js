@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         REFLEC BEAT SCORE EXPORT
-// @namespace    https://example.com/
+// @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Export REFLEC BEAT scores including full judgements and timestamps as JSON
 // @match        https://projectflower.eu/game/rb/profile/*
@@ -56,8 +56,9 @@
             const levelElem = difficultyElem?.querySelector('strong');
             const lampElem = row.querySelector('td.rb-rank strong'); // Rank / Lamp
             const scoreText = row.querySelector('td.rb-rank span')?.innerText || '';
-            const scoreMatch = scoreText.replace(/,/g, '').match(/\d+/);
-            const scoreNum = scoreMatch ? parseInt(scoreMatch[0]) : null;
+            const scoreMatch = scoreText.match(/(\d+(?:,\d+)*)\s*\((\d+(?:\.\d+)?)%\)/);
+            const scoreNum = scoreMatch ? parseInt(scoreMatch[1].replace(/,/g, '')) : null;
+            const scorePercent = scoreMatch ? parseFloat(scoreMatch[2]) : null;
 
             // Extract timestamp from <small> in last column
             const timestampElem = row.querySelector('td.hidden-from-mobile small');
@@ -96,6 +97,7 @@
                 difficulty: difficultyElem?.innerText.replace(levelElem?.innerText, '').trim() || '',
                 level: levelElem ? parseInt(levelElem.innerText.trim()) : null,
                 score: scoreNum,
+                scorePercent,
                 lamp: lampElem?.innerText.trim() || '',
                 lifeLeft: parseInt(lifeLeft) || null,
                 timestamp, // Unix ms

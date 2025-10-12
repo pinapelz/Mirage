@@ -9,6 +9,7 @@ import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay"
 import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
 import MusicDiverDisplay from "../components/displays/MusicDiverDisplay";
+import ReflecBeatScoreDisplay from "../components/displays/ReflecBeatScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -249,6 +250,17 @@ const Score = () => {
             case "musicdiver":
               return (
                 <MusicDiverDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  onDelete={handleDeleteScore}
+                />
+              );
+            case "reflecbeat":
+              return (
+                <ReflecBeatScoreDisplay
                   scores={scores}
                   viewMode={viewMode}
                   sortField={sortField}
