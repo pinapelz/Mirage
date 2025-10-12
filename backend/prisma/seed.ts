@@ -21,6 +21,11 @@ async function main() {
         formattedName: "Hatsune Miku: Project DIVA Arcade Future Tone",
         description: "A 4-button and touch slider game from SEGA",
       },
+      {
+        internalName: "musicdiver",
+        formattedName: "MUSIC DIVER",
+        description: "Taito's quadrant based drumming game",
+      },
     ],
   });
   console.log("Initial seed data inserted");

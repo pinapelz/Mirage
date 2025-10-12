@@ -6,6 +6,7 @@ import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
 import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
+import MusicDiverDisplay from "../components/displays/MusicDiverDisplay";
 import SongInfoDisplay from "../components/modals/SongInfoDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
@@ -217,6 +218,18 @@ const Chart = () => {
               case "diva":
                 return (
                   <DivaScoreDisplay
+                    scores={scores}
+                    viewMode={viewMode}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
+                    showUsername={true}
+                    hideTitleArtist={true}
+                  />
+                );
+              case "musicdiver":
+                return (
+                  <MusicDiverDisplay
                     scores={scores}
                     viewMode={viewMode}
                     sortField={sortField}

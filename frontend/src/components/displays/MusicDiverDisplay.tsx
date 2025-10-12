@@ -21,7 +21,7 @@ interface ScoreDisplayProps {
   hideTitleArtist?: boolean;
 }
 
-const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
+const MusicDiverDisplay: React.FC<ScoreDisplayProps> = ({
   scores,
   viewMode,
   sortField,
@@ -68,7 +68,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
   const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
-    "difficulty",
+    "level",
     "lamp",
     "rank",
     "diff_lamp",
@@ -316,7 +316,23 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                       <p className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-wide mb-1">
                         {getDisplayName(key)}
                       </p>
-                      <p className="text-white font-semibold text-sm sm:text-lg">
+                      <p className={`${key === 'lamp' || key === 'diff_lamp' || key === 'score' || key === 'level' ? 'font-orbitron' : ''} text-white font-semibold text-sm sm:text-lg ${
+                        (key === 'lamp' || key === 'diff_lamp') && value && !String(value).toLowerCase().includes('fail') && !String(value).toLowerCase().includes('no clear')
+                          ? 'text-[hsl(180,100%,40%)]'
+                          : key === 'rank' && value && String(value).toLowerCase().includes('s')
+                          ? 'text-yellow-300'
+                          : key === 'rank' && value && String(value).toLowerCase().includes('a')
+                          ? 'text-green-300'
+                          : key === 'rank' && value && String(value).toLowerCase().includes('b')
+                          ? 'text-blue-300'
+                          : key === 'rank' && value && String(value).toLowerCase().includes('c')
+                          ? 'text-orange-300'
+                          : key === 'rank' && value && String(value).toLowerCase().includes('d')
+                          ? 'text-red-300'
+                          : key === 'score'
+                          ? 'text-white'
+                          : 'text-slate-300'
+                      }`}>
                         {renderValue(value, key)}
                       </p>
                     </div>
@@ -416,8 +432,12 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                   <td key={key} className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
                     {key === "lamp" || key === "diff_lamp" ? (
                       <div className="flex items-center space-x-2">
-                        <span className="inline-block bg-slate-800/50 text-slate-200 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs border border-slate-600 whitespace-nowrap">
-                          {score[key] || "No Clear"}
+                        <span className={`inline-block px-1 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs border whitespace-nowrap font-orbitron
+                          ${!score[key] ? 'text-slate-400'
+                          : String(score[key]).toLowerCase().includes('fail') || String(score[key]).toLowerCase().includes('no clear')
+                            ? 'text-red-400 border-red-400'
+                            : 'text-[hsl(180,100%,40%)] border-[hsl(180,100%,40%)]'}`}>
+                          {score[key] || "NO DATA"}
                         </span>
                       </div>
                     ) : key === "judgements" ? (
@@ -438,7 +458,35 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
                       </span>
                     ) : (
                       <span
-                        className={`${(key === "title" || key === "song") && !hideTitleArtist ? "text-white font-medium" : key === "score" ? "text-white font-medium" : "text-slate-300"}`}
+                        className={`${(key === "title" || key === "song") && !hideTitleArtist
+                          ? "text-white font-medium"
+                          : key === "score"
+                            ? "text-white font-medium font-orbitron"
+                          : key === "difficulty"
+                            ? `font-orbitron ${
+                              score[key] && String(score[key]).toLowerCase().includes('basic')
+                                ? 'text-green-400'
+                              : score[key] && String(score[key]).toLowerCase().includes('advanced')
+                                ? 'text-yellow-400'
+                              : score[key] && String(score[key]).toLowerCase().includes('expert')
+                                ? 'text-red-400'
+                              : score[key] && String(score[key]).toLowerCase().includes('master')
+                                ? 'text-purple-400'
+                              : 'text-slate-300'
+                            }`
+                          : key === "rank"
+                            ? score[key] && String(score[key]).toLowerCase().includes('s')
+                              ? 'text-yellow-300'
+                            : score[key] && String(score[key]).toLowerCase().includes('a')
+                              ? 'text-green-300'
+                            : score[key] && String(score[key]).toLowerCase().includes('b')
+                              ? 'text-blue-300'
+                            : score[key] && String(score[key]).toLowerCase().includes('c')
+                              ? 'text-orange-300'
+                            : score[key] && String(score[key]).toLowerCase().includes('d')
+                              ? 'text-red-300'
+                              : 'text-slate-300'
+                          : "text-slate-300"}`}
                       >
                         {renderValue(score[key], key)}
                       </span>
@@ -467,4 +515,4 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
   );
 };
 
-export default ScoreDisplay;
+export default MusicDiverDisplay;

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import dancerushImage from "../assets/games/dancerush.webp";
 import dancearoundImage from "../assets/games/dancearound.webp";
 import divaImage from "../assets/games/diva.webp";
+import musicdiverImage from "../assets/games/music_diver.webp";
 
 const Home = () => {
   const { user, isLoading, logout } = useAuth();
@@ -35,6 +36,9 @@ const Home = () => {
       }
       case "diva": {
         return divaImage;
+      }
+      case "musicdiver": {
+        return musicdiverImage;
       }
       default: {
         return null;

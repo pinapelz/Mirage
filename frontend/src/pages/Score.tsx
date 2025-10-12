@@ -8,6 +8,7 @@ import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
 import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
+import MusicDiverDisplay from "../components/displays/MusicDiverDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -91,7 +92,7 @@ const Score = () => {
       setLoading(true);
       try {
         const url = new URL(import.meta.env.VITE_API_URL + "/scores");
-        url.searchParams.append("userId", user.id);
+        url.searchParams.append("userId", user.id.toString());
         url.searchParams.append("internalGameName", gameName);
         url.searchParams.append("pageNum", pageNum.toString());
         url.searchParams.append("sortKey", requestOrder);
@@ -123,7 +124,7 @@ const Score = () => {
 
     try {
       const url = new URL(import.meta.env.VITE_API_URL + "/scores");
-      url.searchParams.append("userId", user.id);
+      url.searchParams.append("userId", user.id.toString());
       url.searchParams.append("internalGameName", gameName);
       url.searchParams.append("scoreId", scoreId.toString());
 
@@ -237,6 +238,17 @@ const Score = () => {
             case "diva":
               return (
                 <DivaScoreDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  onDelete={handleDeleteScore}
+                />
+              );
+            case "musicdiver":
+              return (
+                <MusicDiverDisplay
                   scores={scores}
                   viewMode={viewMode}
                   sortField={sortField}
