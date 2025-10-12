@@ -7,6 +7,7 @@ import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
 import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
+import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -225,6 +226,17 @@ const Score = () => {
             case "dancearound":
               return (
                 <DancearoundScoreDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  onDelete={handleDeleteScore}
+                />
+              );
+            case "diva":
+              return (
+                <DivaScoreDisplay
                   scores={scores}
                   viewMode={viewMode}
                   sortField={sortField}

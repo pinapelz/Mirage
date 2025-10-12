@@ -1,11 +1,18 @@
 import React from "react";
 import {Link} from "react-router";
 import { globalSkipKeys } from "../../types/constants";
-import dancerushEasyImg from "../../assets/games/dancerush/easy.webp";
-import dancerushNormalImg from "../../assets/games/dancerush/normal.webp";
-import p1_img from "../../assets/games/dancerush/1_p.webp";
-import p2_img from "../../assets/games/dancerush/2_p.webp";
 import SHA1 from "crypto-js/sha1";
+import easyImg from "../../assets/games/diva/easy.webp";
+import normalImg from "../../assets/games/diva/normal.webp";
+import hardImg from "../../assets/games/diva/hard.webp";
+import extremeImg from "../../assets/games/diva/extreme.webp";
+import ex_extremeImg from "../../assets/games/diva/ex_extreme.webp";
+import standardImg from "../../assets/games/diva/standard.webp";
+import misstakeImg from "../../assets/games/diva/misstake.webp";
+import perfectImg from "../../assets/games/diva/perfect.webp";
+import greatImg from "../../assets/games/diva/great.webp";
+import excellentImg from "../../assets/games/diva/excellent.webp";
+
 
 interface Score {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +32,7 @@ interface ScoreDisplayProps {
   hideTitleArtist?: boolean;
 }
 
-const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
+const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
   scores,
   viewMode,
   sortField,
@@ -39,9 +46,9 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   const keyDisplayNames: Record<string, string> = {
     title: "Title",
     artist: "Artist",
-    score: "Score",
-    difficulty: "Difficulty Number",
-    lamp: "Rank",
+    score: "SCORE",
+    difficulty: "Difficulty Rating",
+    lamp: "CLEAR RANK",
     diff_lamp: "Chart Difficulty",
     timestamp: "Date",
     judgements: "Judgements",
@@ -55,6 +62,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     num_players: "Players"
   };
 
+  const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
     "difficulty",
@@ -65,11 +73,22 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
+    console.log("formatValue called with key:", key);
 
     // Handle timestamps
     if (key === "timestamp" || key === "date") {
       const date = new Date(typeof value === "number" ? value : value);
       return date.toLocaleDateString();
+    }
+
+    if(key === "difficulty"){
+      console.log("difficulty value:", value);
+      return  "★ " + value.toString();
+    }
+
+    if(key === "achievement"){
+      console.log("achievement value:", value);
+      return value.toString() + "%";
     }
 
     if (typeof value === "number") {
@@ -98,6 +117,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     // Handle judgements specially
     if (key === "judgements" && typeof value === "object") {
       const judgementEntries = Object.entries(value);
+
 
       if (compact) {
         return (
@@ -144,36 +164,57 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     }
 
     if(key === "diff_lamp"){
+      let imgSrc = null;
+      switch (value) {
+        case "EASY":
+          imgSrc = easyImg;
+          break;
+        case "NORMAL":
+          imgSrc = normalImg;
+          break;
+        case "HARD":
+          imgSrc = hardImg;
+          break;
+        case "EXTRME":
+          imgSrc = extremeImg;
+          break;
+        case "EX EXTRME":
+          imgSrc = ex_extremeImg;
+          break;
+        default:
+          imgSrc = standardImg;
+          break;
+      }
       return <span>
-        <img src={value == "EASY" ? dancerushEasyImg : dancerushNormalImg} alt={value} />
+        <img src={imgSrc} alt={value} />
       </span>;
     }
 
     if(key === "lamp"){
-       return <span className="px-2 py-1 rounded-full">{
-         (() => {
-           switch(value){
-             case 1:
-               return "⭐️";
-             case 2:
-               return "⭐️⭐️";
-             case 3:
-                 return "⭐️⭐️⭐️";
-             case 4:
-                 return "⭐️⭐️⭐️⭐️";
-             case 5:
-                 return "⭐️⭐️⭐️⭐️⭐️";
-             default:
-               return value;
-           }
-         })()
-       }</span>;
-    }
-
-    if(key === "num_players"){
+      let imgSrc = null;
+      switch (value){
+        case "NOT CLEAR":
+          imgSrc = misstakeImg;
+          break;
+        case "STANDARD":
+          imgSrc = standardImg;
+          break;
+        case "GREAT":
+          imgSrc = greatImg;
+          break;
+        case "PERFECT":
+          imgSrc = perfectImg;
+          break;
+        case "EXCELLENT":
+          imgSrc = excellentImg;
+          break;
+        default:
+          imgSrc = standardImg;
+          break;
+      }
       return <span>
-        <img src={value == 1 ? p1_img : p2_img} alt={value + " player"} />
-      </span>
+        <img src={imgSrc} alt={value} className="w-4xl" />
+      </span>;
     }
 
 
@@ -185,12 +226,22 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
       ([key]) => !globalSkipKeys.includes(key),
     );
 
+    const primary = entries.filter(([key]) => primaryKeys.includes(key));
     const mainStats = entries.filter(([key]) => mainStatKeys.includes(key));
     const expandable = entries.filter(([key]) => expandableKeys.includes(key));
+    const others = entries.filter(
+      ([key]) =>
+        !primaryKeys.includes(key) &&
+        !mainStatKeys.includes(key) &&
+        !expandableKeys.includes(key) &&
+        key !== "timestamp",
+    );
 
     return {
+      primary,
       mainStats,
       expandable,
+      others,
       timestamp: score.timestamp,
     };
   };
@@ -273,9 +324,9 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { mainStats, expandable, timestamp } =
+          const { primary, mainStats, expandable, others, timestamp } =
             getScoreEntries(score);
-          const chartIdHash = SHA1(`dancerush${score.title}${score.artist}`).toString();
+          const chartIdHash = SHA1(`diva${score.title}${score.artist}`).toString();
           return (
             <div
               key={score.id || index}
@@ -285,7 +336,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   {!hideTitleArtist && (
-                    <Link to={`/chart?chartId=${chartIdHash}&game=dancerush`}>
+                    <Link to={`/chart?chartId=${chartIdHash}&game=diva`}>
                       <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
                         {score.title || score.song || "Unknown Title"}
                       </h3>
@@ -330,6 +381,23 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
                 </div>
               ))}
 
+              {/* Other fields */}
+              {others.length > 0 && (
+                <div className="mb-4">
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    {others.map(([key, value]) => (
+                      <div key={key} className="flex justify-between">
+                        <span className="text-slate-400">
+                          {getDisplayName(key)}:
+                        </span>
+                        <span className="text-white font-medium">
+                          {renderValue(value, key)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Timestamp */}
               <div className="pt-4 border-t border-slate-800/50">
@@ -446,4 +514,4 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   );
 };
 
-export default DancerushScoreDisplay;
+export default DivaScoreDisplay;
