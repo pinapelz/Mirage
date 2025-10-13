@@ -40,9 +40,13 @@ const SongInfoDisplay = ({
       if (score.difficulty !== undefined) {
         const diffKey = (score.diff_lamp as string) || (score.difficulty as string).toString();
         if (!difficultyMap.has(diffKey)) {
+          const level = score.diff_lamp
+            ? (score.difficulty as number)
+            : (score.level as number);
+
           difficultyMap.set(diffKey, {
             difficulty: diffKey,
-            level: score.difficulty as number,
+            level: level,
           });
         }
       }
