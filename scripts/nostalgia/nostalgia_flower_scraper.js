@@ -44,6 +44,7 @@
     // Parse judgements from details row
     function parseJudgements(detailsRow) {
         const judgements = {};
+        const optional = {};
         const cols = detailsRow.querySelectorAll("div.col-sm-2");
         cols.forEach(col => {
             const labelElem = col.querySelector("strong");
@@ -59,11 +60,11 @@
             else if (label === "Miss") judgements.miss = Number(valueText) || 0;
             else if (label === "Fast/Slow" || label === "Fast/Slow") {
                 const parts = valueText.split("/").map(x => Number(x.trim()));
-                judgements.fast = parts[0] || 0;
-                judgements.slow = parts[1] || 0;
+                optional.fast = parts[0] || 0;
+                optional.slow = parts[1] || 0;
             }
         });
-        return judgements;
+        return { judgements, optional };
     }
 
     // Fetch artist from song page
@@ -125,7 +126,7 @@
 
             // Judgements
             const detailsRow = scoreLines[i * 2 + 1].querySelector("div[style*='padding: 5px']");
-            const judgements = parseJudgements(detailsRow);
+            const { judgements, optional } = parseJudgements(detailsRow);
 
             scores.push({
                 title: title,
@@ -135,7 +136,8 @@
                 score: score,
                 lamp: lamp,
                 timestamp: timeAchieved,
-                judgements: judgements
+                judgements: judgements,
+                optional: optional
             });
 
             updateProgress(i + 1, totalSongs);
