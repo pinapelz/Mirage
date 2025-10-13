@@ -9,6 +9,8 @@ import dancerushImage from "../assets/games/dancerush.webp";
 import dancearoundImage from "../assets/games/dancearound.webp";
 import divaImage from "../assets/games/diva.webp";
 import musicdiverImage from "../assets/games/music_diver.webp";
+import reflecbeatImage from "../assets/games/reflecbeat.webp";
+import nostalgiaImage from "../assets/games/nostalgia.webp";
 
 const Home = () => {
   const { user, isLoading, logout } = useAuth();
@@ -39,6 +41,12 @@ const Home = () => {
       }
       case "musicdiver": {
         return musicdiverImage;
+      }
+      case "reflecbeat": {
+        return reflecbeatImage;
+      }
+      case "nostalgia": {
+        return nostalgiaImage;
       }
       default: {
         return null;

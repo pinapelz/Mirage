@@ -6,13 +6,14 @@ import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
 import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
-import MusicDiverDisplay from "../components/displays/MusicDiverDisplay";
+import MusicDiverDisplay from "../components/displays/MusicDiverScoreDisplay";
 import SongInfoDisplay from "../components/modals/SongInfoDisplay";
+import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
+import NostalgiaScoreDisplay from "../components/displays/NostalgiaScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
 import { getFilterOptions } from "../types/constants";
-import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 
 const Chart = () => {
   const { user, isLoading, logout } = useAuth();
@@ -230,6 +231,18 @@ const Chart = () => {
               case "musicdiver":
                 return (
                   <MusicDiverDisplay
+                    scores={scores}
+                    viewMode={viewMode}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
+                    showUsername={true}
+                    hideTitleArtist={true}
+                  />
+                );
+              case "nostalgia":
+                return (
+                  <NostalgiaScoreDisplay
                     scores={scores}
                     viewMode={viewMode}
                     sortField={sortField}
