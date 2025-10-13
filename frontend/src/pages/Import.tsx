@@ -7,6 +7,7 @@ import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import type { SupportedGame } from "../types/game";
 import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
+import DivaNetModal from "../components/modals/DivaNetModal";
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -14,6 +15,7 @@ const Import = () => {
   const [selectedGame, setSelectedGame] = useState("");
   const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
   const [isEamusementModalOpen, setIsEamusementModalOpen] = useState(false);
+  const [isDivaNetModalOpen, setIsDivaNetModalOpen] = useState(false);
   const [supportedGames, setSupportedGames] = useState<SupportedGame[]>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [uploadStatus, setUploadStatus] = useState<{
@@ -121,52 +123,49 @@ const Import = () => {
     </div>
   );
 
-  const EamusementScrapeUploadCard = () => (
-    <>
-      {/* e-amusement Card */}
-      <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-        <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
-          <svg
-            className="w-6 h-6 text-blue-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-            />
-          </svg>
-        </div>
-        <h4 className="text-white font-semibold mb-2">
-          e-amusement Play History
-        </h4>
-        <p className="text-slate-400 text-sm mb-4">
-          Import via scraping your playdata from KONAMI e-amusement
-        </p>
-        <button
-          onClick={() => setIsEamusementModalOpen(true)}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
-        >
-          Connect e-amusement
-        </button>
-      </div>
-    </>
-  );
+  // Component removed - moved to EamusementModal.tsx
 
   const renderImportOptions = () => {
     switch (selectedGame) {
       case "dancerush":
         return (
           <>
-            {/* JSON Upload Card */}
             <JsonUploadCard />
-            <EamusementScrapeUploadCard />
+            <EamusementModal
+              isOpen={false}
+              onClose={() => {}}
+              game={supportedGames.find((g) => g.internalName === selectedGame)}
+              renderAsCard={() => setIsEamusementModalOpen(true)}
+            />
           </>
         );
-
+        break;
+      case "dancearound":
+        return (
+          <>
+            <JsonUploadCard />
+            <EamusementModal
+              isOpen={false}
+              onClose={() => {}}
+              game={supportedGames.find((g) => g.internalName === selectedGame)}
+              renderAsCard={() => setIsEamusementModalOpen(true)}
+            />
+          </>
+        );
+        break;
+      case "diva":
+        return (
+          <>
+            <JsonUploadCard />
+            <DivaNetModal
+              isOpen={false}
+              onClose={() => {}}
+              game={supportedGames.find((g) => g.internalName === selectedGame)}
+              renderAsCard={() => setIsDivaNetModalOpen(true)}
+            />
+          </>
+        );
+        break;
       default:
         return <JsonUploadCard />;
     }
@@ -288,6 +287,16 @@ const Import = () => {
       <EamusementModal
         isOpen={isEamusementModalOpen}
         onClose={() => setIsEamusementModalOpen(false)}
+        game={
+          supportedGames.find((g) => g.internalName === selectedGame) ||
+          undefined
+        }
+      />
+
+      {/* DivaNet Modal */}
+      <DivaNetModal
+        isOpen={isDivaNetModalOpen}
+        onClose={() => setIsDivaNetModalOpen(false)}
         game={
           supportedGames.find((g) => g.internalName === selectedGame) ||
           undefined

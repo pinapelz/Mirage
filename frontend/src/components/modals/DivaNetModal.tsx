@@ -1,30 +1,24 @@
 import type { SupportedGame } from "../../types/game";
-import { EamuseImportInfo } from "../../types/constants";
 
-interface EamusementUploadModalProps {
+interface DivaNetModalProps {
   isOpen: boolean;
   onClose: () => void;
   game: SupportedGame | undefined;
   renderAsCard?: () => void;
 }
 
-const scriptLinkMap = {
-  "dancerush": "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js",
-  "dancearound": "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/dancearound_play_history.user.js",
-}
-
-const EamusementUploadModal = ({
+const DivaNetModal = ({
   isOpen,
   onClose,
   game,
   renderAsCard
-}: EamusementUploadModalProps) => {
+}: DivaNetModalProps) => {
   if (renderAsCard) {
     return (
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-        <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
+        <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
           <svg
-            className="w-6 h-6 text-blue-400"
+            className="w-6 h-6 text-green-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -38,16 +32,16 @@ const EamusementUploadModal = ({
           </svg>
         </div>
         <h4 className="text-white font-semibold mb-2">
-          e-amusement Play History
+          DIVA.NET Play History
         </h4>
         <p className="text-slate-400 text-sm mb-4">
-          Import via scraping your playdata from KONAMI e-amusement
+          Import via scraping your playdata from SEGA DIVA.NET
         </p>
         <button
           onClick={renderAsCard}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
         >
-          Export e-amusement
+          Export DIVA.NET
         </button>
       </div>
     );
@@ -82,49 +76,23 @@ const EamusementUploadModal = ({
             </p>
           </div>
 
-          {/* Warning */}
-          <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
-            <p className="text-sm text-blue-400">
-              You may or may need to be subscribed to{" "}
-              <a
-                className="font-bold hover:underline"
-                href="https://p.eagate.573.jp/payment/p/ex_select_course.html"
-              >
-                KONAMI's e-amusement Basic and/or Premium course
-              </a>{" "}
-              to view a exportable playdata history for certain games.
-            </p>
-          </div>
-
           {/* Instructions */}
           <div className="mb-4 rounded-md bg-slate-800 border border-slate-700 p-4">
             <h4 className="text-sm font-semibold text-slate-300 mb-2">
               Instructions:
             </h4>
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
-              <li>Log into your e-amusement account</li>
-              {EamuseImportInfo[game.internalName] ? (
-                <li>
-                  Navigate to your{" "}
-                  <a href={EamuseImportInfo[game.internalName]?.scorePage}>
-                    {game.formattedName} score data page
-                  </a>{" "}
-                  {game.formattedName} score data page
-                </li>
-              ) : (
-                <li>Navigate to your {game.formattedName} score data page</li>
-              )}
-              {EamuseImportInfo[game.internalName] ? (
-                <li>
-                  Install the userscript to your browser (use an extension such
-                  as Tampermonkey)
-                </li>
-              ) : (
-                <li>
-                  Scrape the data using any method of your choice and translate
-                  it into a Mirage {game.formattedName} compatible JSON format
-                </li>
-              )}
+              <li>Log into your DIVA.NET account</li>
+              <li>
+                Navigate to the Play History (履歴) Page
+              </li>
+              <li>
+                Install the userscript to your browser (use an extension such
+                as Tampermonkey).
+              </li>
+              <li>
+                A button will appear on the page that you can click to start the scraping process.
+              </li>
               <li>Upload the resulting JSON file into Mirage using the Batch-Manual Upload functionality</li>
               <li>Verify that all data has been imported correctly</li>
             </ol>
@@ -134,10 +102,10 @@ const EamusementUploadModal = ({
           <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
             <p className="text-sm text-blue-400">
               <a
-                href={scriptLinkMap[game.internalName as keyof typeof scriptLinkMap]}
+                href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/diva_net_history.user.js"
                 className="underline"
               >
-                {game.formattedName} Userscript Download
+                DIVA.NET Score Export Userscript
               </a>
             </p>
           </div>
@@ -157,4 +125,4 @@ const EamusementUploadModal = ({
   );
 };
 
-export default EamusementUploadModal;
+export default DivaNetModal;
