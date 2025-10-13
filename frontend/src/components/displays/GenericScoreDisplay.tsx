@@ -65,7 +65,6 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
     num_players: "Players"
   };
 
-  const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
     "difficulty",
@@ -177,19 +176,16 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
       ([key]) => !globalSkipKeys.includes(key),
     );
 
-    const primary = entries.filter(([key]) => primaryKeys.includes(key));
     const mainStats = entries.filter(([key]) => mainStatKeys.includes(key));
     const expandable = entries.filter(([key]) => expandableKeys.includes(key));
     const others = entries.filter(
       ([key]) =>
-        !primaryKeys.includes(key) &&
         !mainStatKeys.includes(key) &&
         !expandableKeys.includes(key) &&
         key !== "timestamp",
     );
 
     return {
-      primary,
       mainStats,
       expandable,
       others,
@@ -275,7 +271,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
         {sortedScores.map((score, index) => {
           const chartIdHash = SHA1(`${internalGameName}${score.title}${score.artist}`).toString();
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { primary, mainStats, expandable, others: rawOthers, timestamp } =
+          const { mainStats, expandable, others: rawOthers, timestamp } =
             getScoreEntries(score);
           const others = rawOthers.filter(([key]) => !skipKeys.includes(key));
 

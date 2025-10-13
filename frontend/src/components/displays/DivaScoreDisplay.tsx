@@ -62,7 +62,6 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
     num_players: "Players"
   };
 
-  const primaryKeys = ["title", "artist", "song"];
   const mainStatKeys = [
     "score",
     "difficulty",
@@ -226,19 +225,16 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
       ([key]) => !globalSkipKeys.includes(key),
     );
 
-    const primary = entries.filter(([key]) => primaryKeys.includes(key));
     const mainStats = entries.filter(([key]) => mainStatKeys.includes(key));
     const expandable = entries.filter(([key]) => expandableKeys.includes(key));
     const others = entries.filter(
       ([key]) =>
-        !primaryKeys.includes(key) &&
         !mainStatKeys.includes(key) &&
         !expandableKeys.includes(key) &&
         key !== "timestamp",
     );
 
     return {
-      primary,
       mainStats,
       expandable,
       others,
@@ -324,7 +320,7 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { primary, mainStats, expandable, others, timestamp } =
+          const { mainStats, expandable, others, timestamp } =
             getScoreEntries(score);
           const chartIdHash = SHA1(`diva${score.title}${score.artist}`).toString();
           return (
