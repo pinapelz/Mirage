@@ -10,6 +10,7 @@ import MusicDiverDisplay from "../components/displays/MusicDiverScoreDisplay";
 import SongInfoDisplay from "../components/modals/SongInfoDisplay";
 import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 import NostalgiaScoreDisplay from "../components/displays/NostalgiaScoreDisplay";
+import ReflecBeatScoreDisplay from "../components/displays/ReflecBeatScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -243,6 +244,18 @@ const Chart = () => {
               case "nostalgia":
                 return (
                   <NostalgiaScoreDisplay
+                    scores={scores}
+                    viewMode={viewMode}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
+                    showUsername={true}
+                    hideTitleArtist={true}
+                  />
+                );
+              case "reflecbeat":
+                return (
+                  <ReflecBeatScoreDisplay
                     scores={scores}
                     viewMode={viewMode}
                     sortField={sortField}
