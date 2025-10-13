@@ -189,7 +189,9 @@ const ReflecBeatScoreDisplay: React.FC<ScoreDisplayProps> = ({
       ([key]) =>
         !mainStatKeys.includes(key) &&
         !expandableKeys.includes(key) &&
-        key !== "timestamp",
+        key !== "timestamp" &&
+        key !== "title" &&
+        key !== "artist",
     );
 
     return {
