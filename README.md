@@ -11,6 +11,18 @@
 - **Self-Host or Go Solo** – Use locally or host for group score tracking. Multi-user system.
 - **Presets** - Comes pre-loaded with tracking functionality for various rhythm games
 
+# Default Supported Games
+- DANCERUSH
+- DANCE aROUND
+- Project DIVA Arcade: Future Tone
+- MUSIC DIVER
+- Nostalgia
+- REFLEC BEAT
+
+> [!NOTE]  
+> Basically stuff that isn't supported by [Tachi](https://github.com/zkrising/Tachi) (*yet?*), you should use it for all the other games it does support
+
+
 > ⚠️ **Warning:** Work in progress
 
 # Development
@@ -39,3 +51,4 @@ pnpm dev
 - Express
 - Prisma ORM
 - Postgres
+
