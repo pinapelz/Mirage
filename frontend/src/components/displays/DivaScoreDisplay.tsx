@@ -81,12 +81,10 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
     }
 
     if(key === "difficulty"){
-      console.log("difficulty value:", value);
       return  "★ " + value.toString();
     }
 
     if(key === "achievement"){
-      console.log("achievement value:", value);
       return value.toString() + "%";
     }
 
