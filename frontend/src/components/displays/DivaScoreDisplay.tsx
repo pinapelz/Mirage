@@ -72,7 +72,6 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
-    console.log("formatValue called with key:", key);
 
     // Handle timestamps
     if (key === "timestamp" || key === "date") {

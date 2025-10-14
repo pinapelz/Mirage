@@ -1,0 +1,41 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="8" fill="#0a0014"/>
+
+  <defs>
+    <!-- Purple gradient for main elements -->
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#c084fc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9d5ff;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="mirageGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#581c87;stop-opacity:0.8" />
+      <stop offset="30%" style="stop-color:#9333ea;stop-opacity:0.6" />
+      <stop offset="60%" style="stop-color:#c084fc;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#f3e8ff;stop-opacity:0.2" />
+    </linearGradient>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="0.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g transform="translate(16, 16)" filter="url(#glow)">
+    <!-- Left side of M -->
+    <rect x="-8" y="-6" width="2.5" height="12" fill="#9333ea" rx="1.25"/>
+    <rect x="-5" y="-3" width="2.5" height="6" fill="#a855f7" rx="1.25"/>
+
+    <!-- Center peak -->
+    <rect x="-1.25" y="-8" width="2.5" height="16" fill="url(#purpleGradient)" rx="1.25"/>
+
+    <!-- Right side of M -->
+    <rect x="2.5" y="-3" width="2.5" height="6" fill="#a855f7" rx="1.25"/>
+    <rect x="5.5" y="-6" width="2.5" height="12" fill="#9333ea" rx="1.25"/>
+  </g>
+
+</svg>
