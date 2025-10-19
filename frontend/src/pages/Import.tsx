@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
-import JsonUploadModal from "../components/modals/JsonUploadModal";
-import EamusementModal from "../components/modals/EamusementModal";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import type { SupportedGame } from "../types/game";
 import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
-import DivaNetModal from "../components/modals/DivaNetModal";
+
+const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
+const EamusementModal = lazy(() => import("../components/modals/EamusementModal"));
+const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -272,36 +273,40 @@ const Import = () => {
         </div>
       </div>
 
-      {/* JSON Upload Modal */}
-      <JsonUploadModal
-        isOpen={isJsonModalOpen}
-        onClose={() => setIsJsonModalOpen(false)}
-        onUpload={handleJsonUpload}
-        game={
-          supportedGames.find((g) => g.internalName === selectedGame)
-            ?.formattedName || ""
-        }
-      />
-
-      {/* Eamusement Modal */}
-      <EamusementModal
-        isOpen={isEamusementModalOpen}
-        onClose={() => setIsEamusementModalOpen(false)}
-        game={
-          supportedGames.find((g) => g.internalName === selectedGame) ||
-          undefined
-        }
-      />
-
-      {/* DivaNet Modal */}
-      <DivaNetModal
-        isOpen={isDivaNetModalOpen}
-        onClose={() => setIsDivaNetModalOpen(false)}
-        game={
-          supportedGames.find((g) => g.internalName === selectedGame) ||
-          undefined
-        }
-      />
+      {/* Modals wrapped in Suspense */}
+      <Suspense fallback={<div>Loading...</div>}>
+        {isJsonModalOpen && (
+          <JsonUploadModal
+            isOpen={isJsonModalOpen}
+            onClose={() => setIsJsonModalOpen(false)}
+            onUpload={handleJsonUpload}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame)
+                ?.formattedName || ""
+            }
+          />
+        )}
+        {isEamusementModalOpen && (
+          <EamusementModal
+            isOpen={isEamusementModalOpen}
+            onClose={() => setIsEamusementModalOpen(false)}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame) ||
+              undefined
+            }
+          />
+        )}
+        {isDivaNetModalOpen && (
+          <DivaNetModal
+            isOpen={isDivaNetModalOpen}
+            onClose={() => setIsDivaNetModalOpen(false)}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame) ||
+              undefined
+            }
+          />
+        )}
+      </Suspense>
     </div>
   );
 };
