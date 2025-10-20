@@ -84,7 +84,7 @@ const DivaNetModal = ({
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
               <li>Log into your DIVA.NET account</li>
               <li>
-                Navigate to the Play History (履歴) Page
+                Navigate to the <a href="https://project-diva-ac.net/divanet/personal/playHistory/0">Play History (プレイ履歴) Page</a>
               </li>
               <li>
                 Install the userscript to your browser (use an extension such
@@ -105,7 +105,7 @@ const DivaNetModal = ({
                 href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/diva_net_history.user.js"
                 className="underline"
               >
-                DIVA.NET Score Export Userscript
+                DIVA.NET Recently Played Score Export Userscript (Last 20 Played)
               </a>
             </p>
           </div>
