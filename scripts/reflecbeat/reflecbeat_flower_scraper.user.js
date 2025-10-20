@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         REFLEC BEAT SCORE EXPORT
+// @name         REFLEC BEAT (Flower) Play History Scraper
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Export REFLEC BEAT scores including full judgements and timestamps as JSON

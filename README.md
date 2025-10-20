@@ -1,6 +1,6 @@
 # Mirage
 
-**Mirage** is a rhythm game score tracker that doesn’t rely on predefined seeds or chart metadata. It preseves your scores across games — even niche ones.
+**Mirage** is a "rhythm" game score tracker that doesn’t rely on predefined seeds or chart metadata. It preseves your scores across games — even niche ones.
 
 ![https://github.com/user-attachments/assets/e1a03b39-3c6f-4d31-8a4e-7ae9abaa93a2](https://github.com/user-attachments/assets/e1a03b39-3c6f-4d31-8a4e-7ae9abaa93a2)
 ![https://github.com/user-attachments/assets/63341f3b-991c-4147-8014-30f27020dc05](https://github.com/user-attachments/assets/63341f3b-991c-4147-8014-30f27020dc05)
@@ -19,7 +19,7 @@
 - Nostalgia
 - REFLEC BEAT
 
-> [!NOTE]  
+> [!NOTE]
 > Basically stuff that isn't supported by [Tachi](https://github.com/zkrising/Tachi) (*yet?*), you should use it for all the other games it does support
 
 
@@ -51,4 +51,3 @@ pnpm dev
 - Express
 - Prisma ORM
 - Postgres
-

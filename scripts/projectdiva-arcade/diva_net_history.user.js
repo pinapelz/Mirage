@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         DIVA.NET Mirage Scraper
+// @name         PDAFT (DIVA.NET) Mirage Scraper
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Scrape DIVA.NET play history (pages 1–20) into Mirage JSON

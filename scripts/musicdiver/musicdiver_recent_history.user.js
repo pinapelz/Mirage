@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         MIRAGE MUSIC DIVER SCORE EXPORT
+// @name         Music Diver (MyPage) Recently Played Mirage Scraper
 // @namespace    https://mypage.musicdiver.jp/
 // @version      1.1
 // @description  MUSIC DIVER My Page Recent History to Mirage import JSON

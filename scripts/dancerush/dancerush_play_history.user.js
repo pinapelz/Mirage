@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         DANCERUSH Mirage Scraper
+// @name         DANCERUSH (e-amusement) Recently Played Mirage Scraper
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  DANCERUSH e-amusement site to Mirage import JSON

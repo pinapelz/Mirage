@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Mirage Nostalgia Score Scraper for FLOWER
+// @name         Nostalgia (Flower) Play History Scraper
 // @version      1.0
 // @description  Scrapes scores from Flower's Nostalgia page and converts to Mirage
 // @author       Meta-link

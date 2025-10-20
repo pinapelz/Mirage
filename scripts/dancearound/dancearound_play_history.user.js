@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         DANCEAROUND Mirage Scraper
+// @name         DANCEAROUND (e-amusement) Recently Played Mirage Scraper
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  DANCEAROUND e-amusement site to Mirage import JSON
