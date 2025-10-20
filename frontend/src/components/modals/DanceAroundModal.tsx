@@ -1,24 +1,19 @@
 import type { SupportedGame } from "../../types/game";
 import { EamuseImportInfo } from "../../types/constants";
 
-interface EamusementUploadModalProps {
+interface DanceAroundModalProps {
   isOpen: boolean;
   onClose: () => void;
   game: SupportedGame | undefined;
   renderAsCard?: () => void;
 }
 
-const scriptLinkMap = {
-  "dancerush": "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js",
-  "dancearound": "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/dancearound_play_history.user.js",
-}
-
-const EamusementUploadModal = ({
+const DanceAroundModal = ({
   isOpen,
   onClose,
   game,
   renderAsCard
-}: EamusementUploadModalProps) => {
+}: DanceAroundModalProps) => {
   if (renderAsCard) {
     return (
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
@@ -38,10 +33,10 @@ const EamusementUploadModal = ({
           </svg>
         </div>
         <h4 className="text-white font-semibold mb-2">
-          e-amusement Play History
+          Dance aROUND e-amusement Play History
         </h4>
         <p className="text-slate-400 text-sm mb-4">
-          Import via scraping your playdata from KONAMI e-amusement
+          Import via scraping your Dance aROUND playdata from KONAMI e-amusement
         </p>
         <button
           onClick={renderAsCard}
@@ -75,7 +70,7 @@ const EamusementUploadModal = ({
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
-              Import {game.formattedName} Data
+              Import Dance aROUND Data
             </h3>
             <p className="text-slate-400 text-sm">
               Follow the instructions below to import your data
@@ -103,18 +98,18 @@ const EamusementUploadModal = ({
             </h4>
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
               <li>Log into your e-amusement account</li>
-              {EamuseImportInfo[game.internalName] ? (
+              {EamuseImportInfo["dancearound"] ? (
                 <li>
                   Navigate to your{" "}
-                  <a href={EamuseImportInfo[game.internalName]?.scorePage}>
-                    {game.formattedName} score data page
+                  <a href={EamuseImportInfo["dancearound"]?.scorePage}>
+                    Dance aROUND score data page
                   </a>{" "}
-                  {game.formattedName} score data page
+                  Dance aROUND score data page
                 </li>
               ) : (
-                <li>Navigate to your {game.formattedName} score data page</li>
+                <li>Navigate to your Dance aROUND score data page</li>
               )}
-              {EamuseImportInfo[game.internalName] ? (
+              {EamuseImportInfo["dancearound"] ? (
                 <li>
                   Install the userscript to your browser (use an extension such
                   as Tampermonkey)
@@ -122,7 +117,7 @@ const EamusementUploadModal = ({
               ) : (
                 <li>
                   Scrape the data using any method of your choice and translate
-                  it into a Mirage {game.formattedName} compatible JSON format
+                  it into a Mirage Dance aROUND compatible JSON format
                 </li>
               )}
               <li>Upload the resulting JSON file into Mirage using the Batch-Manual Upload functionality</li>
@@ -134,10 +129,10 @@ const EamusementUploadModal = ({
           <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
             <p className="text-sm text-blue-400">
               <a
-                href={scriptLinkMap[game.internalName as keyof typeof scriptLinkMap]}
+                href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/dancearound_play_history.user.js"
                 className="underline"
               >
-                {game.formattedName} Userscript Download
+                e-amusement Recently Played Score Export Userscript (Last 30 Played)
               </a>
             </p>
           </div>
@@ -157,4 +152,4 @@ const EamusementUploadModal = ({
   );
 };
 
-export default EamusementUploadModal;
+export default DanceAroundModal;

@@ -7,7 +7,8 @@ import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
 
 const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
-const EamusementModal = lazy(() => import("../components/modals/EamusementModal"));
+const DancerushModal = lazy(() => import("../components/modals/DancerushModal"));
+const DanceAroundModal = lazy(() => import("../components/modals/DanceAroundModal"));
 const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 
 const Import = () => {
@@ -15,7 +16,8 @@ const Import = () => {
   const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState("");
   const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
-  const [isEamusementModalOpen, setIsEamusementModalOpen] = useState(false);
+  const [isDancerushModalOpen, setIsDancerushModalOpen] = useState(false);
+  const [isDanceAroundModalOpen, setIsDanceAroundModalOpen] = useState(false);
   const [isDivaNetModalOpen, setIsDivaNetModalOpen] = useState(false);
   const [supportedGames, setSupportedGames] = useState<SupportedGame[]>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
@@ -132,11 +134,11 @@ const Import = () => {
         return (
           <>
             <JsonUploadCard />
-            <EamusementModal
+            <DancerushModal
               isOpen={false}
               onClose={() => {}}
               game={supportedGames.find((g) => g.internalName === selectedGame)}
-              renderAsCard={() => setIsEamusementModalOpen(true)}
+              renderAsCard={() => setIsDancerushModalOpen(true)}
             />
           </>
         );
@@ -145,11 +147,11 @@ const Import = () => {
         return (
           <>
             <JsonUploadCard />
-            <EamusementModal
+            <DanceAroundModal
               isOpen={false}
               onClose={() => {}}
               game={supportedGames.find((g) => g.internalName === selectedGame)}
-              renderAsCard={() => setIsEamusementModalOpen(true)}
+              renderAsCard={() => setIsDanceAroundModalOpen(true)}
             />
           </>
         );
@@ -286,10 +288,20 @@ const Import = () => {
             }
           />
         )}
-        {isEamusementModalOpen && (
-          <EamusementModal
-            isOpen={isEamusementModalOpen}
-            onClose={() => setIsEamusementModalOpen(false)}
+        {isDancerushModalOpen && (
+          <DancerushModal
+            isOpen={isDancerushModalOpen}
+            onClose={() => setIsDancerushModalOpen(false)}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame) ||
+              undefined
+            }
+          />
+        )}
+        {isDanceAroundModalOpen && (
+          <DanceAroundModal
+            isOpen={isDanceAroundModalOpen}
+            onClose={() => setIsDanceAroundModalOpen(false)}
             game={
               supportedGames.find((g) => g.internalName === selectedGame) ||
               undefined
