@@ -1,5 +1,4 @@
 import type { SupportedGame } from "../../types/game";
-import { EamuseImportInfo } from "../../types/constants";
 
 interface DancerushModalProps {
   isOpen: boolean;
@@ -70,7 +69,7 @@ const DancerushModal = ({
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
-              Import DANCERUSH Data
+              Import DANCERUSH e-amusement Data
             </h3>
             <p className="text-slate-400 text-sm">
               Follow the instructions below to import your data
@@ -97,44 +96,48 @@ const DancerushModal = ({
               Instructions:
             </h4>
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
-              <li>Log into your e-amusement account</li>
-              {EamuseImportInfo["dancerush"] ? (
-                <li>
-                  Navigate to your{" "}
-                  <a href={EamuseImportInfo["dancerush"]?.scorePage}>
-                    DANCERUSH score data page
-                  </a>{" "}
-                  DANCERUSH score data page
-                </li>
-              ) : (
-                <li>Navigate to your DANCERUSH score data page</li>
-              )}
-              {EamuseImportInfo["dancerush"] ? (
-                <li>
-                  Install the userscript to your browser (use an extension such
-                  as Tampermonkey)
-                </li>
-              ) : (
-                <li>
-                  Scrape the data using any method of your choice and translate
-                  it into a Mirage DANCERUSH compatible JSON format
-                </li>
-              )}
-              <li>Upload the resulting JSON file into Mirage using the Batch-Manual Upload functionality</li>
+              <li>
+                Log into the{" "}
+                <a
+                  className="font-bold hover:underline"
+                  href="https://p.eagate.573.jp/game/dan/1st/top/entrance.html">
+                  DANCERUSH e-amusement page
+                </a>
+              </li>
+              <li>
+                Navigate to the{" "}
+                <a
+                  className="font-bold hover:underline"
+                  href="https://p.eagate.573.jp/game/dan/1st/playdata/index.html#play_hist">
+                  DANCERUSH Play History Page
+                </a>{" "}
+              </li>
+              <li>
+                Install the relevant userscript (use a browser extension such as{" "}
+                <a
+                  className="font-bold hover:underline"
+                  href="https://www.tampermonkey.net/">Tampermonkey</a>)
+              </li>
+              {/* Additional Info */}
+              <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
+                <p className="text-sm text-blue-400">
+                  <a
+                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js"
+                    className="font-bold underline"
+                  >
+                    e-amusement Recently Played Score Export Userscript (Last 20 Played)
+                  </a>
+                </p>
+              </div>
+              <li>
+                A button will appear on the page that you can click to start the scraping process.
+              </li>
+              <li>
+                Upload the resulting JSON file into Mirage using the
+                Batch-Manual Upload functionality
+              </li>
               <li>Verify that all data has been imported correctly</li>
             </ol>
-          </div>
-
-          {/* Additional Info */}
-          <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
-            <p className="text-sm text-blue-400">
-              <a
-                href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js"
-                className="underline"
-              >
-                e-amusement Recently Played Score Export Userscript (Last 20 Played)
-              </a>
-            </p>
           </div>
 
           {/* Actions */}

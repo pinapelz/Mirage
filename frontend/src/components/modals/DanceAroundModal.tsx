@@ -1,5 +1,4 @@
 import type { SupportedGame } from "../../types/game";
-import { EamuseImportInfo } from "../../types/constants";
 
 interface DanceAroundModalProps {
   isOpen: boolean;
@@ -12,7 +11,7 @@ const DanceAroundModal = ({
   isOpen,
   onClose,
   game,
-  renderAsCard
+  renderAsCard,
 }: DanceAroundModalProps) => {
   if (renderAsCard) {
     return (
@@ -53,8 +52,8 @@ const DanceAroundModal = ({
   const handleClose = () => {
     onClose();
   };
-  if(game === undefined){
-    return "Sorry, due to some extreme error the game you're looking for doesn't seem to exist..."
+  if (game === undefined) {
+    return "Sorry, due to some extreme error the game you're looking for doesn't seem to exist...";
   }
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -97,45 +96,50 @@ const DanceAroundModal = ({
               Instructions:
             </h4>
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
-              <li>Log into your e-amusement account</li>
-              {EamuseImportInfo["dancearound"] ? (
-                <li>
-                  Navigate to your{" "}
-                  <a href={EamuseImportInfo["dancearound"]?.scorePage}>
-                    Dance aROUND score data page
-                  </a>{" "}
-                  Dance aROUND score data page
-                </li>
-              ) : (
-                <li>Navigate to your Dance aROUND score data page</li>
-              )}
-              {EamuseImportInfo["dancearound"] ? (
-                <li>
-                  Install the userscript to your browser (use an extension such
-                  as Tampermonkey)
-                </li>
-              ) : (
-                <li>
-                  Scrape the data using any method of your choice and translate
-                  it into a Mirage Dance aROUND compatible JSON format
-                </li>
-              )}
-              <li>Upload the resulting JSON file into Mirage using the Batch-Manual Upload functionality</li>
+              <li>
+                Log into the{" "}
+                <a
+                  className="font-bold hover:underline"
+                  href="https://p.eagate.573.jp/game/around/1st/top/index.html">
+                  DANCE aROUND e-amusement page
+                </a>
+              </li>
+              <li>
+                Navigate to the{" "}
+                <a
+                  className="font-bold hover:underline"
+                  href="https://p.eagate.573.jp/game/around/1st/top/index.html#play_hist">
+                  DANCE aROUND Play History Page
+                </a>{" "}
+              </li>
+              <li>
+                Install the relevant userscript (use a browser extension such as{" "}
+                <a
+                  className="font-bold hover:underline"
+                  href="https://www.tampermonkey.net/">Tampermonkey</a>)
+              </li>
+              {/* Additional Info */}
+              <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
+                <p className="text-sm text-blue-400">
+                  <a
+                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancearound_play_history.user.js"
+                    className="font-bold underline"
+                  >
+                    e-amusement Recently Played Score Export Userscript (Last 20 Played)
+                  </a>
+                </p>
+              </div>
+              <li>
+                A button will appear on the page that you can click to start the scraping process.
+              </li>
+              <li>
+                Upload the resulting JSON file into Mirage using the
+                Batch-Manual Upload functionality
+              </li>
               <li>Verify that all data has been imported correctly</li>
             </ol>
           </div>
 
-          {/* Additional Info */}
-          <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
-            <p className="text-sm text-blue-400">
-              <a
-                href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/dancearound_play_history.user.js"
-                className="underline"
-              >
-                e-amusement Recently Played Score Export Userscript (Last 30 Played)
-              </a>
-            </p>
-          </div>
 
           {/* Actions */}
           <div className="flex justify-center">

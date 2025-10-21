@@ -1,18 +1,18 @@
 import type { SupportedGame } from "../../types/game";
 
-interface DivaNetModalProps {
+interface MusicDiverMyPageModalProps {
   isOpen: boolean;
   onClose: () => void;
   game: SupportedGame | undefined;
   renderAsCard?: () => void;
 }
 
-const DivaNetModal = ({
+const MusicDiverMyPageModal = ({
   isOpen,
   onClose,
   game,
   renderAsCard
-}: DivaNetModalProps) => {
+}: MusicDiverMyPageModalProps) => {
   if (renderAsCard) {
     return (
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
@@ -32,16 +32,16 @@ const DivaNetModal = ({
           </svg>
         </div>
         <h4 className="text-white font-semibold mb-2">
-          DIVA.NET Play History
+          MUSIC DIVER MyPage
         </h4>
         <p className="text-slate-400 text-sm mb-4">
-          Import via scraping your playdata from SEGA DIVA.NET
+          Import Play History via MUSIC DIVER MyPage
         </p>
         <button
           onClick={renderAsCard}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
         >
-          Export DIVA.NET
+          Export MyPage
         </button>
       </div>
     );
@@ -82,19 +82,20 @@ const DivaNetModal = ({
               Instructions:
             </h4>
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
-              <li>Log into your <a className="font-bold hover:underline" href="https://project-diva-ac.net/divanet/">DIVA.NET account</a></li>
+              <li>Log into your <a href="https://mypage.musicdiver.jp">MUSIC DIVER MyPage account</a></li>
               <li>
-                Navigate to the <a className="font-bold hover:underline" href="https://project-diva-ac.net/divanet/personal/playHistory/0">Play History (プレイ履歴) Page</a>
+                Navigate to the <a href="">Play History (プレイ履歴) Page</a>
               </li>
               <li>
-                Install the relevant userscript (use a browser extension like <a className="font-bold hover:underline" href="https://www.tampermonkey.net/">Tampermonkey</a>)
+                Install the appropriate userscript to your browser (use an extension such
+                as Tampermonkey).
               </li>
               {/* Additional Info */}
-              <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
+              <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
                 <p className="text-sm text-blue-400">
                   <a
                     href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/diva_net_history.user.js"
-                    className="font-bold underline"
+                    className="underline"
                   >
                     DIVA.NET Recently Played Score Export Userscript (Last 20 Played)
                   </a>
@@ -124,4 +125,4 @@ const DivaNetModal = ({
   );
 };
 
-export default DivaNetModal;
+export default MusicDiverMyPageModal;
