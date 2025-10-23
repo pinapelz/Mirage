@@ -37,10 +37,8 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
-    title: "Title",
-    artist: "Artist",
     score: "Score",
-    difficulty: "Difficulty Number",
+    difficulty: "Level",
     lamp: "Rank",
     diff_lamp: "Chart Difficulty",
     timestamp: "Date",
@@ -50,7 +48,6 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     great: "Great",
     good: "Good",
     bad: "Bad",
-    miss: "Miss",
     username: "Username",
     num_players: "Players"
   };
@@ -61,7 +58,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "lamp",
     "diff_lamp",
   ];
-  const expandableKeys = ["judgements", "optional"];
+  const expandableKeys = ["judgements", "optional", "num_players"];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
@@ -272,7 +269,6 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { mainStats, expandable, timestamp } =
             getScoreEntries(score);
           const chartIdHash = SHA1(`dancerush${score.title}${score.artist}`).toString();

@@ -44,8 +44,6 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
-    title: "Title",
-    artist: "Artist",
     score: "SCORE",
     difficulty: "Difficulty Rating",
     lamp: "CLEAR RANK",
@@ -53,13 +51,7 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
     timestamp: "Date",
     judgements: "Judgements",
     maxCombo: "Max Combo",
-    perfect: "Perfect",
-    great: "Great",
-    good: "Good",
-    bad: "Bad",
-    miss: "Miss",
     username: "Username",
-    num_players: "Players"
   };
 
   const mainStatKeys = [
@@ -69,6 +61,7 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "diff_lamp",
   ];
   const expandableKeys = ["judgements", "optional"];
+  const gameParam = new URLSearchParams(window.location.search).get("game") || "diva";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
@@ -318,10 +311,9 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { mainStats, expandable, others, timestamp } =
+          const chartIdHash = SHA1(`${gameParam}${score.title}${score.artist}`).toString();
+          const { mainStats, expandable, timestamp } =
             getScoreEntries(score);
-          const chartIdHash = SHA1(`diva${score.title}${score.artist}`).toString();
           return (
             <div
               key={score.id || index}
@@ -331,7 +323,7 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   {!hideTitleArtist && (
-                    <Link to={`/chart?chartId=${chartIdHash}&game=diva`}>
+                    <Link to={`/chart?chartId=${chartIdHash}&game=${gameParam}`}>
                       <h3 className="text-lg font-semibold text-white mb-1 break-words leading-tight">
                         {score.title || score.song || "Unknown Title"}
                       </h3>
@@ -375,24 +367,6 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
                   {renderValue(value, key)}
                 </div>
               ))}
-
-              {/* Other fields */}
-              {others.length > 0 && (
-                <div className="mb-4">
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    {others.map(([key, value]) => (
-                      <div key={key} className="flex justify-between">
-                        <span className="text-slate-400">
-                          {getDisplayName(key)}:
-                        </span>
-                        <span className="text-white font-medium">
-                          {renderValue(value, key)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Timestamp */}
               <div className="pt-4 border-t border-slate-800/50">

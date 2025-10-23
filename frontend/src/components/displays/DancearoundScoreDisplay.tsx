@@ -37,20 +37,16 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
-    title: "Title",
-    artist: "Artist",
     score: "Score",
-    difficulty: "Difficulty Level",
+    difficulty: "Difficulty",
     lamp: "Rank",
-    diff_lamp: "Chart Difficulty",
-    timestamp: "Date",
+    level: "Level",
     judgements: "Judgements",
     maxCombo: "Max Combo",
     perfect: "Perfect",
     great: "Great",
     good: "Good",
     bad: "Bad",
-    miss: "Miss",
     username: "Username",
     clear_status: "Status"
   };
@@ -58,11 +54,10 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
   const mainStatKeys = [
     "score",
     "difficulty",
+    "level",
     "lamp",
-    "diff_lamp",
   ];
   const expandableKeys = ["judgements", "optional", "clear_status"];
-  const localSkipKeys = ["num_players"]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
@@ -178,7 +173,7 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
   const getScoreEntries = (score: Score) => {
     const entries = Object.entries(score).filter(
-      ([key]) => !globalSkipKeys.includes(key) && !localSkipKeys.includes(key),
+      ([key]) => !globalSkipKeys.includes(key) && key !== "num_players",
     );
 
     const mainStats = entries.filter(([key]) => mainStatKeys.includes(key));
@@ -227,7 +222,7 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
   // Get all possible keys for table headers
   const allKeys = Array.from(
     new Set(scores.flatMap((score) => Object.keys(score))),
-  ).filter((key) => !globalSkipKeys.includes(key) && !localSkipKeys.includes(key));
+  ).filter((key) => !globalSkipKeys.includes(key) && key !== "num_players");
 
   // Prioritize important keys for table display
   const tableKeys = [
@@ -268,7 +263,6 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {sortedScores.map((score, index) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { mainStats, expandable, timestamp } =
             getScoreEntries(score);
           const chartIdHash = SHA1(`dancearound${score.title}${score.artist}`).toString();
