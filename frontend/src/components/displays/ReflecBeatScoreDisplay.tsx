@@ -39,49 +39,28 @@ const ReflecBeatScoreDisplay: React.FC<ScoreDisplayProps> = ({
     difficulty: "Difficulty",
     lifeLeft: "Life Remaining",
     lamp: "Lamp",
-    diff_lamp: "Lamp",
     timestamp: "Date",
     judgements: "Judgements",
-    maxCombo: "Max Combo",
-    perfect: "Perfect",
+    justreflec: "JustReflec",
+    just: "Just",
     great: "Great",
     good: "Good",
-    bad: "Bad",
     miss: "Miss",
     scorePercent: "Score %",
-    rating: "Rating",
-    percent: "Percent",
-    chart: "Chart",
-    song: "Song",
-    ranking: "Ranking",
-    combo: "Combo",
-    grade: "Grade",
     level: "Level",
-    bpm: "BPM",
-    notes: "Notes",
-    duration: "Duration",
-    playcount: "Play Count",
     date: "Date",
     time: "Time",
     username: "Username",
-    num_players: "Players"
   };
 
   const mainStatKeys = [
     "score",
     "difficulty",
     "lamp",
-    "rank",
-    "diff_lamp",
-    "percent",
-    "rating",
-    "grade",
     "scorePercent"
   ];
   const expandableKeys = ["judgements", "optional"];
-  const skipKeys = ["user", "username"]
-  // get ?game=
-  const internalGameName =new URLSearchParams(window.location.search).get("game") || "dancerush";
+  const gameParam = new URLSearchParams(window.location.search).get("game") || "reflecbeat";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
@@ -278,11 +257,9 @@ const ReflecBeatScoreDisplay: React.FC<ScoreDisplayProps> = ({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {sortedScores.map((score, index) => {
-          const chartIdHash = SHA1(`${internalGameName}${score.title}${score.artist}`).toString();
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { mainStats, expandable, others: rawOthers, timestamp } =
+          const chartIdHash = SHA1(`${gameParam}${score.title}${score.artist}`).toString();
+          const { mainStats, expandable, others, timestamp } =
             getScoreEntries(score);
-          const others = rawOthers.filter(([key]) => !skipKeys.includes(key));
 
 
           return (
@@ -294,7 +271,7 @@ const ReflecBeatScoreDisplay: React.FC<ScoreDisplayProps> = ({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   {!hideTitleArtist && (
-                    <Link to={`/chart?chartId=${chartIdHash}&game=${internalGameName}`}>
+                    <Link to={`/chart?chartId=${chartIdHash}&game=${gameParam}`}>
                       <h3 className="text-base sm:text-lg font-semibold text-white mb-1 break-words leading-tight">
                         {score.title || score.song || "Unknown Title"}
                       </h3>

@@ -37,6 +37,8 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
+    title: "Title",
+    artist: "Artist",
     score: "Score",
     difficulty: "Level",
     lamp: "Rank",

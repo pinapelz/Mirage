@@ -44,11 +44,18 @@ const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
 }) => {
   // Key mappings for better display names. Hit or miss
   const keyDisplayNames: Record<string, string> = {
+    title: "Title",
+    artist: "Artist",
     score: "SCORE",
     difficulty: "Difficulty Rating",
     lamp: "CLEAR RANK",
     diff_lamp: "Chart Difficulty",
     timestamp: "Date",
+    sad: "Sad",
+    cool: "Cool",
+    fine: "Fine",
+    safe: "Safe",
+    worst: "Worst",
     judgements: "Judgements",
     maxCombo: "Max Combo",
     username: "Username",
