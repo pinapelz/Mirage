@@ -24,21 +24,25 @@
         });
     }
 
-    function getDifficulty(fumen, mdb) {
+    function getDifficulty(fumen, songData) {
         let difficulty, lamp;
 
         switch (fumen) {
             case "ADVANCED":
-                difficulty = mdb.fumens.ADVANCED.level;
+                difficulty = songData?.ADVANCED?.level || 0;
                 lamp = "ADVANCED";
                 break;
             case "BASIC":
-                difficulty = mdb.fumens.BASIC.level;
+                difficulty = songData?.BASIC?.level || 0;
                 lamp = "BASIC";
                 break;
             case "MASTER":
-                difficulty = mdb.fumens.MASTER.level;
+                difficulty = songData?.MASTER?.level || 0;
                 lamp = "MASTER";
+                break;
+            default:
+                difficulty = 0;
+                lamp = fumen;
                 break;
         }
 
@@ -105,17 +109,15 @@
                 },
             };
             const remappedList = play_hist.map((entry) => {
-                const diff = getDifficulty(entry.music_type, song_db[entry.music_id].difficulty)
-                const numPlayers = (entry.p1 && entry.p2) ? 2 : 1;
+                const level = getDifficulty(entry.fumen_type, song_db[entry.music_id].fumens)
                 return {
                     title: song_db[entry.music_id].title_name,
                     artist: song_db[entry.music_id].artist_name,
-                    diff_lamp: diff.lamp,
-                    num_players: numPlayers,
+                    level: level.difficulty,
                     score: entry.score,
                     lamp: getLampText(entry.rank),
                     clear_status: getClearStatusText(entry.clear_status),
-                    difficulty: diff.difficulty,
+                    difficulty: level.lamp,
                     timestamp: entry.play_date,
                     judgements: {
                         "perfect": entry.perfect,
@@ -130,6 +132,7 @@
                 };
             });
             mirage.scores = remappedList;
+            console.log("Final mirage object:", mirage);
 
             const blob = new Blob([JSON.stringify(mirage, null, 2)], {
                 type: "application/json",
@@ -139,6 +142,7 @@
             a.href = URL.createObjectURL(blob);
             a.download = "dancearound_scores_mirage_import.json";
             a.click();
+            console
         } catch (err) {
             console.error("Fetch/download error:", err);
             alert("Failed to fetch or process JSON. See console for details.");
