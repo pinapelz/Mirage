@@ -1,14 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { authApi } from '../utils/authApi';
-import type { User as ApiUser, SessionResponse } from '../utils/authApi';
+import type { User, SessionResponse } from '../utils/authApi';
 
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  isAdmin: boolean;
-}
 
 interface AuthContextType {
   user: User | null;
@@ -40,13 +34,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const isAuthenticated = user !== null;
 
-  const transformApiUser = (apiUser: ApiUser): User => ({
-    id: apiUser.id,
-    username: apiUser.username,
-    email: apiUser.email,
-    isAdmin: apiUser.isAdmin,
-  });
-
   const checkAuth = async () => {
     try {
       const response = await authApi.getSession();
@@ -59,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const sessionData = response.data as SessionResponse;
 
       if (sessionData.authenticated && sessionData.user) {
-        setUser(transformApiUser(sessionData.user));
+        setUser(sessionData.user);
       } else {
         setUser(null);
       }
@@ -80,7 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       if (response.data) {
-        setUser(transformApiUser(response.data as ApiUser));
+        setUser(response.data as User);
       }
 
       return { success: true };
@@ -99,7 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       if (response.data) {
-        setUser(transformApiUser(response.data as ApiUser));
+        setUser(response.data as User);
       }
 
       return { success: true };
