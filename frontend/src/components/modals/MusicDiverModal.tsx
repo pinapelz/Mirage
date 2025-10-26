@@ -16,9 +16,9 @@ const MusicDiverMyPageModal = ({
   if (renderAsCard) {
     return (
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-        <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
+        <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
           <svg
-            className="w-6 h-6 text-green-400"
+            className="w-6 h-6 text-blue-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -35,11 +35,11 @@ const MusicDiverMyPageModal = ({
           MUSIC DIVER MyPage
         </h4>
         <p className="text-slate-400 text-sm mb-4">
-          Import Play History via MUSIC DIVER MyPage
+          Import Play History via MUSIC DIVER MyPage (with and without Diver Pass)
         </p>
         <button
           onClick={renderAsCard}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
         >
           Export MyPage
         </button>
@@ -75,6 +75,14 @@ const MusicDiverMyPageModal = ({
               Follow the instructions below to import your data
             </p>
           </div>
+          {/* Warning */}
+          <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
+            <p className="text-sm text-blue-400">
+              You need to be subscribed to Diver Pass to view playdata beyond the last 5 charts played.<br/>
+              You can purchase Diver Pass on MUSIC DIVER cabinets after carding in.
+            </p>
+          </div>
+
 
           {/* Instructions */}
           <div className="mb-4 rounded-md bg-slate-800 border border-slate-700 p-4">
@@ -84,20 +92,20 @@ const MusicDiverMyPageModal = ({
             <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
               <li>Log into your <a href="https://mypage.musicdiver.jp">MUSIC DIVER MyPage account</a></li>
               <li>
-                Navigate to the <a href="">Play History (プレイ履歴) Page</a>
+                Click the 3 dots on the top right Navigate to the <a href="https://mypage.musicdiver.jp/record?view=history">Record Page</a>
               </li>
               <li>
                 Install the appropriate userscript to your browser (use an extension such
                 as Tampermonkey).
               </li>
               {/* Additional Info */}
-              <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
+              <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
                 <p className="text-sm text-blue-400">
                   <a
-                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/diva_net_history.user.js"
+                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/musicdiver/musicdiver_recent_history.user.js"
                     className="underline"
                   >
-                    DIVA.NET Recently Played Score Export Userscript (Last 20 Played)
+                    MyPage Recently Played Score Export Userscript
                   </a>
                 </p>
               </div>

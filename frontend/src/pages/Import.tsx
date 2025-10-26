@@ -10,6 +10,7 @@ const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"
 const DancerushModal = lazy(() => import("../components/modals/DancerushModal"));
 const DanceAroundModal = lazy(() => import("../components/modals/DanceAroundModal"));
 const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
+const MusicDiverModal = lazy(() => import("../components/modals/MusicDiverModal"));
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -19,6 +20,7 @@ const Import = () => {
   const [isDancerushModalOpen, setIsDancerushModalOpen] = useState(false);
   const [isDanceAroundModalOpen, setIsDanceAroundModalOpen] = useState(false);
   const [isDivaNetModalOpen, setIsDivaNetModalOpen] = useState(false);
+  const [isMusicDiverModalOpen, setIsMusicDiverModalOpen] = useState(false);
   const [supportedGames, setSupportedGames] = useState<SupportedGame[]>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [uploadStatus, setUploadStatus] = useState<{
@@ -142,7 +144,6 @@ const Import = () => {
             />
           </>
         );
-        break;
       case "dancearound":
         return (
           <>
@@ -155,7 +156,6 @@ const Import = () => {
             />
           </>
         );
-        break;
       case "diva":
         return (
           <>
@@ -168,7 +168,18 @@ const Import = () => {
             />
           </>
         );
-        break;
+      case "musicdiver":
+        return (
+          <>
+            <JsonUploadCard />
+            <MusicDiverModal
+              isOpen={false}
+              onClose={() => {}}
+              game={supportedGames.find((g) => g.internalName === selectedGame)}
+              renderAsCard={() => setIsMusicDiverModalOpen(true)}
+            />
+          </>
+        );
       default:
         return <JsonUploadCard />;
     }
@@ -312,6 +323,16 @@ const Import = () => {
           <DivaNetModal
             isOpen={isDivaNetModalOpen}
             onClose={() => setIsDivaNetModalOpen(false)}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame) ||
+              undefined
+            }
+          />
+        )}
+        {isMusicDiverModalOpen && (
+          <MusicDiverModal
+            isOpen={isMusicDiverModalOpen}
+            onClose={() => setIsMusicDiverModalOpen(false)}
             game={
               supportedGames.find((g) => g.internalName === selectedGame) ||
               undefined
