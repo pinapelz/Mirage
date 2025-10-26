@@ -5,10 +5,10 @@ import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import type { SupportedGame } from "../types/game";
 import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
+import { EamusementUserscriptCard } from "../components/modals/EamusementUserscriptModal";
 
 const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
-const DancerushModal = lazy(() => import("../components/modals/DancerushModal"));
-const DanceAroundModal = lazy(() => import("../components/modals/DanceAroundModal"));
+const EamusementUserscriptModal = lazy(() => import("../components/modals/EamusementUserscriptModal"));
 const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 const MusicDiverModal = lazy(() => import("../components/modals/MusicDiverModal"));
 
@@ -128,19 +128,15 @@ const Import = () => {
     </div>
   );
 
-  // Component removed - moved to EamusementModal.tsx
-
   const renderImportOptions = () => {
     switch (selectedGame) {
       case "dancerush":
         return (
           <>
             <JsonUploadCard />
-            <DancerushModal
-              isOpen={false}
-              onClose={() => {}}
-              game={supportedGames.find((g) => g.internalName === selectedGame)}
-              renderAsCard={() => setIsDancerushModalOpen(true)}
+            <EamusementUserscriptCard
+            mainGameName="DANCERUSH"
+            onClick={() => setIsDancerushModalOpen(true)}
             />
           </>
         );
@@ -148,11 +144,9 @@ const Import = () => {
         return (
           <>
             <JsonUploadCard />
-            <DanceAroundModal
-              isOpen={false}
-              onClose={() => {}}
-              game={supportedGames.find((g) => g.internalName === selectedGame)}
-              renderAsCard={() => setIsDanceAroundModalOpen(true)}
+            <EamusementUserscriptCard
+            mainGameName="DANCE aROUND"
+            onClick={() => setIsDanceAroundModalOpen(true)}
             />
           </>
         );
@@ -300,23 +294,29 @@ const Import = () => {
           />
         )}
         {isDancerushModalOpen && (
-          <DancerushModal
+          <EamusementUserscriptModal
             isOpen={isDancerushModalOpen}
             onClose={() => setIsDancerushModalOpen(false)}
-            game={
-              supportedGames.find((g) => g.internalName === selectedGame) ||
-              undefined
-            }
+            mainGameName="DANCERUSH"
+            userPage="https://p.eagate.573.jp/game/dan/1st/top/entrance.html"
+            importPage="https://p.eagate.573.jp/game/dan/1st/top/index.html#play_his"
+            scripts={[{
+              name: "e-amusement Recently Played Score Export Userscript (Last 20 Played)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js"
+            }]}
           />
         )}
         {isDanceAroundModalOpen && (
-          <DanceAroundModal
+          <EamusementUserscriptModal
             isOpen={isDanceAroundModalOpen}
             onClose={() => setIsDanceAroundModalOpen(false)}
-            game={
-              supportedGames.find((g) => g.internalName === selectedGame) ||
-              undefined
-            }
+            mainGameName="DANCE aROUND"
+            userPage="https://p.eagate.573.jp/game/around/1st/top/index.html"
+            importPage="https://p.eagate.573.jp/game/around/1st/top/index.html#play_hist"
+            scripts={[{
+              name: "e-amusement Recently Played Score Export Userscript (Last 20 Played)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/dancearound_play_history.user.js"
+            }]}
           />
         )}
         {isDivaNetModalOpen && (

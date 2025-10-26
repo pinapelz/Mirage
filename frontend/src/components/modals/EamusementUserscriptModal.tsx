@@ -1,59 +1,71 @@
-import type { SupportedGame } from "../../types/game";
-
-interface DanceAroundModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  game: SupportedGame | undefined;
-  renderAsCard?: () => void;
+interface UserScript {
+  name: string;
+  url: string;
 }
 
-const DanceAroundModal = ({
+interface EamusementUserscriptModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mainGameName: string;
+  userPage: string;
+  importPage: string;
+  scripts: UserScript[];
+}
+
+interface EamusementUserscriptCardProps {
+  mainGameName: string;
+  onClick: () => void;
+}
+
+export const EamusementUserscriptCard = ({ mainGameName, onClick }: EamusementUserscriptCardProps) => {
+  return (
+    <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
+      <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
+        <svg
+          className="w-6 h-6 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+          />
+        </svg>
+      </div>
+      <h4 className="text-white font-semibold mb-2">
+        {mainGameName} e-amusement Play History (Userscript)
+      </h4>
+      <p className="text-slate-400 text-sm mb-4">
+        Import via scraping your {mainGameName} playdata from KONAMI e-amusement
+      </p>
+      <button
+        onClick={onClick}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+      >
+        Export e-amusement
+      </button>
+    </div>
+  )
+}
+
+const EamusementUserscriptModal = ({
   isOpen,
   onClose,
-  game,
-  renderAsCard,
-}: DanceAroundModalProps) => {
-  if (renderAsCard) {
-    return (
-      <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-        <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
-          <svg
-            className="w-6 h-6 text-blue-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-            />
-          </svg>
-        </div>
-        <h4 className="text-white font-semibold mb-2">
-          Dance aROUND e-amusement Play History
-        </h4>
-        <p className="text-slate-400 text-sm mb-4">
-          Import via scraping your Dance aROUND playdata from KONAMI e-amusement
-        </p>
-        <button
-          onClick={renderAsCard}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
-        >
-          Export e-amusement
-        </button>
-      </div>
-    );
-  }
-
+  mainGameName,
+  userPage,
+  importPage,
+  scripts,
+}: EamusementUserscriptModalProps) => {
   if (!isOpen) return null;
 
   const handleClose = () => {
     onClose();
   };
-  if (game === undefined) {
-    return "Sorry, due to some extreme error the game you're looking for doesn't seem to exist...";
+  if(mainGameName === undefined){
+    return "Sorry, due to some extreme error the game you're looking for doesn't seem to exist..."
   }
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -69,7 +81,7 @@ const DanceAroundModal = ({
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
-              Import Dance aROUND Data
+              Import {mainGameName} e-amusement Data
             </h3>
             <p className="text-slate-400 text-sm">
               Follow the instructions below to import your data
@@ -100,16 +112,16 @@ const DanceAroundModal = ({
                 Log into the{" "}
                 <a
                   className="font-bold hover:underline"
-                  href="https://p.eagate.573.jp/game/around/1st/top/index.html">
-                  DANCE aROUND e-amusement page
+                  href={userPage}>
+                  {mainGameName} e-amusement page
                 </a>
               </li>
               <li>
                 Navigate to the{" "}
                 <a
                   className="font-bold hover:underline"
-                  href="https://p.eagate.573.jp/game/around/1st/top/index.html#play_hist">
-                  DANCE aROUND Play History Page
+                  href={importPage}>
+                  {mainGameName} Play History Page
                 </a>{" "}
               </li>
               <li>
@@ -121,12 +133,14 @@ const DanceAroundModal = ({
               {/* Additional Info */}
               <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
                 <p className="text-sm text-blue-400">
-                  <a
-                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancearound_play_history.user.js"
-                    className="font-bold underline"
-                  >
-                    e-amusement Recently Played Score Export Userscript (Last 20 Played)
-                  </a>
+                  {scripts.map(userscript => (
+                    <a
+                      href={userscript.url}
+                      className="font-bold underline"
+                    >
+                      {userscript.name}
+                    </a>
+                  ))}
                 </p>
               </div>
               <li>
@@ -139,7 +153,6 @@ const DanceAroundModal = ({
               <li>Verify that all data has been imported correctly</li>
             </ol>
           </div>
-
 
           {/* Actions */}
           <div className="flex justify-center">
@@ -156,4 +169,4 @@ const DanceAroundModal = ({
   );
 };
 
-export default DanceAroundModal;
+export default EamusementUserscriptModal;
