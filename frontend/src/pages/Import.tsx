@@ -6,21 +6,22 @@ import type { SupportedGame } from "../types/game";
 import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
 import { EamusementUserscriptCard } from "../components/modals/EamusementUserscriptModal";
+import { FlowerUserscriptCard } from "../components/modals/FlowerUserscriptModal";
 
 const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
 const EamusementUserscriptModal = lazy(() => import("../components/modals/EamusementUserscriptModal"));
 const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 const MusicDiverModal = lazy(() => import("../components/modals/MusicDiverModal"));
+const FlowerUserscriptModal = lazy(() => import("../components/modals/FlowerUserscriptModal"));
+
+type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat';
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
   const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState("");
-  const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
-  const [isDancerushModalOpen, setIsDancerushModalOpen] = useState(false);
-  const [isDanceAroundModalOpen, setIsDanceAroundModalOpen] = useState(false);
-  const [isDivaNetModalOpen, setIsDivaNetModalOpen] = useState(false);
-  const [isMusicDiverModalOpen, setIsMusicDiverModalOpen] = useState(false);
+  const [openModal, setOpenModal] = useState<ModalType | null>(null);
+
   const [supportedGames, setSupportedGames] = useState<SupportedGame[]>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [uploadStatus, setUploadStatus] = useState<{
@@ -120,7 +121,7 @@ const Import = () => {
         Upload your game data from a Mirage compatible JSON file
       </p>
       <button
-        onClick={() => setIsJsonModalOpen(true)}
+        onClick={() => setOpenModal('json')}
         className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
       >
         Upload JSON
@@ -136,7 +137,7 @@ const Import = () => {
             <JsonUploadCard />
             <EamusementUserscriptCard
             mainGameName="DANCERUSH"
-            onClick={() => setIsDancerushModalOpen(true)}
+            onClick={() => setOpenModal('dancerush')}
             />
           </>
         );
@@ -145,8 +146,8 @@ const Import = () => {
           <>
             <JsonUploadCard />
             <EamusementUserscriptCard
-            mainGameName="DANCE aROUND"
-            onClick={() => setIsDanceAroundModalOpen(true)}
+              mainGameName="DANCE aROUND"
+              onClick={() => setOpenModal('dancearound')}
             />
           </>
         );
@@ -158,7 +159,7 @@ const Import = () => {
               isOpen={false}
               onClose={() => {}}
               game={supportedGames.find((g) => g.internalName === selectedGame)}
-              renderAsCard={() => setIsDivaNetModalOpen(true)}
+              renderAsCard={() => setOpenModal('divanet')}
             />
           </>
         );
@@ -170,7 +171,27 @@ const Import = () => {
               isOpen={false}
               onClose={() => {}}
               game={supportedGames.find((g) => g.internalName === selectedGame)}
-              renderAsCard={() => setIsMusicDiverModalOpen(true)}
+              renderAsCard={() => setOpenModal('musicdiver')}
+            />
+          </>
+        );
+      case "nostalgia":
+        return (
+          <>
+            <JsonUploadCard />
+            <FlowerUserscriptCard
+            mainGameName="NOSTALGIA"
+            onClick={() => setOpenModal('nostalgia')}
+            />
+          </>
+        );
+      case "reflecbeat":
+        return (
+          <>
+            <JsonUploadCard />
+            <FlowerUserscriptCard
+            mainGameName="REFLEC BEAT"
+            onClick={() => setOpenModal('reflecbeat')}
             />
           </>
         );
@@ -282,10 +303,10 @@ const Import = () => {
 
       {/* Modals wrapped in Suspense */}
       <Suspense fallback={<div>Loading...</div>}>
-        {isJsonModalOpen && (
+        {openModal === 'json' && (
           <JsonUploadModal
-            isOpen={isJsonModalOpen}
-            onClose={() => setIsJsonModalOpen(false)}
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
             onUpload={handleJsonUpload}
             game={
               supportedGames.find((g) => g.internalName === selectedGame)
@@ -293,23 +314,23 @@ const Import = () => {
             }
           />
         )}
-        {isDancerushModalOpen && (
+        {openModal === 'dancerush' && (
           <EamusementUserscriptModal
-            isOpen={isDancerushModalOpen}
-            onClose={() => setIsDancerushModalOpen(false)}
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
             mainGameName="DANCERUSH"
             userPage="https://p.eagate.573.jp/game/dan/1st/top/entrance.html"
-            importPage="https://p.eagate.573.jp/game/dan/1st/top/index.html#play_his"
+            importPage="https://p.eagate.573.jp/payment/p/ex_select_course.html"
             scripts={[{
               name: "e-amusement Recently Played Score Export Userscript (Last 20 Played)",
               url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js"
             }]}
           />
         )}
-        {isDanceAroundModalOpen && (
+        {openModal === 'dancearound' && (
           <EamusementUserscriptModal
-            isOpen={isDanceAroundModalOpen}
-            onClose={() => setIsDanceAroundModalOpen(false)}
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
             mainGameName="DANCE aROUND"
             userPage="https://p.eagate.573.jp/game/around/1st/top/index.html"
             importPage="https://p.eagate.573.jp/game/around/1st/top/index.html#play_hist"
@@ -319,24 +340,50 @@ const Import = () => {
             }]}
           />
         )}
-        {isDivaNetModalOpen && (
+        {openModal === 'divanet' && (
           <DivaNetModal
-            isOpen={isDivaNetModalOpen}
-            onClose={() => setIsDivaNetModalOpen(false)}
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
             game={
               supportedGames.find((g) => g.internalName === selectedGame) ||
               undefined
             }
           />
         )}
-        {isMusicDiverModalOpen && (
+        {openModal === 'musicdiver' && (
           <MusicDiverModal
-            isOpen={isMusicDiverModalOpen}
-            onClose={() => setIsMusicDiverModalOpen(false)}
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
             game={
               supportedGames.find((g) => g.internalName === selectedGame) ||
               undefined
             }
+          />
+        )}
+        {openModal === 'nostalgia' && (
+          <FlowerUserscriptModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            mainGameName="NOSTALGIA"
+            userPage="https://projectflower.eu"
+            importPage="https://projectflower.eu/game/nostalgia/54827307"
+            scripts={[{
+              name: "Flower Play History (Exports only the page you are on)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/nostalgia/nostalgia_flower_scraper.user.js"
+            }]}
+          />
+        )}
+        {openModal === 'reflecbeat' && (
+          <FlowerUserscriptModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            mainGameName="REFLEC BEAT"
+            userPage="https://projectflower.eu"
+            importPage="https://projectflower.eu/game/rb/profile/21363050"
+            scripts={[{
+              name: "Flower Play History (Exports only the page you are on)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/reflecbeat_flower_scraper.user.js"
+            }]}
           />
         )}
       </Suspense>
