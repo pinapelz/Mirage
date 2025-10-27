@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import LoadingDisplay from "../components/displays/LoadingDisplay";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { NavBar } from "../components/NavBar";
@@ -190,12 +191,7 @@ const AllScores = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-          <p className="text-slate-300 text-lg">Loading games...</p>
-        </div>
-      </div>
+      <LoadingDisplay message="Loading Community Scores..." />
     );
   }
 

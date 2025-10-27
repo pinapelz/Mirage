@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import LoadingDisplay from "../components/displays/LoadingDisplay";
 import { NavBar } from "../components/NavBar";
 import { useAuth } from "../contexts/AuthContext";
 import type { SupportedGame } from "../types/game";
@@ -77,12 +78,7 @@ const Home = () => {
 
   if (isLoading || gamesLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-300">Loading dashboard...</p>
-        </div>
-      </div>
+      <LoadingDisplay />
     );
   }
 
