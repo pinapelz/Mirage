@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import LoadingDisplay  from "../components/displays/LoadingDisplay";
+import LoadingDisplay  from "../components/LoadingDisplay";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { NavBar } from "../components/NavBar";

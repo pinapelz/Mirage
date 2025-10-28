@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from "react";
 import { useNavigate } from "react-router";
-import LoadingDisplay from "../components/displays/LoadingDisplay";
+import LoadingDisplay from "../components/LoadingDisplay";
 import { useAuth } from "../contexts/AuthContext";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import type { SupportedGame } from "../types/game";

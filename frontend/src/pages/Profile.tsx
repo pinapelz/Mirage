@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import LoadingDisplay  from "../components/displays/LoadingDisplay";
+import LoadingDisplay  from "../components/LoadingDisplay";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import { NavBar } from '../components/NavBar';
 import { useAuth } from "../contexts/AuthContext";
