@@ -46,3 +46,46 @@ export const handleGetCurrentSession =  async (req: express.Request, res: expres
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export const handleGetScoresHeatmap = async (req: express.Request, res: express.Response) => {
+  const { userId, gameInternalName } = req.query;
+  if (!userId) {
+    return res.status(400).json({ error: "Must specify userId to lookup parameters" });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId as string) },
+      select: { id: true, username: true, isAdmin: true }
+    });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const oneYearAndOneDay = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+    const unixMs = Math.floor(oneYearAndOneDay.getTime() / 1000);
+
+    const scores = await prisma.score.findMany({
+      where: {
+        userId: parseInt(userId as string),
+        timestamp: { gte: unixMs },
+        ...(gameInternalName && { gameInternalName: gameInternalName as string })
+      },
+      orderBy: { timestamp: 'desc' },
+      select: {
+        timestamp: true
+      }
+    }).then(scores => scores.map(score => ({
+      ...score,
+      timestamp: Number(score.timestamp)
+    })))
+
+    res.json({
+      "username": user.username,
+      "isAdmin": user.isAdmin,
+      scores
+    });
+  } catch (error) {
+    console.error('Session check error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

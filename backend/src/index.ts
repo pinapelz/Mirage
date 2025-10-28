@@ -51,6 +51,8 @@ app.post('/api/logout', requireAuth, authRoutes.handleLogout);
 
 app.get('/api/me', userRoutes.handleMeRoute);
 app.get('/api/session', userRoutes.handleGetCurrentSession);
+app.get('/api/heatmap', requireAuth, userRoutes.handleGetScoresHeatmap);
+
 
 app.get('/api/supportedGames', gameRoutes.handleGetSupportedGames);
 
