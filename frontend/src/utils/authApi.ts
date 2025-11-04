@@ -156,6 +156,7 @@ export interface User {
   username: string;
   email: string;
   isAdmin: boolean;
+  bio?: string;
 }
 
 export interface SessionResponse {

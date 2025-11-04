@@ -4,12 +4,13 @@ import { prisma } from '../config/db';
 
 export const handleMeRoute = async (req: express.Request, res: express.Response) => {
   try {
-    if (!req.session.userId) {
-      return res.status(403).json({ error: 'Not Authenticated' });
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ error: 'userId query parameter is required' });
     }
     const user = await prisma.user.findUniqueOrThrow({
-      where: { id: req.session.userId },
-      select: { id: true, username: true, isAdmin: true }
+      where: { id: parseInt(userId as string) },
+      select: { id: true, username: true, isAdmin: true, bio: true }
     });
     const isAdmin = user.id === 1 || user.isAdmin;
     res.json({user, isAdmin});

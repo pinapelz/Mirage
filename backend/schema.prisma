@@ -13,6 +13,7 @@ model User {
   password String
   salt     String
   email    String    @unique
+  bio      String?
   sessions Session[]
   scores Score[]
   isAdmin Boolean

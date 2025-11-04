@@ -7,14 +7,44 @@ import { NavBar } from "../components/NavBar";
 import { useAuth } from "../contexts/AuthContext";
 import Heatmap from "../components/Heatmap";
 import type { HeatmapData } from "../components/Heatmap";
+import type { User } from "../utils/authApi";
+
+interface UserData {
+  user: User;
+  isAdmin: boolean;
+}
 
 const Profile = () => {
   const { user, isLoading, logout } = useAuth();
   const targetUser =
     new URLSearchParams(window.location.search).get("userId") || ""; // looking at profile of this user
   const navigate = useNavigate();
-  const [fetchingHeatmapData, setFetchingHeatmapData] = useState(false);
+  const [fetchingHeatmapData, setFetchingHeatmapData] = useState(true);
+  const [fetchingUserData, setFetchingUserData] = useState(true);
   const [heatmapData, setHeatmapData] = useState<HeatmapData>({ data: [] });
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    if (targetUser) {
+      setFetchingUserData(true);
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch(
+            new URL(
+              import.meta.env.VITE_API_URL + "/me?userId=" + targetUser,
+            ),
+            { credentials: "include" },
+          );
+          const data = await response.json();
+          setUserData(data);
+          setFetchingUserData(false);
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
+      };
+      fetchUserData();
+    }
+  }, [targetUser]);
 
   useEffect(() => {
     if (targetUser) {
@@ -61,7 +91,7 @@ const Profile = () => {
     navigate("/");
   }
 
-  if (isLoading || fetchingHeatmapData) {
+  if (isLoading || fetchingHeatmapData || fetchingUserData) {
     return <LoadingDisplay message="Loading Profile Page..." />;
   }
 
@@ -95,7 +125,7 @@ const Profile = () => {
             {user.username}
           </h1>
           <p className="text-sm sm:text-base text-slate-400">
-            This is a profile page for {user.username}
+            {userData?.user.bio || "I'm a fairly non-descript person"}
           </p>
         </div>
         {isBrowser ? (
