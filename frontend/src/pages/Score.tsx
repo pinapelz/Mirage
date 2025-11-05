@@ -104,7 +104,7 @@ const Score = () => {
         } else {
           url.searchParams.append("userId", user.id.toString());
         }
-        if(targetUserId !== user.id.toString()){
+        if(targetUserId && targetUserId !== user.id.toString()){
           setViewingOwnScores(false);
         }
         else{
@@ -179,7 +179,7 @@ const Score = () => {
 
   if (isLoading || loading) {
     return (
-      <LoadingDisplay message={"Loading Your Scores for " + formattedGameName}/>
+      <LoadingDisplay message={"Loading Scores for " + formattedGameName}/>
     );
   }
 
