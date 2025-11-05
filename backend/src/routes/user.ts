@@ -2,9 +2,15 @@
 import express from 'express';
 import { prisma } from '../config/db';
 
-interface recentPlayedGame {
+interface RecentPlayedGame {
   gameInternalName: string;
   timestamp: BigInt;
+}
+
+interface SafeGameCount {
+  gameInternalName: string;
+  formattedName: string;
+  count: number;
 }
 
 export const handleMeRoute = async (req: express.Request, res: express.Response) => {
@@ -17,7 +23,7 @@ export const handleMeRoute = async (req: express.Request, res: express.Response)
       where: { id: parseInt(userId as string) },
       select: { id: true, username: true, isAdmin: true, bio: true }
     });
-    const recentPlayedGames: recentPlayedGame[] = await prisma.$queryRaw`
+    const recentPlayedGames: RecentPlayedGame[] = await prisma.$queryRaw`
       SELECT DISTINCT ON (s."gameInternalName")
         g."formattedName",
         s."gameInternalName",
@@ -27,6 +33,16 @@ export const handleMeRoute = async (req: express.Request, res: express.Response)
       WHERE s."userId" = ${parseInt(userId as string)}
       ORDER BY s."gameInternalName", s."timestamp" DESC;
     `;
+    const scoreCountByGame: SafeGameCount[] = await prisma.$queryRaw`
+      SELECT
+        s."gameInternalName",
+        g."formattedName",
+        COUNT(*) as "count"
+      FROM "Score" s
+      INNER JOIN "Game" g ON g."internalName" = s."gameInternalName"
+      WHERE s."userId" = ${parseInt(userId as string)}
+      GROUP BY s."gameInternalName", g."formattedName"
+    `;
     const safeGames= recentPlayedGames.map((game) => ({
       ...game,
       timestamp:
@@ -34,9 +50,13 @@ export const handleMeRoute = async (req: express.Request, res: express.Response)
           ? Number(game.timestamp)
           : game.timestamp,
     }));
+    const safeScoreCountByGame = scoreCountByGame.map((game) => ({
+      ...game,
+      count: Number(game.count),
+    }));
     const isAdmin = user.id === 1 || user.isAdmin;
     const { isAdmin: _, ...safeUser } = user;
-    res.json({ user: safeUser, recentPlayedGames: safeGames, isAdmin });
+    res.json({ user: safeUser, recentPlayedGames: safeGames, scoreCountByGame: safeScoreCountByGame, isAdmin });
   } catch (error) {
     console.error('Me endpoint error:', error);
     res.status(500).json({ error: 'Internal server error' });

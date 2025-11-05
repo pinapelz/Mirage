@@ -9,7 +9,13 @@ import Heatmap from "../components/Heatmap";
 import type { HeatmapData } from "../components/Heatmap";
 import type { User } from "../utils/authApi";
 
-interface recentPlayedGame {
+interface ScoreCountByGame {
+  gameInternalName: string;
+  formattedName: string;
+  count: number;
+}
+
+interface RecentPlayedGame {
   gameInternalName: string;
   formattedName: string;
   timestamp: number;
@@ -17,7 +23,8 @@ interface recentPlayedGame {
 
 interface UserData {
   user: User;
-  recentPlayedGames: recentPlayedGame[];
+  recentPlayedGames: RecentPlayedGame[];
+  scoreCountByGame: ScoreCountByGame[];
   isAdmin: boolean;
 }
 
@@ -132,9 +139,14 @@ const Profile = () => {
             {user.username}
           </h1>
           <p className="text-sm sm:text-base text-slate-400">
-            {userData?.user.bio ? userData.user.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;') : "I'm a fairly non-descript person"}
+            {userData?.user?.bio ? userData.user.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;') : "I'm a fairly non-descript person"}
           </p>
         </div>
+        {isBrowser ? (
+          <div className="flex flex-col items-center justify-center">
+            <Heatmap data={heatmapData.data} />
+          </div>
+        ) : null}
         <div className="mb-6 sm:mb-8">
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Recently Played Games</h2>
           <ul className="list-disc list-inside space-y-2 text-white">
@@ -146,12 +158,28 @@ const Profile = () => {
             ))}
           </ul>
         </div>
-        {isBrowser ? (
-          <div className="flex flex-col items-center justify-center">
-            <Heatmap data={heatmapData.data} />
-          </div>
-        ) : null}
-      </div>
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Total Scores</h2>
+          <table className="table-auto w-full text-white border-collapse border border-slate-700">
+            <thead>
+              <tr>
+                <th className="border border-slate-700 px-4 py-2">Game</th>
+                <th className="border border-slate-700 px-4 py-2">Total Scores Uploaded</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userData?.scoreCountByGame
+                .sort((a, b) => b.count - a.count)
+                .map((score, index) => (
+                  <tr key={index}>
+                    <td className="border border-slate-700 px-4 py-2">{score.formattedName}</td>
+                    <td className="border border-slate-700 px-4 py-2">{score.count}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+    </div>
     </div>
   );
 };
