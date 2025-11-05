@@ -30,7 +30,7 @@ interface UserData {
 
 const Profile = () => {
   const { user, isLoading, logout } = useAuth();
-  const targetUser =
+  let targetUser =
     new URLSearchParams(window.location.search).get("userId") || ""; // looking at profile of this user
   const navigate = useNavigate();
   const [fetchingHeatmapData, setFetchingHeatmapData] = useState(true);
@@ -101,13 +101,14 @@ const Profile = () => {
     }
   }, [targetUser]);
 
-  if (!targetUser) {
-    navigate("/");
-  }
-
   if (!user) {
     return <SessionExpiredPopup />;
   }
+
+  if (!targetUser) {
+    targetUser = user.id.toString();
+  }
+
 
   if (isLoading || fetchingHeatmapData || fetchingUserData) {
     return <LoadingDisplay message="Loading Profile Page..." />;
@@ -129,7 +130,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <NavBar user={user} handleLogout={handleLogout} currentPage="" />
+      <NavBar user={user} handleLogout={handleLogout} currentPage="profile" />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">

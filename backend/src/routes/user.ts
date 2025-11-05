@@ -31,7 +31,8 @@ export const handleMeRoute = async (req: express.Request, res: express.Response)
       FROM "Score" s
       INNER JOIN "Game" g ON g."internalName" = s."gameInternalName"
       WHERE s."userId" = ${parseInt(userId as string)}
-      ORDER BY s."gameInternalName", s."timestamp" DESC;
+      ORDER BY s."gameInternalName", s."timestamp" DESC
+      LIMIT 5;
     `;
     const scoreCountByGame: SafeGameCount[] = await prisma.$queryRaw`
       SELECT

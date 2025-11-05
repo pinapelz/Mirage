@@ -22,6 +22,17 @@ export const NavBar = ({ currentPage, user, handleLogout }: {
         Home
       </Link>
       <Link
+        to="/profile"
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          currentPage === 'profile'
+            ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+            : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+        }`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        Profile
+      </Link>
+      <Link
         to="/import"
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
           currentPage === 'import'
