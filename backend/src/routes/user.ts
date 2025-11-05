@@ -2,6 +2,11 @@
 import express from 'express';
 import { prisma } from '../config/db';
 
+interface recentPlayedGame {
+  gameInternalName: string;
+  timestamp: BigInt;
+}
+
 export const handleMeRoute = async (req: express.Request, res: express.Response) => {
   try {
     const { userId } = req.query;
@@ -12,13 +17,31 @@ export const handleMeRoute = async (req: express.Request, res: express.Response)
       where: { id: parseInt(userId as string) },
       select: { id: true, username: true, isAdmin: true, bio: true }
     });
+    const recentPlayedGames: recentPlayedGame[] = await prisma.$queryRaw`
+      SELECT DISTINCT ON (s."gameInternalName")
+        g."formattedName",
+        s."gameInternalName",
+        s."timestamp"
+      FROM "Score" s
+      INNER JOIN "Game" g ON g."internalName" = s."gameInternalName"
+      WHERE s."userId" = ${parseInt(userId as string)}
+      ORDER BY s."gameInternalName", s."timestamp" DESC;
+    `;
+    const safeGames= recentPlayedGames.map((game) => ({
+      ...game,
+      timestamp:
+        typeof game.timestamp === "bigint"
+          ? Number(game.timestamp)
+          : game.timestamp,
+    }));
     const isAdmin = user.id === 1 || user.isAdmin;
-    res.json({user, isAdmin});
+    const { isAdmin: _, ...safeUser } = user;
+    res.json({ user: safeUser, recentPlayedGames: safeGames, isAdmin });
   } catch (error) {
     console.error('Me endpoint error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-}
+};
 
 export const handleGetCurrentSession =  async (req: express.Request, res: express.Response) => {
   try {

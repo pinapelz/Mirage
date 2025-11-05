@@ -181,6 +181,7 @@ export const handleGetScores = async (
     if (!userId || !internalGameName || !pageNum) {
       return res.status(400).json({ error: "Missing required parameters" });
     }
+
     const pageNumber = parseInt(pageNum as string);
     const gameInternalName = internalGameName as string;
     const userIdNumber = parseInt(userId as string);
@@ -199,6 +200,15 @@ export const handleGetScores = async (
 
     let scores;
     let totalScores;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userIdNumber },
+      select: { username: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     if (pbOnlyFlag) {
       // For pbOnly, we need to get the best score for each chart
@@ -359,6 +369,7 @@ export const handleGetScores = async (
     res.status(200).json({
       scores: safeScores,
       num_pages,
+      user: user.username
     });
   } catch (error) {
     console.error("Failed to fetch scores:", error);

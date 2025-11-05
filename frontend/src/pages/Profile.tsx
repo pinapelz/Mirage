@@ -9,8 +9,15 @@ import Heatmap from "../components/Heatmap";
 import type { HeatmapData } from "../components/Heatmap";
 import type { User } from "../utils/authApi";
 
+interface recentPlayedGame {
+  gameInternalName: string;
+  formattedName: string;
+  timestamp: number;
+}
+
 interface UserData {
   user: User;
+  recentPlayedGames: recentPlayedGame[];
   isAdmin: boolean;
 }
 
@@ -91,12 +98,12 @@ const Profile = () => {
     navigate("/");
   }
 
-  if (isLoading || fetchingHeatmapData || fetchingUserData) {
-    return <LoadingDisplay message="Loading Profile Page..." />;
-  }
-
   if (!user) {
     return <SessionExpiredPopup />;
+  }
+
+  if (isLoading || fetchingHeatmapData || fetchingUserData) {
+    return <LoadingDisplay message="Loading Profile Page..." />;
   }
 
   const handleLogout = async () => {
@@ -125,8 +132,19 @@ const Profile = () => {
             {user.username}
           </h1>
           <p className="text-sm sm:text-base text-slate-400">
-            {userData?.user.bio || "I'm a fairly non-descript person"}
+            {userData?.user.bio ? userData.user.bio.replace(/</g, '&lt;').replace(/>/g, '&gt;') : "I'm a fairly non-descript person"}
           </p>
+        </div>
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Recently Played Games</h2>
+          <ul className="list-disc list-inside space-y-2 text-white">
+            {userData?.recentPlayedGames.map((game, index) => (
+              <li key={index} className="flex items-center justify-between p-2 bg-slate-800 rounded-lg border border-slate-700">
+               <span className="font-bold hover:underline"><a href={`/score?game=${game.gameInternalName}&userId=${userData.user.id}`}>{game.formattedName}</a> </span>
+                <span className="text-sm text-slate-400">{new Date(game.timestamp).toLocaleString()}</span>
+              </li>
+            ))}
+          </ul>
         </div>
         {isBrowser ? (
           <div className="flex flex-col items-center justify-center">

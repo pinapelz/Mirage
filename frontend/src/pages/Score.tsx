@@ -23,6 +23,8 @@ const Score = () => {
   const [formattedGameName, setFormattedGameName] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [scores, setScores] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [username, setUsername] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
@@ -30,6 +32,7 @@ const Score = () => {
   const [sortField, setSortField] = useState<SortField>("");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [requestOrder, setRequestOrder] = useState<string>("timestamp");
+  const [viewingOwnScores, setViewingOwnScores] = useState(true);
 
   const gameName =
     new URLSearchParams(window.location.search).get("game") || "dancerush";
@@ -95,7 +98,18 @@ const Score = () => {
       setLoading(true);
       try {
         const url = new URL(import.meta.env.VITE_API_URL + "/scores");
-        url.searchParams.append("userId", user.id.toString());
+        const targetUserId = new URLSearchParams(window.location.search).get("userId");
+        if (targetUserId) {
+          url.searchParams.append("userId", targetUserId);
+        } else {
+          url.searchParams.append("userId", user.id.toString());
+        }
+        if(targetUserId !== user.id.toString()){
+          setViewingOwnScores(false);
+        }
+        else{
+          setViewingOwnScores(true);
+        }
         url.searchParams.append("internalGameName", gameName);
         url.searchParams.append("pageNum", pageNum.toString());
         url.searchParams.append("sortKey", requestOrder);
@@ -104,6 +118,7 @@ const Score = () => {
         const response = await fetch(url.toString(), {credentials: 'include'});
         if (!response.ok) throw new Error("Failed to fetch scores");
         const data = await response.json();
+        setUsername(data.user);
         const flattened = data.scores.map(flattenScoreData);
         setScores(flattened);
         setNumPages(data.num_pages);
@@ -175,7 +190,7 @@ const Score = () => {
         <div className="mb-6 sm:mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-linear-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
-              Your Scores for {formattedGameName}
+              {viewingOwnScores ? "Your Scores" : `${username}'s Scores`} for {formattedGameName}
             </h1>
             <div className="flex items-center space-x-1 sm:space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
               <button
