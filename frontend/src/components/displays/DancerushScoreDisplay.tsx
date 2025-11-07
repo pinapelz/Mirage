@@ -1,29 +1,13 @@
 import React from "react";
 import {Link} from "react-router";
 import { globalSkipKeys } from "../../types/constants";
+import type {Score, ScoreDisplayProps} from "../../types/game";
 import dancerushEasyImg from "../../assets/games/dancerush/easy.webp";
 import dancerushNormalImg from "../../assets/games/dancerush/normal.webp";
 import p1_img from "../../assets/games/dancerush/1_p.webp";
 import p2_img from "../../assets/games/dancerush/2_p.webp";
 import SHA1 from "crypto-js/sha1";
 
-interface Score {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  timestamp: string | number;
-  username?: string;
-}
-
-interface ScoreDisplayProps {
-  scores: Score[];
-  viewMode: "cards" | "table";
-  sortField: string;
-  sortDirection: "asc" | "desc";
-  onSort: (field: string) => void;
-  onDelete?: (scoreId: number) => void;
-  showUsername?: boolean;
-  hideTitleArtist?: boolean;
-}
 
 const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
   scores,

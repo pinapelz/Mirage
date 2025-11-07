@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router";
 import { globalSkipKeys } from "../../types/constants";
+import type {Score, ScoreDisplayProps} from "../../types/game";
 import SHA1 from "crypto-js/sha1";
 import easyImg from "../../assets/games/diva/easy.webp";
 import normalImg from "../../assets/games/diva/normal.webp";
@@ -13,24 +14,6 @@ import perfectImg from "../../assets/games/diva/perfect.webp";
 import greatImg from "../../assets/games/diva/great.webp";
 import excellentImg from "../../assets/games/diva/excellent.webp";
 
-
-interface Score {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  timestamp: string | number;
-  username?: string;
-}
-
-interface ScoreDisplayProps {
-  scores: Score[];
-  viewMode: "cards" | "table";
-  sortField: string;
-  sortDirection: "asc" | "desc";
-  onSort: (field: string) => void;
-  onDelete?: (scoreId: number) => void;
-  showUsername?: boolean;
-  hideTitleArtist?: boolean;
-}
 
 const DivaScoreDisplay: React.FC<ScoreDisplayProps> = ({
   scores,

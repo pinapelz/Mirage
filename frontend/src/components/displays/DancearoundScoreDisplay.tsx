@@ -1,29 +1,12 @@
 import React from "react";
 import {Link} from "react-router";
 import { globalSkipKeys } from "../../types/constants";
+import type {Score, ScoreDisplayProps} from "../../types/game";
 import lampExcellent from "../../assets/games/dancearound/grade_excellent.webp";
 import lampFullcombo from "../../assets/games/dancearound/grade_fullcombo.webp";
 import lampClear from "../../assets/games/dancearound/grade_clear.webp";
 import lampFailure from "../../assets/games/dancearound/grade_failed.webp";
 import SHA1 from "crypto-js/sha1";
-
-interface Score {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  timestamp: string | number;
-  username?: string;
-}
-
-interface ScoreDisplayProps {
-  scores: Score[];
-  viewMode: "cards" | "table";
-  sortField: string;
-  sortDirection: "asc" | "desc";
-  onSort: (field: string) => void;
-  onDelete?: (scoreId: number) => void;
-  showUsername?: boolean;
-  hideTitleArtist?: boolean;
-}
 
 const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
   scores,

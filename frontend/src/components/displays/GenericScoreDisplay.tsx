@@ -2,24 +2,7 @@ import React from "react";
 import SHA1 from "crypto-js/sha1";
 import { Link } from "react-router";
 import { globalSkipKeys } from "../../types/constants";
-
-interface Score {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-  timestamp: string | number;
-  username?: string;
-}
-
-interface ScoreDisplayProps {
-  scores: Score[];
-  viewMode: "cards" | "table";
-  sortField: string;
-  sortDirection: "asc" | "desc";
-  onSort: (field: string) => void;
-  onDelete?: (scoreId: number) => void;
-  showUsername?: boolean;
-  hideTitleArtist?: boolean;
-}
+import type {Score, ScoreDisplayProps} from "../../types/game";
 
 const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
   scores,
