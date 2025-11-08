@@ -12,6 +12,7 @@ import divaImage from "../assets/games/diva.webp";
 import musicdiverImage from "../assets/games/music_diver.webp";
 import reflecbeatImage from "../assets/games/reflecbeat.webp";
 import nostalgiaImage from "../assets/games/nostalgia.webp";
+import taikoImage from "../assets/games/taiko.webp";
 
 const Home = () => {
   const { user, isLoading, logout } = useAuth();
@@ -48,6 +49,9 @@ const Home = () => {
       }
       case "nostalgia": {
         return nostalgiaImage;
+      }
+      case "taiko": {
+        return taikoImage;
       }
       default: {
         return null;

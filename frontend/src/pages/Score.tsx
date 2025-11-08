@@ -12,6 +12,7 @@ import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
 import MusicDiverDisplay from "../components/displays/MusicDiverScoreDisplay";
 import ReflecBeatScoreDisplay from "../components/displays/ReflecBeatScoreDisplay";
 import NostalgiaScoreDisplay from "../components/displays/NostalgiaScoreDisplay";
+import TaikoScoreDisplay from "../components/displays/TaikoScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -284,6 +285,17 @@ const Score = () => {
             case "nostalgia":
               return (
                 <NostalgiaScoreDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  onDelete={handleDeleteScore}
+                />
+              );
+            case "taiko":
+              return (
+                <TaikoScoreDisplay
                   scores={scores}
                   viewMode={viewMode}
                   sortField={sortField}

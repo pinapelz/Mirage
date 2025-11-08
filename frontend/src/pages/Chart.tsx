@@ -12,6 +12,7 @@ import SongInfoDisplay from "../components/modals/SongInfoDisplay";
 import DancearoundScoreDisplay from "../components/displays/DancearoundScoreDisplay";
 import NostalgiaScoreDisplay from "../components/displays/NostalgiaScoreDisplay";
 import ReflecBeatScoreDisplay from "../components/displays/ReflecBeatScoreDisplay";
+import TaikoScoreDisplay from "../components/displays/TaikoScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -252,6 +253,18 @@ const Chart = () => {
               case "reflecbeat":
                 return (
                   <ReflecBeatScoreDisplay
+                    scores={scores}
+                    viewMode={viewMode}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={handleSort}
+                    showUsername={true}
+                    hideTitleArtist={true}
+                  />
+                );
+              case "taiko":
+                return (
+                  <TaikoScoreDisplay
                     scores={scores}
                     viewMode={viewMode}
                     sortField={sortField}

@@ -35,6 +35,11 @@ async function main() {
         internalName: "reflecbeat",
         formattedName: "REFLEC BEAT",
         description: "A touchscreen rhythm game from KONAMI",
+      },
+      {
+        internalName: "taiko",
+        formattedName: "Taiko no Tatsujin Arcade",
+        description: "A drum-based rhythm game"
       }
     ],
   });

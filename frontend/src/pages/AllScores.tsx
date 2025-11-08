@@ -11,6 +11,7 @@ import DivaScoreDisplay from "../components/displays/DivaScoreDisplay";
 import MusicDiverScoreDisplay from "../components/displays/MusicDiverScoreDisplay";
 import NostalgiaScoreDisplay from "../components/displays/NostalgiaScoreDisplay";
 import ReflecBeatScoreDisplay from "../components/displays/ReflecBeatScoreDisplay";
+import TaikoScoreDisplay from "../components/displays/TaikoScoreDisplay";
 type SortField = string;
 type SortDirection = "asc" | "desc";
 
@@ -297,7 +298,6 @@ const AllScores = () => {
                   showUsername={true}
                 />
               );
-              break;
             case "dancearound":
               return (
                 <DancearoundScoreDisplay
@@ -309,7 +309,6 @@ const AllScores = () => {
                   showUsername={true}
                 />
               );
-              break;
             case "diva":
               return (
                 <DivaScoreDisplay
@@ -321,7 +320,6 @@ const AllScores = () => {
                   showUsername={true}
                 />
               );
-              break;
             case "musicdiver":
               return (
                 <MusicDiverScoreDisplay
@@ -333,7 +331,6 @@ const AllScores = () => {
                   showUsername={true}
                 />
               );
-              break;
             case "nostalgia":
               return (
                 <NostalgiaScoreDisplay
@@ -345,7 +342,6 @@ const AllScores = () => {
                   showUsername={true}
                 />
               );
-              break;
             case "reflecbeat":
               return (
                 <ReflecBeatScoreDisplay
@@ -357,7 +353,17 @@ const AllScores = () => {
                   showUsername={true}
                 />
               );
-              break;
+            case "taiko":
+              return (
+                <TaikoScoreDisplay
+                  scores={scores}
+                  viewMode={viewMode}
+                  sortField={sortField}
+                  sortDirection={sortDirection}
+                  onSort={handleSort}
+                  showUsername={true}
+                />
+              );
             default:
               return (
                 <ScoreDisplay

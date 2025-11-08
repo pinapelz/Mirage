@@ -165,8 +165,8 @@ def get_play_hist(token: str, chart_data):
             "crown_rank": crown,
             "score_rank": lamp,
             "score": int(total_score) if total_score and total_score.isdigit() else total_score,
+            "judgements": judgements,
             "optional": {
-                "judgements": judgements,
                 "combo": combo,
                 "pound": pound
             }
