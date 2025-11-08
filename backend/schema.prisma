@@ -55,3 +55,9 @@ model Charts {
   game   Game   @relation(fields: [gameInternalName], references: [internalName])
   scores Score[]
 }
+
+model InviteCodes {
+  id              Int       @id @default(autoincrement())
+  code            String    @unique
+  remaining       Int
+}

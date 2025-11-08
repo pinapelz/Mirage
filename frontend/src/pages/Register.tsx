@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -7,10 +7,25 @@ const Register = () => {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    code: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [requireInvite, setRequireInvite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchServerInfo = async () => {
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "/info");
+        const data = await response.json();
+        setRequireInvite(Boolean(data.requireInvite));
+      } catch (error) {
+        console.error('Error fetching server info:', error);
+      }
+    };
+    fetchServerInfo();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,6 +68,10 @@ const Register = () => {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
+    if (requireInvite && !formData.code.trim()) {
+      newErrors.code = 'Invite code is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -67,11 +86,14 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      const result = await register({
+      const registrationData = {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-      });
+        ...(requireInvite && { code: formData.code })
+      };
+
+      const result = await register(registrationData);
 
       if (!result.success) {
         setErrors({ general: result.error || 'Registration failed. Please try again.' });
@@ -131,6 +153,26 @@ const Register = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {requireInvite && (
+              <div>
+                <label htmlFor="code" className="block text-sm font-medium text-slate-300 mb-2">
+                  Invite code
+                </label>
+                <input
+                  type="text"
+                  id="code"
+                  name="code"
+                  value={formData.code}
+                  onChange={handleChange}
+                  className="block w-full px-3 py-2 border border-slate-600 rounded-md shadow-sm bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors"
+                  placeholder="Enter your invite code"
+                />
+                {errors.code && (
+                  <p className="mt-1 text-sm text-red-400">{errors.code}</p>
+                )}
+              </div>
+            )}
+
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
                 Username

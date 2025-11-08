@@ -11,6 +11,7 @@ import * as userRoutes from './routes/user';
 import * as gameRoutes from './routes/game';
 import * as scoreRoutes from './routes/score';
 import * as adminRoutes from './routes/admin';
+import * as serverRoutes from './routes/server';
 
 const app = express();
 const port = 5000;
@@ -48,6 +49,8 @@ startSessionCleanup();
 app.post('/api/register', authRoutes.handleRegistration);
 app.post('/api/authenticate', authRoutes.handleAuthentication);
 app.post('/api/logout', requireAuth, authRoutes.handleLogout);
+app.get('/api/info', serverRoutes.handleGetInstanceInfo);
+app.post('/api/admin/createInvite', serverRoutes.handleCreateInviteCode);
 
 app.get('/api/me', userRoutes.handleMeRoute);
 app.get('/api/session', userRoutes.handleGetCurrentSession);

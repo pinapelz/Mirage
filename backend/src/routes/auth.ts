@@ -6,10 +6,22 @@ import crypto from 'crypto';
 
 export const handleRegistration = async (req: express.Request, res: express.Response) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, password, email, code: inviteCode } = req.body;
+    const requireInvite = process.env.REQUIRE_INVITE === 'true';
 
     if (!username || !password || !email) {
       return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (requireInvite && !inviteCode) {
+      return res.status(400).json({ error: 'Invite code is required' });
+    }
+
+    if (requireInvite && inviteCode) {
+      const invite = await prisma.inviteCodes.findUnique({ where: { code: inviteCode } });
+      if (!invite || invite.remaining <= 0) {
+        return res.status(400).json({ error: 'Invalid invite code' });
+      }
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -37,6 +49,14 @@ export const handleRegistration = async (req: express.Request, res: express.Resp
         isAdmin: false
       }
     });
+
+    // Decrement invite code usage if required
+    if (requireInvite && inviteCode) {
+      await prisma.inviteCodes.update({
+        where: { code: inviteCode },
+        data: { remaining: { decrement: 1 } }
+      });
+    }
 
     // Create session for the new user
     req.session.userId = user.id;
