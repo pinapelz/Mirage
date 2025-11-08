@@ -1,7 +1,38 @@
 import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import type { SupportedGame } from "../types/game";
 import sakuraMirageImage from "../assets/games/mirage.webp";
 
 const Landing = () => {
+  const [requireInvite, setRequireInvite] = useState(false);
+  const [numUsers, setNumUsers] = useState(0);
+  const [supportedGames, setSupportedGames] = useState<SupportedGame[] | null>(null);
+  useEffect(() => {
+    const fetchServerInfo = async () => {
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "/info");
+        const data = await response.json();
+        setRequireInvite(Boolean(data.requireInvite));
+        setNumUsers(Number(data.userCount));
+      } catch (error) {
+        console.error('Error fetching server info:', error);
+      }
+    };
+
+    const fetchSupportedGames = async () => {
+      try {
+        const response = await fetch(import.meta.env.VITE_API_URL + "/supportedGames");
+        const data = await response.json();
+        setSupportedGames(data);
+      } catch (error) {
+        console.error('Error fetching supported games:', error);
+      }
+    };
+    fetchServerInfo();
+    fetchSupportedGames();
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       {/* Navigation */}
@@ -60,6 +91,53 @@ const Landing = () => {
                 Login!
               </Link>
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Server Stats Section */}
+      <section className="py-6 sm:py-8 border-t border-slate-800 bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6">
+              Server <span className="text-violet-400">Status</span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                <h3 className="text-lg font-semibold text-violet-300 mb-2">Users</h3>
+                <p className="text-2xl font-bold text-white">{numUsers}</p>
+                <p className="text-sm text-slate-400">registered users</p>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                <h3 className="text-lg font-semibold text-violet-300 mb-2">Registration</h3>
+                <p className="text-2xl font-bold text-white">
+                  {requireInvite ? "Invite Only" : "Open"}
+                </p>
+                <p className="text-sm text-slate-400">
+                  {requireInvite ? "ask an admin" : "anyone can join"}
+                </p>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                <h3 className="text-lg font-semibold text-violet-300 mb-2">Games</h3>
+                <p className="text-2xl font-bold text-white">
+                  {supportedGames ? supportedGames.length : "Loading..."}
+                </p>
+                <p className="text-sm text-slate-400">supported games</p>
+              </div>
+            </div>
+            {supportedGames && supportedGames.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">Supported Games</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {supportedGames.map((game) => (
+                    <div key={game.internalName} className="bg-slate-800/30 rounded-md p-3 border border-slate-700/50">
+                      <h4 className="text-violet-300 font-medium">{game.formattedName}</h4>
+                      <p className="text-sm text-slate-400 mt-1">{game.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
