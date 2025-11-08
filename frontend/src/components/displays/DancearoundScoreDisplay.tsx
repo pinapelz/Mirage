@@ -33,7 +33,6 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
     good: "Good",
     bad: "Bad",
     username: "Username",
-    clear_status: "Status"
   };
 
   const mainStatKeys = [
@@ -42,7 +41,7 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
     "level",
     "lamp",
   ];
-  const expandableKeys = ["judgements", "optional", "clear_status"];
+  const expandableKeys = ["judgements", "optional"];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatValue = (value: any, key: string): string => {
     if (value === null || value === undefined) return "N/A";
@@ -294,6 +293,21 @@ const DancearoundScoreDisplay: React.FC<ScoreDisplayProps> = ({
                   ))}
                 </div>
               )}
+
+              {/* Clear Status */}
+              {score.clear_status && (
+                <div className="mb-4 bg-gradient-to-r from-violet-900/20 to-purple-900/20 rounded-xl p-4 border border-violet-700/30 shadow-lg shadow-violet-500/10">
+                  <div className="flex items-center justify-between">
+                    <p className="text-violet-300 text-xs uppercase tracking-wider font-semibold">
+                      Clear Status
+                    </p>
+                    <div className="flex-1 flex justify-center">
+                      {renderValue(score.clear_status, "clear_status")}
+                    </div>
+                  </div>
+                </div>
+              )}
+
 
               {/* Expandable sections (judgements, optional) */}
               {expandable.map(([key, value]) => (
