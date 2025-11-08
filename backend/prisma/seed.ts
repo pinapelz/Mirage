@@ -42,6 +42,7 @@ async function main() {
         description: "A drum-based rhythm game"
       }
     ],
+    skipDuplicates: true
   });
   console.log("Initial seed data inserted");
 }
