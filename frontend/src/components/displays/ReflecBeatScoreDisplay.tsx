@@ -50,6 +50,8 @@ const ReflecBeatScoreDisplay: React.FC<ScoreDisplayProps> = ({
 
     // Handle timestamps
     if (key === "timestamp" || key === "date") {
+      if(value === 0)
+        return "N/A";
       const date = new Date(typeof value === "number" ? value : value);
       return date.toLocaleDateString();
     }
