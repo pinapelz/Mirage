@@ -92,86 +92,108 @@ def get_play_hist(token: str, chart_data):
     """
     Fetch and parse Donder Hiroba play history page.
     Extracts scores, difficulty, ranks, and performance breakdowns.
+    Handles pagination by going through all pages until duplicate results are found.
     """
-    play_hist_page = requests.get(PLAY_HISTORY_URL, cookies={"_token_v2": token}, headers=headers)
-    soup = BeautifulSoup(play_hist_page.text, "html.parser")
+    all_results = []
+    page = 1
+    previous_page_titles = set()
 
-    results = []
-    scores = soup.find_all(class_="scoreUser")
-    current_time_ms = int(time.time() * 1000)
+    while True:
+        page_url = f"{PLAY_HISTORY_URL}?page={page}" if page > 1 else PLAY_HISTORY_URL
+        print(f"[INFO] Fetching page {page}...")
+        play_hist_page = requests.get(page_url, cookies={"_token_v2": token}, headers=headers)
+        soup = BeautifulSoup(play_hist_page.text, "html.parser")
+        scores = soup.find_all(class_="scoreUser")
 
-    for s in scores:
-        title_tag = s.find("h2")
-        title = title_tag.text.strip() if title_tag else None
+        if not scores:
+            print(f"[INFO] No scores found on page {page}. Ending pagination.")
+            break
 
-        total_score_tag = s.find("div", class_="scoreScore")
-        total_score = total_score_tag.text.strip().replace("点", "") if total_score_tag else None
+        current_page_titles = set()
+        page_results = []
 
-        # Skip unknown songs
-        if not title or chart_data.get(title) is None:
-            print(f"[WARN] {title} is unknown in chart_data. Skipping.")
-            continue
+        for s in scores:
+            title_tag = s.find("h2")
+            title = title_tag.text.strip() if title_tag else None
 
-        # Extract difficulty, crown, and lamp (rank icons)
-        difficulty = crown = lamp = None
-        score_element = s.find("div", class_="playDataArea", attrs={"style": True})
-        img_tags = score_element.find_all("img") if score_element else []
+            total_score_tag = s.find("div", class_="scoreScore")
+            total_score = total_score_tag.text.strip().replace("点", "") if total_score_tag else None
 
-        for img in img_tags:
-            src = img["src"].split("/")[-1]
-            if src in DIFFICULTY_MAP:
-                difficulty = DIFFICULTY_MAP[src]
-            elif src in CROWN_MAP:
-                crown = CROWN_MAP[src]
-            elif src in LAMP_MAP:
-                lamp = LAMP_MAP[src]
+            # Skip unknown songs
+            if not title or chart_data.get(title) is None:
+                print(f"[WARN] {title} is unknown in chart_data. Skipping.")
+                continue
 
-        # Extract detailed score data (judgements, combo, pound)
-        judgements = {}
-        combo = pound = None
+            current_page_titles.add(title)
+            difficulty = crown = lamp = None
+            score_element = s.find("div", class_="playDataArea", attrs={"style": True})
+            img_tags = score_element.find_all("img") if score_element else []
 
-        score_data_area = s.find("div", class_="scoreDataArea")
-        if score_data_area:
-            score_elements = score_data_area.find_all("div", class_="playDataArea", recursive=True)
-            for el in score_elements:
-                img = el.find("img", class_="score_name")
-                val_tag = el.find("div", class_="playDataScore")
-                if not img or not val_tag:
-                    continue
-
+            for img in img_tags:
                 src = img["src"].split("/")[-1]
-                value = val_tag.get_text(strip=True).replace("回", "")
-                if not value.isdigit():
-                    continue
-                value = int(value)
+                if src in DIFFICULTY_MAP:
+                    difficulty = DIFFICULTY_MAP[src]
+                elif src in CROWN_MAP:
+                    crown = CROWN_MAP[src]
+                elif src in LAMP_MAP:
+                    lamp = LAMP_MAP[src]
 
-                if "score_name_good" in src:
-                    judgements["good"] = value
-                elif "score_name_ok" in src:
-                    judgements["ok"] = value
-                elif "score_name_ng" in src:
-                    judgements["bad"] = value
-                elif "score_name_combo" in src:
-                    combo = value
-                elif "score_name_pound" in src:
-                    pound = value
+            judgements = {}
+            combo = pound = None
 
-        result_entry = {
-            "title": title,
-            "timestamp": current_time_ms,
-            "artist": chart_data[title]["artist"],
-            "difficulty": difficulty,
-            "level": int(chart_data[title].get(difficulty.lower(), 0)) if difficulty else None,
-            "crown_rank": crown,
-            "score_rank": lamp,
-            "score": int(total_score) if total_score and total_score.isdigit() else total_score,
-            "judgements": judgements,
-            "optional": {
-                "combo": combo,
-                "pound": pound
+            score_data_area = s.find("div", class_="scoreDataArea")
+            if score_data_area:
+                score_elements = score_data_area.find_all("div", class_="playDataArea", recursive=True)
+                for el in score_elements:
+                    img = el.find("img", class_="score_name")
+                    val_tag = el.find("div", class_="playDataScore")
+                    if not img or not val_tag:
+                        continue
+
+                    src = img["src"].split("/")[-1]
+                    value = val_tag.get_text(strip=True).replace("回", "")
+                    if not value.isdigit():
+                        continue
+                    value = int(value)
+
+                    if "score_name_good" in src:
+                        judgements["good"] = value
+                    elif "score_name_ok" in src:
+                        judgements["ok"] = value
+                    elif "score_name_ng" in src:
+                        judgements["bad"] = value
+                    elif "score_name_combo" in src:
+                        combo = value
+                    elif "score_name_pound" in src:
+                        pound = value
+
+            result_entry = {
+                "title": title,
+                "timestamp": 0,
+                "artist": chart_data[title]["artist"],
+                "difficulty": difficulty,
+                "level": int(chart_data[title].get(difficulty.lower(), 0)) if difficulty else None,
+                "crown_rank": crown,
+                "score_rank": lamp,
+                "score": int(total_score) if total_score and total_score.isdigit() else total_score,
+                "judgements": judgements,
+                "optional": {
+                    "combo": combo,
+                    "pound": pound
+                }
             }
-        }
-        results.append(result_entry)
+            page_results.append(result_entry)
+        if page > 1 and current_page_titles.issubset(previous_page_titles):
+            print(f"[INFO] Page {page} contains duplicate results. Stopping pagination.")
+            break
+
+        all_results.extend(page_results)
+        print(f"[INFO] Page {page} processed: {len(page_results)} scores found")
+
+        previous_page_titles.update(current_page_titles)
+        page += 1
+
+    print(f"[INFO] Total scores collected: {len(all_results)} across {page - 1} pages")
 
     return {
         "meta": {
@@ -179,11 +201,13 @@ def get_play_hist(token: str, chart_data):
             "playtype": "Single",
             "service": "Donder Hiroba Export"
         },
-        "scores": results,
+        "scores": all_results,
     }
 
 
 if __name__ == "__main__":
+    print("[ALERT!] Please first refresh your scores on Donder Hiroba so that it has the latest info. Visit: https://donderhiroba.jp/score_list.php and click on the top right\n\n")
+    print("!Your token will change after doing this!")
     parser = argparse.ArgumentParser(
         prog="taiko_donder_hiroba_export.py",
         description="Exports Taiko no Tatsujin scores from Donder Hiroba into a Mirage compatible JSON",
