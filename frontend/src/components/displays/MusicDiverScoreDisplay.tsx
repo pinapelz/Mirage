@@ -336,16 +336,20 @@ const MusicDiverDisplay: React.FC<ScoreDisplayProps> = ({
               {/* Timestamp */}
               <div className="pt-4 border-t border-slate-800/50">
                 <p className="text-slate-500 text-[10px] sm:text-xs">
-                  {new Date(
-                    typeof timestamp === "number" ? timestamp : timestamp,
-                  ).toLocaleDateString()}{" "}
-                  •{" "}
-                  {new Date(
-                    typeof timestamp === "number" ? timestamp : timestamp,
-                  ).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {timestamp === 0 ? "N/A" : (
+                    <>
+                      {new Date(
+                        typeof timestamp === "number" ? timestamp : timestamp,
+                      ).toLocaleDateString()}{" "}
+                      •{" "}
+                      {new Date(
+                        typeof timestamp === "number" ? timestamp : timestamp,
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </>
+                  )}
                 </p>
               </div>
             </div>
