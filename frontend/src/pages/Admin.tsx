@@ -3,9 +3,10 @@ import { NavBar } from "../components/NavBar";
 import { useAuth } from "../contexts/AuthContext";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import UnauthorizedAccess from "../components/UnauthorizedAccess";
-import CollapsibleSection from "../components/CollapsibleSection";
-import InviteCodeManager from "../components/InviteCodeManager";
-import GameManager from "../components/GameManager";
+import CollapsibleSection from "../components/admin/CollapsibleSection";
+import InviteCodeManager from "../components/admin/InviteCodeManager";
+import GameManager from "../components/admin/GameManager";
+import UserDeletion from "../components/admin/UserDeletion";
 import { useState } from "react";
 
 interface GameFormData {
@@ -23,6 +24,7 @@ const Admin = () => {
   const { user, isLoading, logout } = useAuth();
   const [showAddGame, setShowAddGame] = useState(false);
   const [showCreateInvite, setShowCreateInvite] = useState(false);
+  const [showUserDeletion, setShowUserDeletion] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCreatingInvite, setIsCreatingInvite] = useState(false);
   const [createdInviteCode, setCreatedInviteCode] = useState<string | null>(null);
@@ -107,6 +109,11 @@ const Admin = () => {
     }
   };
 
+  const handleUserDeleted = () => {
+    // Optional: Add any additional logic after user deletion
+    console.log('User deleted successfully');
+  };
+
   if (isLoading) {
     return <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="text-center">
@@ -159,6 +166,17 @@ const Admin = () => {
           <GameManager
             onGameSubmit={handleGameSubmit}
             isSubmitting={isSubmitting}
+          />
+        </CollapsibleSection>
+
+        {/* User Deletion Section */}
+        <CollapsibleSection
+          title="Delete User"
+          isOpen={showUserDeletion}
+          onToggle={() => setShowUserDeletion(!showUserDeletion)}
+        >
+          <UserDeletion
+            onUserDeleted={handleUserDeleted}
           />
         </CollapsibleSection>
       </div>

@@ -66,6 +66,7 @@ app.get('/api/scores/:chartId', requireAuth, scoreRoutes.handleGetScoresByChartI
 app.get('/api/allScores', requireAuth, scoreRoutes.handleGetAllGameScores);
 
 app.post('/api/admin/createGame', requireAuth, adminRoutes.handleCreateGame);
+app.delete('/api/admin/user/:userId', requireAuth, adminRoutes.handleDeleteUser);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
