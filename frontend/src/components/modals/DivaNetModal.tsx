@@ -39,7 +39,7 @@ const DivaNetModal = ({
         </p>
         <button
           onClick={renderAsCard}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+          className="hover:cursor-pointer w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
         >
           Export DIVA.NET
         </button>

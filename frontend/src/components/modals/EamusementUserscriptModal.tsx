@@ -43,7 +43,7 @@ export const EamusementUserscriptCard = ({ mainGameName, onClick }: EamusementUs
       </p>
       <button
         onClick={onClick}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+        className="hover:cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
       >
         Export e-amusement
       </button>

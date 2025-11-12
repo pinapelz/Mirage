@@ -17,7 +17,7 @@ const FlowerUserscriptModal = lazy(() => import("../components/modals/FlowerUser
 const TaikoDonderHirobaModal = lazy(() => import("../components/modals/TaikoDonderHirobaModal"));
 const TaikoEGTSModal = lazy(() => import("../components/modals/TaikoEGTSModal"));
 
-type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat' | 'taiko';
+type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat' | 'taiko' | 'taikoEGTS';
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -125,7 +125,7 @@ const Import = () => {
       </p>
       <button
         onClick={() => setOpenModal('json')}
-        className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+        className="hover:cursor-pointer w-full bg-violet-600 hover:bg-violet-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
       >
         Upload JSON
       </button>
@@ -212,7 +212,7 @@ const Import = () => {
             isOpen={false}
             onClose={() => {}}
             game={supportedGames.find((g) => g.internalName === selectedGame)}
-            renderAsCard={() => setOpenModal('taiko')}
+            renderAsCard={() => setOpenModal('taikoEGTS')}
             />
           </>
         );
@@ -412,7 +412,7 @@ const Import = () => {
             }
           />
         )}
-        {openModal === 'taiko' && (
+        {openModal === 'taikoEGTS' && (
           <TaikoEGTSModal
             isOpen={true}
             onClose={() => setOpenModal(null)}
