@@ -2,6 +2,7 @@ import React from "react";
 import SHA1 from "crypto-js/sha1";
 import { Link } from "react-router";
 import { globalSkipKeys } from "../../types/constants";
+import notClearImg from "../../assets/games/taiko/not_clear.webp";
 import clearImg from "../../assets/games/taiko/clear.webp";
 import donderfulImg from "../../assets/games/taiko/donderful_combo.webp";
 import easyImg from "../../assets/games/taiko/easy.webp";
@@ -177,7 +178,7 @@ const TaikoScoreDisplay: React.FC<ScoreDisplayProps> = ({
           imgSrc = donderfulImg;
           break;
         default:
-          imgSrc = easyImg;
+          imgSrc = notClearImg;
           break;
       }
       return <span>
