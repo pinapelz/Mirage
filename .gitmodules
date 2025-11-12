@@ -1,0 +1,3 @@
+[submodule "scripts/taiko/donderhiroba"]
+	path = scripts/taiko/donderhiroba
+	url = https://github.com/pinapelz/donder-hiroba-to-mirage-import
