@@ -16,9 +16,9 @@ const TaikoDonderHirobaModal = ({
   if (renderAsCard) {
     return (
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-        <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
+        <div className="w-12 h-12 bg-orange-600/20 rounded-lg flex items-center justify-center mb-4">
           <svg
-            className="w-6 h-6 text-blue-400"
+            className="w-6 h-6 text-orange-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -33,13 +33,13 @@ const TaikoDonderHirobaModal = ({
         </div>
         <h4 className="text-white font-semibold mb-2">Donder Hiroba Import</h4>
         <p className="text-slate-400 text-sm mb-4">
-          Import Play History from Donder Hiroba
+          Import Play History from Donder Hiroba (Official Taiko Cabinets)
         </p>
         <button
           onClick={renderAsCard}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+          className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
         >
-          Export MyPage
+          Export Donder Hiroba
         </button>
       </div>
     );
@@ -67,18 +67,24 @@ const TaikoDonderHirobaModal = ({
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
-              Import {game.formattedName} Data (Donder Hiroba)
+              Import Donder Hiroba Data
             </h3>
             <p className="text-slate-400 text-sm">
               Exporting from Donder Hiroba requires slightly more setup than
               other methods. Follow the instructions{" "}
               <a
                 href="https://github.com/pinapelz/donder-hiroba-to-mirage-import/blob/main/README.md"
-                className="text-blue-500 hover:underline"
+                className="text-orange-500 hover:underline"
               >
                 here
               </a>
               .
+            </p>
+          </div>
+          <div className="mb-6 rounded-md bg-orange-500/10 border border-orange-500/20 p-3">
+            <p className="text-sm text-orange-400">
+              In case it isn't already clear. You will need to have played at least 1 game of Taiko on an official cabinet using
+              an IC Card to register on Donder Hiroba.
             </p>
           </div>
           {/* Actions */}

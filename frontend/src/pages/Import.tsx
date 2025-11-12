@@ -8,6 +8,7 @@ import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
 import { EamusementUserscriptCard } from "../components/modals/EamusementUserscriptModal";
 import { FlowerUserscriptCard } from "../components/modals/FlowerUserscriptModal";
+import TaikoDonderHirobaModal from "../components/modals/TaikoDonderHirobaModal";
 
 const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
 const EamusementUserscriptModal = lazy(() => import("../components/modals/EamusementUserscriptModal"));
@@ -15,7 +16,7 @@ const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 const MusicDiverModal = lazy(() => import("../components/modals/MusicDiverModal"));
 const FlowerUserscriptModal = lazy(() => import("../components/modals/FlowerUserscriptModal"));
 
-type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat';
+type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat' | 'taiko';
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -193,6 +194,18 @@ const Import = () => {
             <FlowerUserscriptCard
             mainGameName="REFLEC BEAT"
             onClick={() => setOpenModal('reflecbeat')}
+            />
+          </>
+        );
+      case "taiko":
+        return (
+          <>
+            <JsonUploadCard />
+            <TaikoDonderHirobaModal
+            isOpen={false}
+            onClose={() => {}}
+            game={supportedGames.find((g) => g.internalName === selectedGame)}
+            renderAsCard={() => setOpenModal('taiko')}
             />
           </>
         );
@@ -380,6 +393,16 @@ const Import = () => {
               name: "Flower Play History (Exports only the page you are on)",
               url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/flower/reflecbeat_flower_scraper.user.js"
             }]}
+          />
+        )}
+        {openModal === 'taiko' && (
+          <TaikoDonderHirobaModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame) ||
+              undefined
+            }
           />
         )}
       </Suspense>
