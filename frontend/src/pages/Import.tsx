@@ -8,13 +8,14 @@ import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
 import { EamusementUserscriptCard } from "../components/modals/EamusementUserscriptModal";
 import { FlowerUserscriptCard } from "../components/modals/FlowerUserscriptModal";
-import TaikoDonderHirobaModal from "../components/modals/TaikoDonderHirobaModal";
 
 const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
 const EamusementUserscriptModal = lazy(() => import("../components/modals/EamusementUserscriptModal"));
 const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 const MusicDiverModal = lazy(() => import("../components/modals/MusicDiverModal"));
 const FlowerUserscriptModal = lazy(() => import("../components/modals/FlowerUserscriptModal"));
+const TaikoDonderHirobaModal = lazy(() => import("../components/modals/TaikoDonderHirobaModal"));
+const TaikoEGTSModal = lazy(() => import("../components/modals/TaikoEGTSModal"));
 
 type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat' | 'taiko';
 
@@ -202,6 +203,12 @@ const Import = () => {
           <>
             <JsonUploadCard />
             <TaikoDonderHirobaModal
+            isOpen={false}
+            onClose={() => {}}
+            game={supportedGames.find((g) => g.internalName === selectedGame)}
+            renderAsCard={() => setOpenModal('taiko')}
+            />
+            <TaikoEGTSModal
             isOpen={false}
             onClose={() => {}}
             game={supportedGames.find((g) => g.internalName === selectedGame)}
@@ -397,6 +404,16 @@ const Import = () => {
         )}
         {openModal === 'taiko' && (
           <TaikoDonderHirobaModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            game={
+              supportedGames.find((g) => g.internalName === selectedGame) ||
+              undefined
+            }
+          />
+        )}
+        {openModal === 'taiko' && (
+          <TaikoEGTSModal
             isOpen={true}
             onClose={() => setOpenModal(null)}
             game={

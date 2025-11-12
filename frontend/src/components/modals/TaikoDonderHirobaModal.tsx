@@ -1,6 +1,6 @@
 import type { SupportedGame } from "../../types/game";
 
-interface DonerHirobaModalProps {
+interface DonderHirobaModalProps {
   isOpen: boolean;
   onClose: () => void;
   game: SupportedGame | undefined;
@@ -12,7 +12,7 @@ const TaikoDonderHirobaModal = ({
   onClose,
   game,
   renderAsCard,
-}: DonerHirobaModalProps) => {
+}: DonderHirobaModalProps) => {
   if (renderAsCard) {
     return (
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
