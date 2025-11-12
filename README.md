@@ -52,3 +52,5 @@ pnpm dev
 - Express
 - Prisma ORM
 - Postgres
+
+> You're welcome to join my [personal instance](https://mirage.pinapelz.com), but I make no guarantees about the integrity of data if something goes catastrophically wrong.

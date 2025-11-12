@@ -102,7 +102,7 @@ const MusicDiverMyPageModal = ({
               <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
                 <p className="text-sm text-blue-400">
                   <a
-                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/musicdiver/musicdiver_recent_history.user.js"
+                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/musicdiver/mypage/musicdiver_recent_history.user.js"
                     className="underline"
                   >
                     MyPage Recently Played Score Export Userscript

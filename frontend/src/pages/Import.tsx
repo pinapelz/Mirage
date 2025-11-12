@@ -319,7 +319,7 @@ const Import = () => {
             importPage="https://p.eagate.573.jp/payment/p/ex_select_course.html"
             scripts={[{
               name: "e-amusement Recently Played Score Export Userscript (Last 20 Played)",
-              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/dancerush_play_history.user.js"
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/eamuse/dancerush_play_history.user.js"
             }]}
           />
         )}
@@ -332,7 +332,7 @@ const Import = () => {
             importPage="https://p.eagate.573.jp/game/around/1st/top/index.html#play_hist"
             scripts={[{
               name: "e-amusement Recently Played Score Export Userscript (Last 20 Played)",
-              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/dancearound_play_history.user.js"
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/eamuse/dancearound_play_history.user.js"
             }]}
           />
         )}
@@ -365,7 +365,7 @@ const Import = () => {
             importPage="https://projectflower.eu/game/nostalgia/54827307"
             scripts={[{
               name: "Flower Play History (Exports only the page you are on)",
-              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/nostalgia/nostalgia_flower_scraper.user.js"
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/nostalgia/flower/nostalgia_flower_scraper.user.js"
             }]}
           />
         )}
@@ -378,7 +378,7 @@ const Import = () => {
             importPage="https://projectflower.eu/game/rb/profile/21363050"
             scripts={[{
               name: "Flower Play History (Exports only the page you are on)",
-              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/reflecbeat_flower_scraper.user.js"
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/flower/reflecbeat_flower_scraper.user.js"
             }]}
           />
         )}

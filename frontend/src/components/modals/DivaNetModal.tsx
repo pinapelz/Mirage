@@ -93,7 +93,7 @@ const DivaNetModal = ({
               <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
                 <p className="text-sm text-blue-400">
                   <a
-                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/diva_net_history.user.js"
+                    href="https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/divanet/diva_net_history.user.js"
                     className="font-bold underline"
                   >
                     DIVA.NET Recently Played Score Export Userscript (Last 20 Played)
