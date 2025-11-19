@@ -400,7 +400,7 @@ const NostalgiaScoreDisplay: React.FC<ScoreDisplayProps> = ({
                       </div>
                     ) : key === "timestamp" ? (
                       <span className="text-slate-400 text-[10px] sm:text-xs whitespace-nowrap">
-                        {new Date(
+                        {score[key] === 0 ? "N/A" : new Date(
                           typeof score[key] === "number"
                             ? score[key]
                             : score[key],

@@ -393,7 +393,7 @@ const DancerushScoreDisplay: React.FC<ScoreDisplayProps> = ({
                       </div>
                     ) : key === "timestamp" ? (
                       <span className="text-slate-400 text-xs">
-                        {new Date(
+                        {score[key] === 0 ? "N/A" : new Date(
                           typeof score[key] === "number"
                             ? score[key]
                             : score[key],
