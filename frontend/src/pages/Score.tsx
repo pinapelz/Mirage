@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import LoadingDisplay  from "../components/LoadingDisplay";
+import LoadingDisplay from "../components/LoadingDisplay";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { NavBar } from "../components/NavBar";
-import type { SupportedGame}  from "../types/game";
+import type { SupportedGame } from "../types/game";
 import SessionExpiredPopup from "../components/SessionExpiredPopup";
 import ScoreDisplay from "../components/displays/GenericScoreDisplay";
 import DancerushScoreDisplay from "../components/displays/DancerushScoreDisplay";
@@ -45,6 +45,31 @@ const Score = () => {
     } catch (error) {
       console.error("Logout failed:", error);
       alert("Network error during logout. Please try again.");
+    }
+  };
+
+  const exportScores = async () => {
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_API_URL +
+          `/exportScores?internalGameName=${gameName}&page=${currentPage}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        },
+      );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `scores_${gameName}_${currentPage}.json`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("Network error during export. Please try again.");
     }
   };
 
@@ -107,8 +132,7 @@ const Score = () => {
         }
         if(targetUserId && targetUserId !== user.id.toString()){
           setViewingOwnScores(false);
-        }
-        else{
+        } else {
           setViewingOwnScores(true);
         }
         url.searchParams.append("internalGameName", gameName);
@@ -116,7 +140,9 @@ const Score = () => {
         url.searchParams.append("sortKey", requestOrder);
         url.searchParams.append("direction", "asc");
 
-        const response = await fetch(url.toString(), {credentials: 'include'});
+        const response = await fetch(url.toString(), {
+          credentials: "include",
+        });
         if (!response.ok) throw new Error("Failed to fetch scores");
         const data = await response.json();
         setUsername(data.user);
@@ -137,7 +163,11 @@ const Score = () => {
   const handleDeleteScore = async (scoreId: number) => {
     if (!user) return;
 
-    if (!confirm("Are you sure you want to delete this score? This action cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this score? This action cannot be undone.",
+      )
+    ) {
       return;
     }
 
@@ -180,7 +210,7 @@ const Score = () => {
 
   if (isLoading || loading) {
     return (
-      <LoadingDisplay message={"Loading Scores for " + formattedGameName}/>
+      <LoadingDisplay message={"Loading Scores for " + formattedGameName} />
     );
   }
 
@@ -191,7 +221,8 @@ const Score = () => {
         <div className="mb-6 sm:mb-12">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-linear-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
-              {viewingOwnScores ? "Your Scores" : `${username}'s Scores`} for {formattedGameName}
+              {viewingOwnScores ? "Your Scores" : `${username}'s Scores`} for{" "}
+              {formattedGameName}
             </h1>
             <div className="flex items-center space-x-1 sm:space-x-2 bg-slate-900/50 backdrop-blur-sm rounded-xl p-1 border border-slate-800/50">
               <button
@@ -339,6 +370,12 @@ const Score = () => {
         )}
         <p className="text-slate-400 mt-4 text-sm sm:text-base md:text-lg text-center">
           Displaying {scores.length} scores • Page {currentPage} of {numPages}
+        </p>
+        <p
+          className="text-slate-400 underline mt-4 text-sm sm:text-base md:text-lg text-center cursor-pointer"
+          onClick={exportScores}
+        >
+          {viewingOwnScores ? "Export Scores on Page" : null}
         </p>
         {viewMode === "table" && (
           <p className="text-slate-500 mt-2 text-xs text-center md:hidden">

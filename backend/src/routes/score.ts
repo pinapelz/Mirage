@@ -148,15 +148,17 @@ export const handleExportScoreForGame = async (
   const { internalGameName, page } = req.query;
   const userId = req.session.userId;
   if (!userId || !internalGameName) {
+    console.log(userId);
+    console.log(internalGameName);
     return res.status(400).json({ error: "Missing required parameters" });
   }
-  const offset = (Math.max(parseInt(page as string) || 1, 1) - 1) * 50;
+  const offset = (Math.max(parseInt(page as string) || 1, 1) - 1) * PAGE_SIZE;
   const scores: any = await prisma.$queryRaw`
     SELECT * FROM "Score"
     WHERE "userId" = ${userId}
     AND "gameInternalName" = ${internalGameName}
     ORDER BY (data->>'timestamp')::numeric desc
-    OFFSET ${offset} LIMIT 50
+    OFFSET ${offset} LIMIT ${PAGE_SIZE}
   `;
   const safeScores = scores.map((score: any) => ({
     ...score,
