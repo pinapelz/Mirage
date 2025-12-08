@@ -141,6 +141,33 @@ export const handleScoreUpload = async (
   }
 };
 
+export const handleExportScoreForGame = async (
+  req: express.Request,
+  res: express.Response,
+) => {
+  const { internalGameName, page } = req.query;
+  const userId = req.session.userId;
+  if (!userId || !internalGameName) {
+    return res.status(400).json({ error: "Missing required parameters" });
+  }
+  const offset = (Math.max(parseInt(page as string) || 1, 1) - 1) * 50;
+  const scores: any = await prisma.$queryRaw`
+    SELECT * FROM "Score"
+    WHERE "userId" = ${userId}
+    AND "gameInternalName" = ${internalGameName}
+    ORDER BY (data->>'timestamp')::numeric desc
+    OFFSET ${offset} LIMIT 50
+  `;
+  const safeScores = scores.map((score: any) => ({
+    ...score,
+    timestamp: typeof score.timestamp === "bigint" ? Number(score.timestamp) : score.timestamp,
+  }));
+
+  res.status(200).json({
+    scores: safeScores,
+  });
+};
+
 export const handleScoreDeletion = async (
   req: express.Request,
   res: express.Response,

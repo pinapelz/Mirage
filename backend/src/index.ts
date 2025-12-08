@@ -64,6 +64,7 @@ app.get('/api/scores', requireAuth, scoreRoutes.handleGetScores);
 app.delete('/api/scores', requireAuth, scoreRoutes.handleScoreDeletion);
 app.get('/api/scores/:chartId', requireAuth, scoreRoutes.handleGetScoresByChartId);
 app.get('/api/allScores', requireAuth, scoreRoutes.handleGetAllGameScores);
+app.get('/api/exportScores', requireAuth, scoreRoutes.handleExportScoreForGame);
 
 app.post('/api/admin/createGame', requireAuth, adminRoutes.handleCreateGame);
 app.delete('/api/admin/user/:userId', requireAuth, adminRoutes.handleDeleteUser);
