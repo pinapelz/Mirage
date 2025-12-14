@@ -4,6 +4,7 @@
 // @version      1.2
 // @description  Export REFLEC BEAT scores including full judgements and timestamps as JSON
 // @match        https://projectflower.eu/game/rb/profile/*
+// @match        https://eagle.ac/game/rb/profile/*
 // @grant        none
 // ==/UserScript==
 

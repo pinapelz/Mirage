@@ -36,7 +36,7 @@ export const FlowerUserscriptCard = ({ mainGameName, onClick }: FlowerUserscript
         </svg>
       </div>
       <h4 className="text-white font-semibold mb-2">
-        {mainGameName} Flower Play History (Userscript)
+        {mainGameName} Flower/Eagle Play History (Userscript)
       </h4>
       <p className="text-slate-400 text-sm mb-4">
         Import playdata from cabinets on the Flower network
@@ -45,7 +45,7 @@ export const FlowerUserscriptCard = ({ mainGameName, onClick }: FlowerUserscript
         onClick={onClick}
         className="hover:cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
       >
-        Export Flower Data
+        Export Flower/Eagle Data
       </button>
     </div>
   )
@@ -81,7 +81,7 @@ const FlowerUserscriptModal = ({
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
-              Import {mainGameName} Flower Play Data
+              Import {mainGameName} Flower/Eagle Play Data
             </h3>
             <p className="text-slate-400 text-sm">
               Follow the instructions below to import your data
@@ -91,8 +91,8 @@ const FlowerUserscriptModal = ({
           {/* Warning */}
           <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
             <p className="text-sm text-blue-400">
-              You will need your ACCESS CODE to register on Flower for the first time! <br/><br/>
-              Do this by tapping your Amusement IC card at any machine on the Flower network and copying
+              You will need your ACCESS CODE to register on Flower/Eagle for the first time! <br/><br/>
+              Do this by tapping your Amusement IC card at any machine on the Flower/Eagle network and copying
               down the code displayed on the screen.
               <br/><br/>
               This is likely not the same code as the one on the back of your card.

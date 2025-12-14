@@ -4,6 +4,7 @@
 // @description  Scrapes scores from Flower's Nostalgia page and converts to Mirage
 // @author       Meta-link
 // @match        https://projectflower.eu/game/nostalgia/*
+// @match        https://eagle.ac/game/rb/profile/*
 // @grant        none
 // ==/UserScript==
 
