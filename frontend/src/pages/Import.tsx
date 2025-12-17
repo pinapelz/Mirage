@@ -19,7 +19,7 @@ const EagleUserscriptModal = lazy(() => import("../components/modals/EagleUsersc
 const TaikoDonderHirobaModal = lazy(() => import("../components/modals/TaikoDonderHirobaModal"));
 const TaikoEGTSModal = lazy(() => import("../components/modals/TaikoEGTSModal"));
 
-type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgiaFlower' | 'nostalgiaEagle' | 'reflecbeatFlower' | 'reflecbeatEagle' | 'taiko' | 'taikoEGTS';
+type ModalType = 'json' | 'dancerush' | 'dancerushFlower' | 'dancerushEagle' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgiaFlower' | 'nostalgiaEagle' | 'reflecbeatFlower' | 'reflecbeatEagle' | 'taiko' | 'taikoEGTS';
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -143,6 +143,14 @@ const Import = () => {
             <EamusementUserscriptCard
             mainGameName="DANCERUSH"
             onClick={() => setOpenModal('dancerush')}
+            />
+            <FlowerUserscriptCard
+            mainGameName="DANCERUSH"
+            onClick={() => setOpenModal('dancerushFlower')}
+            />
+            <EagleUserscriptCard
+            mainGameName="DANCERUSH"
+            onClick={() => setOpenModal('dancerushEagle')}
             />
           </>
         );
@@ -353,6 +361,32 @@ const Import = () => {
             }]}
           />
         )}
+        {openModal === 'dancerushFlower' && (
+          <FlowerUserscriptModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            mainGameName="DANCERUSH"
+            userPage="https://projectflower.eu"
+            importPage="https://projectflower.eu/game/dancerush/profile/7414"
+            scripts={[{
+              name: "Flower Play History (Exports only the page you are on)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/flower/dancerush_flower_scraper.user.js"
+            }]}
+          />
+        )}
+        {openModal === 'dancerushEagle' && (
+          <EagleUserscriptModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            mainGameName="DANCERUSH"
+            userPage="https://eagle.ac"
+            importPage="https://eagle.ac/game/dancerush/profile/7414"
+            scripts={[{
+              name: "Eagle Play History (Exports only the page you are on)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/flower/dancerush_flower_scraper.user.js"
+            }]}
+          />
+        )}
         {openModal === 'dancearound' && (
           <EamusementUserscriptModal
             isOpen={true}
@@ -405,7 +439,7 @@ const Import = () => {
             onClose={() => setOpenModal(null)}
             mainGameName="NOSTALGIA"
             userPage="https://eagle.ac"
-            importPage="https://eagle.ac/game/nostalgia/54827307"
+            importPage="https://eagle.ac/game/nostalgia/43711497"
             scripts={[{
               name: "Eagle Play History (Exports only the page you are on)",
               url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/nostalgia/flower/nostalgia_flower_scraper.user.js"
