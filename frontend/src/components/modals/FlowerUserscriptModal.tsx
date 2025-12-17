@@ -125,7 +125,7 @@ const FlowerUserscriptModal = ({
                 Install the relevant userscript (use a browser extension such as{" "}
                 <a
                   className="font-bold hover:underline"
-                  href="https://www.tampermonkey.net/">Tampermonkey</a>)
+                  href="https://violentmonkey.github.io/">Violentmonkey</a>)
               </li>
               {/* Additional Info */}
               <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">

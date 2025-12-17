@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         DANCEAROUND (e-amusement) Recently Played Mirage Scraper
-// @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  DANCEAROUND e-amusement site to Mirage import JSON
 // @match        https://p.eagate.573.jp/game/around/1st/playdata/index.html*
 // @grant        none
+// @downloadUrl  https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancearound/eamuse/dancearound_play_history.user.js
 // @run-at       document-idle
 // ==/UserScript==
 

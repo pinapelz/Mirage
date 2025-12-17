@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         REFLEC BEAT (Flower) Play History Scraper
-// @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Export REFLEC BEAT scores including full judgements and timestamps as JSON
 // @match        https://projectflower.eu/game/rb/profile/*
 // @match        https://eagle.ac/game/rb/profile/*
+// @downloadUrl  https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/flower/reflecbeat_flower_scraper.user.js
 // @grant        none
 // ==/UserScript==
 

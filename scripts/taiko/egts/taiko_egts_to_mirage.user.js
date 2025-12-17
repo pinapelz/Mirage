@@ -1,12 +1,10 @@
 // ==UserScript==
 // @name         Taiko EGTS to Mirage
-// @namespace    http://tampermonkey.net/
 // @version      2025-01-12
-// @author       You
 // @match        https://legacy.egts.ca/Users/*
 // @match        http://localhost
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=egts.ca
 // @grant        none
+// @downloadUrl  https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/taiko/egts/taiko_egts_to_mirage.user.js
 // ==/UserScript==
 
 (function() {

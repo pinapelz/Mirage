@@ -5,6 +5,7 @@
 // @author       Meta-link
 // @match        https://projectflower.eu/game/nostalgia/*
 // @match        https://eagle.ac/game/rb/profile/*
+// @downloadUrl  https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/nostalgia/flower/nostalgia_flower_scraper.user.js
 // @grant        none
 // ==/UserScript==
 

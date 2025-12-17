@@ -96,7 +96,9 @@ const MusicDiverMyPageModal = ({
               </li>
               <li>
                 Install the appropriate userscript to your browser (use an extension such
-                as Tampermonkey).
+                as <a
+                  className="font-bold hover:underline"
+                  href="https://violentmonkey.github.io/">Violentmonkey</a>).
               </li>
               {/* Additional Info */}
               <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">

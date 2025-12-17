@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         DANCERUSH (e-amusement) Recently Played Mirage Scraper
-// @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  DANCERUSH e-amusement site to Mirage import JSON
 // @match        https://p.eagate.573.jp/game/dan/1st/playdata/entrance.html*
 // @grant        none
+// @downloadUrl  https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/dancerush/eamuse/dancerush_play_history.user.js
 // @run-at       document-idle
 // ==/UserScript==
 

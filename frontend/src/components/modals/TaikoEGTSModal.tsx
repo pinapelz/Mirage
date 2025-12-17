@@ -90,7 +90,9 @@ const TaikoEGTSModal = ({
               <li>Log into your the WebUI. Its assumed you already know the link if you're using this import method</li>
               <li>
                 Install the appropriate userscript to your browser (use an extension such
-                as Tampermonkey).
+                as <a
+                  className="font-bold hover:underline"
+                  href="https://violentmonkey.github.io/">Violentmonkey</a>).
               </li>
               {/* Additional Info */}
               <div className="my-2 rounded-md bg-[#533166]/10 border border-[#533166]/20 p-3">

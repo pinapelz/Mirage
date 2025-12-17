@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         PDAFT (DIVA.NET) Mirage Scraper
-// @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Scrape DIVA.NET play history (pages 1–20) into Mirage JSON
 // @match        https://project-diva-ac.net/divanet/personal/playHistory/*
+// @downloadUrl https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/projectdiva-arcade/divanet/diva_net_history.user.js
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==

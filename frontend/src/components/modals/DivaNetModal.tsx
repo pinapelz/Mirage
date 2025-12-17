@@ -87,7 +87,7 @@ const DivaNetModal = ({
                 Navigate to the <a className="font-bold hover:underline" href="https://project-diva-ac.net/divanet/personal/playHistory/0">Play History (プレイ履歴) Page</a>
               </li>
               <li>
-                Install the relevant userscript (use a browser extension like <a className="font-bold hover:underline" href="https://www.tampermonkey.net/">Tampermonkey</a>)
+                Install the relevant userscript (use a browser extension like <a className="font-bold hover:underline" href="https://violentmonkey.github.io/">Violentmonkey</a>)
               </li>
               {/* Additional Info */}
               <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">

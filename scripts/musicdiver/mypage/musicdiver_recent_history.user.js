@@ -4,6 +4,7 @@
 // @version      1.1
 // @description  MUSIC DIVER My Page Recent History to Mirage import JSON
 // @match        https://mypage.musicdiver.jp/record?view=history*
+// @downloadUrl  https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/musicdiver/mypage/musicdiver_recent_history.user.js
 // @grant        none
 // ==/UserScript==
 
