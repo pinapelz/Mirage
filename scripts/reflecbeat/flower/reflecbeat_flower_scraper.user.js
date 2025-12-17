@@ -31,7 +31,7 @@
             meta: {
                 game: "reflecbeat",
                 playtype: "Single",
-                service: "REFLEC BEAT Flower Play History"
+                service: "REFLEC BEAT Flower/Eagle Play History"
             },
             scores: parseScoreLog()
         };

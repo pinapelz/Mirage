@@ -155,7 +155,7 @@
             meta: {
                 game: "nostalgia",
                 playtype: "Single",
-                service: "NOSTALGIA Flower Play History",
+                service: "NOSTALGIA Flower/Eagle Play History",
             },
             scores: scores,
         };

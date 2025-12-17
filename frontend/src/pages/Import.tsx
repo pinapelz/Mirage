@@ -8,16 +8,18 @@ import { uploadScore } from "../utils/scoreUpload";
 import { NavBar } from "../components/NavBar";
 import { EamusementUserscriptCard } from "../components/modals/EamusementUserscriptModal";
 import { FlowerUserscriptCard } from "../components/modals/FlowerUserscriptModal";
+import { EagleUserscriptCard } from "../components/modals/EagleUserscriptModal";
 
 const JsonUploadModal = lazy(() => import("../components/modals/JsonUploadModal"));
 const EamusementUserscriptModal = lazy(() => import("../components/modals/EamusementUserscriptModal"));
 const DivaNetModal = lazy(() => import("../components/modals/DivaNetModal"));
 const MusicDiverModal = lazy(() => import("../components/modals/MusicDiverModal"));
 const FlowerUserscriptModal = lazy(() => import("../components/modals/FlowerUserscriptModal"));
+const EagleUserscriptModal = lazy(() => import("../components/modals/EagleUserscriptModal"));
 const TaikoDonderHirobaModal = lazy(() => import("../components/modals/TaikoDonderHirobaModal"));
 const TaikoEGTSModal = lazy(() => import("../components/modals/TaikoEGTSModal"));
 
-type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgia' | 'reflecbeat' | 'taiko' | 'taikoEGTS';
+type ModalType = 'json' | 'dancerush' | 'dancearound' | 'divanet' | 'musicdiver' | 'nostalgiaFlower' | 'nostalgiaEagle' | 'reflecbeatFlower' | 'reflecbeatEagle' | 'taiko' | 'taikoEGTS';
 
 const Import = () => {
   const { user, isLoading, logout } = useAuth();
@@ -184,7 +186,11 @@ const Import = () => {
             <JsonUploadCard />
             <FlowerUserscriptCard
             mainGameName="NOSTALGIA"
-            onClick={() => setOpenModal('nostalgia')}
+            onClick={() => setOpenModal('nostalgiaFlower')}
+            />
+            <EagleUserscriptCard
+            mainGameName="NOSTALGIA"
+            onClick={() => setOpenModal('nostalgiaEagle')}
             />
           </>
         );
@@ -194,7 +200,11 @@ const Import = () => {
             <JsonUploadCard />
             <FlowerUserscriptCard
             mainGameName="REFLEC BEAT"
-            onClick={() => setOpenModal('reflecbeat')}
+            onClick={() => setOpenModal('reflecbeatFlower')}
+            />
+            <EagleUserscriptCard
+            mainGameName="REFLEC BEAT"
+            onClick={() => setOpenModal('reflecbeatEagle')}
             />
           </>
         );
@@ -376,7 +386,7 @@ const Import = () => {
             }
           />
         )}
-        {openModal === 'nostalgia' && (
+        {openModal === 'nostalgiaFlower' && (
           <FlowerUserscriptModal
             isOpen={true}
             onClose={() => setOpenModal(null)}
@@ -389,7 +399,20 @@ const Import = () => {
             }]}
           />
         )}
-        {openModal === 'reflecbeat' && (
+        {openModal === 'nostalgiaEagle' && (
+          <EagleUserscriptModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            mainGameName="NOSTALGIA"
+            userPage="https://eagle.ac"
+            importPage="https://eagle.ac/game/nostalgia/54827307"
+            scripts={[{
+              name: "Eagle Play History (Exports only the page you are on)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/nostalgia/flower/nostalgia_flower_scraper.user.js"
+            }]}
+          />
+        )}
+        {openModal === 'reflecbeatFlower' && (
           <FlowerUserscriptModal
             isOpen={true}
             onClose={() => setOpenModal(null)}
@@ -398,6 +421,19 @@ const Import = () => {
             importPage="https://projectflower.eu/game/rb/profile/21363050"
             scripts={[{
               name: "Flower Play History (Exports only the page you are on)",
+              url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/flower/reflecbeat_flower_scraper.user.js"
+            }]}
+          />
+        )}
+        {openModal === 'reflecbeatEagle' && (
+          <EagleUserscriptModal
+            isOpen={true}
+            onClose={() => setOpenModal(null)}
+            mainGameName="REFLEC BEAT"
+            userPage="https://eagle.ac"
+            importPage="https://eagle.ac/game/rb/profile/21363050"
+            scripts={[{
+              name: "Eagle Play History (Exports only the page you are on)",
               url: "https://github.com/pinapelz/Mirage/raw/refs/heads/main/scripts/reflecbeat/flower/reflecbeat_flower_scraper.user.js"
             }]}
           />

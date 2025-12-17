@@ -3,7 +3,7 @@ interface UserScript {
   url: string;
 }
 
-interface FlowerUserscriptModalProps {
+interface EagleUserscriptModalProps {
   isOpen: boolean;
   onClose: () => void;
   mainGameName: string;
@@ -12,17 +12,17 @@ interface FlowerUserscriptModalProps {
   scripts: UserScript[];
 }
 
-interface FlowerUserscriptCardProps {
+interface EagleUserscriptCardProps {
   mainGameName: string;
   onClick: () => void;
 }
 
-export const FlowerUserscriptCard = ({ mainGameName, onClick }: FlowerUserscriptCardProps) => {
+export const EagleUserscriptCard = ({ mainGameName, onClick }: EagleUserscriptCardProps) => {
   return (
     <div className="bg-slate-800 rounded-lg border border-slate-700 p-6 hover:border-violet-500 transition-colors">
-      <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
+      <div className="w-12 h-12 bg-orange-600/20 rounded-lg flex items-center justify-center mb-4">
         <svg
-          className="w-6 h-6 text-blue-400"
+          className="w-6 h-6 text-orange-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -36,29 +36,29 @@ export const FlowerUserscriptCard = ({ mainGameName, onClick }: FlowerUserscript
         </svg>
       </div>
       <h4 className="text-white font-semibold mb-2">
-        {mainGameName} Flower Play History (Userscript)
+        {mainGameName} Eagle Play History (Userscript)
       </h4>
       <p className="text-slate-400 text-sm mb-4">
-        Import playdata from cabinets on the Flower network
+        Import playdata from cabinets on the Eagle network
       </p>
       <button
         onClick={onClick}
-        className="hover:cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
+        className="hover:cursor-pointer w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-3 sm:px-4 rounded-md text-sm sm:text-base font-medium transition-colors"
       >
-        Export Flower Data
+        Export Eagle Data
       </button>
     </div>
   )
 }
 
-const FlowerUserscriptModal = ({
+const EagleUserscriptModal = ({
   isOpen,
   onClose,
   mainGameName,
   userPage,
   importPage,
   scripts,
-}: FlowerUserscriptModalProps) => {
+}: EagleUserscriptModalProps) => {
   if (!isOpen) return null;
 
   const handleClose = () => {
@@ -81,7 +81,7 @@ const FlowerUserscriptModal = ({
           {/* Header */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-white mb-2">
-              Import {mainGameName} Flower Play Data
+              Import {mainGameName} Eagle Play Data
             </h3>
             <p className="text-slate-400 text-sm">
               Follow the instructions below to import your data
@@ -89,10 +89,10 @@ const FlowerUserscriptModal = ({
           </div>
 
           {/* Warning */}
-          <div className="mb-6 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
-            <p className="text-sm text-blue-400">
-              You will need your ACCESS CODE to register on Flower for the first time! <br/><br/>
-              Do this by tapping your Amusement IC card at any machine on the Flower network and copying
+          <div className="mb-6 rounded-md bg-orange-500/10 border border-orange-500/20 p-3">
+            <p className="text-sm text-orange-400">
+              You will need your ACCESS CODE to register on Eagle for the first time! <br/><br/>
+              Do this by tapping your Amusement IC card at any machine on the Eagle network and copying
               down the code displayed on the screen.
               <br/><br/>
               This is likely not the same code as the one on the back of your card.
@@ -110,7 +110,7 @@ const FlowerUserscriptModal = ({
                 <a
                   className="font-bold hover:underline"
                   href={userPage}>
-                  {mainGameName} Project Flower page
+                  {mainGameName} Eagle page
                 </a>
               </li>
               <li>
@@ -128,8 +128,8 @@ const FlowerUserscriptModal = ({
                   href="https://violentmonkey.github.io/">Violentmonkey</a>)
               </li>
               {/* Additional Info */}
-              <div className="my-2 rounded-md bg-blue-500/10 border border-blue-500/20 p-3">
-                <p className="text-sm text-blue-400">
+              <div className="my-2 rounded-md bg-orange-500/10 border border-orange-500/20 p-3">
+                <p className="text-sm text-orange-400">
                   {scripts.map(userscript => (
                     <a
                       href={userscript.url}
@@ -166,4 +166,4 @@ const FlowerUserscriptModal = ({
   );
 };
 
-export default FlowerUserscriptModal;
+export default EagleUserscriptModal;
